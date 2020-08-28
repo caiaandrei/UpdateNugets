@@ -5,7 +5,9 @@ VisualStudioVersion = 16.0.30323.103
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UpdateNugets.Core", "UpdateNugets.Core\UpdateNugets.Core.csproj", "{203F59B3-1A44-4F66-AB7C-F3435EF6241C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UpdateNugets.Core.Tests", "UpdateNugets.Core.Tests\UpdateNugets.Core.Tests.csproj", "{3F669AE6-BFBB-4477-9897-D476C78267B7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UpdateNugets.Core.Tests", "UpdateNugets.Core.Tests\UpdateNugets.Core.Tests.csproj", "{3F669AE6-BFBB-4477-9897-D476C78267B7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UpdateNugets.UI", "UpdateNugets.View\UpdateNugets.UI.csproj", "{4571EE3E-7600-4ABA-B453-B250E3AAD441}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{3F669AE6-BFBB-4477-9897-D476C78267B7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3F669AE6-BFBB-4477-9897-D476C78267B7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3F669AE6-BFBB-4477-9897-D476C78267B7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4571EE3E-7600-4ABA-B453-B250E3AAD441}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4571EE3E-7600-4ABA-B453-B250E3AAD441}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4571EE3E-7600-4ABA-B453-B250E3AAD441}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4571EE3E-7600-4ABA-B453-B250E3AAD441}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
