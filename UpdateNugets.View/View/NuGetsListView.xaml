@@ -9,9 +9,22 @@
              d:DesignHeight="450" d:DesignWidth="800"
              d:DataContext="{d:DesignInstance viewModel:NuGetsListViewModel}">
     <DockPanel>
-        <TextBox DockPanel.Dock="Top"
-                 Text="{Binding Path=SearchBoxText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                 Margin="2"/>
+        <DockPanel DockPanel.Dock="Top">
+            <Button Content="Clear" 
+                    DockPanel.Dock="Right"
+                    Margin="2"
+                    Command="{Binding ClearCommand}"
+                    CommandParameter="{Binding}"/>
+            
+            <Button Content="Search" 
+                    DockPanel.Dock="Right"
+                    Margin="2"
+                    Command="{Binding SearchCommand}"
+                    CommandParameter="{Binding}"/>
+            
+            <TextBox Text="{Binding Path=SearchBoxText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                     Margin="2"/>
+        </DockPanel>
         <ListBox ItemsSource="{Binding Path=NuGets}"
                  SelectedItem="{Binding SelectedNuGet, Mode=TwoWay}"
                  Margin="2">

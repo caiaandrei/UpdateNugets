@@ -9,6 +9,7 @@
         Title="Select Project Path" 
         Height="140" Width="600"
         d:DataContext="{d:DesignInstance viewModel:SelectProjectPathViewModel}"
+        WindowStartupLocation="CenterOwner"
         >
     <DockPanel LastChildFill="False"
                VerticalAlignment="Center">

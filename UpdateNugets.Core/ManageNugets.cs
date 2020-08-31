@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.IO;
 using System.Linq;
 
@@ -17,6 +16,25 @@ namespace UpdateNugets.Core
         }
 
         public ObservableCollection<NuGet> NuGets { get; } = new ObservableCollection<NuGet>();
+
+        public ObservableCollection<NuGet> Search(string name)
+        {
+            if (string.IsNullOrEmpty(name))
+            {
+                return NuGets;
+            }
+
+            var result = new ObservableCollection<NuGet>();
+            foreach (var item in NuGets)
+            {
+                if (item.Name.ToLower().Contains(name))
+                {
+                    result.Add(item);
+                }
+            }
+
+            return result;
+        }
 
         private void InitializeNuGetsList()
         {
@@ -43,7 +61,7 @@ namespace UpdateNugets.Core
                     else
                     {
                         var nugetVersion = nuget.Versions.FirstOrDefault(item => item.NuGetVersion == projectNuget.Value);
-                        
+
                         if (nugetVersion == null)
                         {
                             nuget.Versions.Add(new Version
