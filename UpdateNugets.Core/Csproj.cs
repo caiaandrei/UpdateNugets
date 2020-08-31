@@ -15,6 +15,7 @@ namespace UpdateNugets.Core
     {
         private const string _packageReferenceConstant = "PackageReference";
         private const string _includeConstant = "Include";
+        private const string _updateConstant = "Update";
         private const string _versionConstant = "Version";
 
         private string _filePath;
@@ -35,7 +36,7 @@ namespace UpdateNugets.Core
 
             foreach (var item in allPackageReferences)
             {
-                var name = item.Attributes[_includeConstant]?.Value;
+                var name = item.Attributes[_includeConstant] != null ? item.Attributes[_includeConstant].Value : item.Attributes[_updateConstant].Value;
                 var versionAttribute = item.Attributes[_versionConstant]?.Value;
                 var versionChild = item.FirstChild?.InnerText;
 
@@ -50,7 +51,8 @@ namespace UpdateNugets.Core
                         result.Add(name, versionChild);
                         break;
                     default:
-                        throw new Exception($"Something went wrong in {_filePath}");
+                        //throw new Exception($"Something went wrong in {_filePath}");
+                        break;
                 }
             }
             return result;
@@ -103,7 +105,10 @@ namespace UpdateNugets.Core
                 {
                     foreach (XmlNode item in node.ChildNodes)
                     {
-                        result.Add(item);
+                        if (item.NodeType != XmlNodeType.Comment)
+                        {
+                            result.Add(item);
+                        }
                     }
                 }
             }

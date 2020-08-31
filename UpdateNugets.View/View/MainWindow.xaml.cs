@@ -1,5 +1,7 @@
 ﻿using System.IO;
 using System.Windows;
+using System.Windows.Controls;
+using UpdateNugets.Core;
 using UpdateNugets.UI.Command;
 using UpdateNugets.UI.ViewModel;
 
@@ -8,6 +10,8 @@ namespace UpdateNugets.UI.View
     public partial class MainWindow : Window
     {
         private MainViewModel _mainViewModel;
+        private NuGetsListViewModel _nuGetsListViewModel;
+
         public MainWindow(MainViewModel mainViewModel)
         {
             InitializeComponent();
@@ -24,10 +28,16 @@ namespace UpdateNugets.UI.View
 
             selectProjectPathView.ShowDialog();
 
-            if (string.IsNullOrEmpty(selectProjectPathViewModel.ProjectPath))
+            if (!string.IsNullOrEmpty(selectProjectPathViewModel.ProjectPath))
             {
                 _mainViewModel.ProjectPath = selectProjectPathViewModel.ProjectPath;
+                _mainViewModel.ManageNuGets = new ManageNugets(selectProjectPathViewModel.ProjectPath);
+                _mainViewModel.NuGetsListViewModel = new NuGetsListViewModel(_mainViewModel.ManageNuGets);
+                
+
             }
+
+
 
         }
     }

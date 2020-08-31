@@ -19,11 +19,16 @@
             <ColumnDefinition />
         </Grid.ColumnDefinitions>
 
-        <local:NuGetsListView Grid.RowSpan="2"/>
-        <GridSplitter />
-        <local:SelectedNuGetDetailsView Grid.Column="1"/>
-        <GridSplitter />
+        
+        <local:NuGetsListView x:Name="NuGetsListView" 
+                              Grid.RowSpan="2"
+                              Margin="5"
+                              DataContext="{Binding NuGetsListViewModel}"/>
+        <local:SelectedNuGetDetailsView Grid.Column="1"
+                                        Margin="5"/>
+
         <local:SelectedNuGetVersionFilesView Grid.Column="1"
-                        Grid.Row="1"/>
+                                             Grid.Row="1"
+                                             Margin="5"/>
     </Grid>
 </Window>
