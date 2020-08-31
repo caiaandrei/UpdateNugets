@@ -9,6 +9,21 @@
         WindowState="Maximized"
         Loaded="Window_Loaded">
     <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition />
+            <RowDefinition />
+        </Grid.RowDefinitions>
 
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition />
+            <ColumnDefinition />
+        </Grid.ColumnDefinitions>
+
+        <local:NuGetsListView Grid.RowSpan="2"/>
+        <GridSplitter />
+        <local:SelectedNuGetDetailsView Grid.Column="1"/>
+        <GridSplitter />
+        <local:SelectedNuGetVersionFilesView Grid.Column="1"
+                        Grid.Row="1"/>
     </Grid>
 </Window>
