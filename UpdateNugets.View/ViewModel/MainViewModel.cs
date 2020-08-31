@@ -1,5 +1,4 @@
 ﻿using Prism.Events;
-using System;
 using UpdateNugets.Core;
 using UpdateNugets.UI.Events;
 
@@ -17,6 +16,7 @@ namespace UpdateNugets.UI.ViewModel
         {
             _eventAggregator = eventAggregator;
             _eventAggregator.GetEvent<SelectedNuGetChangedEvent>().Subscribe(OnSelectedNuGetChangedEvent);
+            _eventAggregator.GetEvent<SelectedVersionChanged>().Subscribe(OnSelectedVersionChangedEvent);
         }
 
         public string ProjectPath
@@ -27,7 +27,7 @@ namespace UpdateNugets.UI.ViewModel
                 _projectPath = value;
                 OnPropertyChanged(nameof(ProjectPath));
                 ManageNuGets = new ManageNugets(_projectPath);
-                NuGetsListViewModel = new NuGetsListViewModel(ManageNuGets);
+                NuGetsListViewModel = new NuGetsListViewModel(ManageNuGets, _eventAggregator);
             }
         }
 
@@ -69,8 +69,12 @@ namespace UpdateNugets.UI.ViewModel
 
         private void OnSelectedNuGetChangedEvent(NuGet nuGet)
         {
-            SelectedNuGetDetailsViewModel = new SelectedNuGetDetailsViewModel(nuGet);
-            SelectedNuGetVersionFilesViewModel = new SelectedNuGetVersionFilesViewModel(nuGet);
+            SelectedNuGetDetailsViewModel = new SelectedNuGetDetailsViewModel(nuGet, _eventAggregator);
+        }
+
+        private void OnSelectedVersionChangedEvent(Version version)
+        {
+            SelectedNuGetVersionFilesViewModel = new SelectedNuGetVersionFilesViewModel(version);
         }
 
     }

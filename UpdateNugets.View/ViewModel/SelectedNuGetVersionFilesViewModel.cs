@@ -1,19 +1,28 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.ObjectModel;
 using UpdateNugets.Core;
 
 namespace UpdateNugets.UI.ViewModel
 {
-    public class SelectedNuGetVersionFilesViewModel
+    public class SelectedNuGetVersionFilesViewModel : ViewModelBase
     {
-        private NuGet nuGet;
+        private Version _version;
+        private ObservableCollection<string> _files;
 
-        public SelectedNuGetVersionFilesViewModel(NuGet nuGet)
+        public SelectedNuGetVersionFilesViewModel(Version version)
         {
-            this.nuGet = nuGet;
+            _version = version;
+            Files = new ObservableCollection<string>(_version.Files);
         }
+
+        public ObservableCollection<string> Files
+        {
+            get { return _files; }
+            set
+            {
+                _files = value;
+                OnPropertyChanged(nameof(Files));
+            }
+        }
+
     }
 }

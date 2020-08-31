@@ -1,14 +1,59 @@
-﻿using UpdateNugets.Core;
+﻿using Prism.Events;
+using System.Collections.ObjectModel;
+using UpdateNugets.Core;
+using UpdateNugets.UI.Events;
 
 namespace UpdateNugets.UI.ViewModel
 {
-    public class SelectedNuGetDetailsViewModel
+    public class SelectedNuGetDetailsViewModel : ViewModelBase
     {
         private NuGet _nuGet;
+        private ObservableCollection<Version> _version;
+        private string _name;
 
-        public SelectedNuGetDetailsViewModel(NuGet nuGet)
+        public SelectedNuGetDetailsViewModel(NuGet nuGet, IEventAggregator eventAggregator)
         {
+            _eventAggregator = eventAggregator;
             _nuGet = nuGet;
+            Versions = new ObservableCollection<Version>(_nuGet.Versions);
+            Name = nuGet.Name;
+            SelectedVersion = Versions[0];
         }
+
+        public ObservableCollection<Version> Versions
+        {
+            get { return _version; }
+            set
+            {
+                _version = value;
+                OnPropertyChanged(nameof(Versions));
+            }
+        }
+
+        private Version _selectedVersion;
+
+        public Version SelectedVersion
+        {
+            get { return _selectedVersion; }
+            set
+            {
+                _selectedVersion = value;
+                OnPropertyChanged(nameof(SelectedVersion));
+                _eventAggregator.GetEvent<SelectedVersionChanged>().Publish(SelectedVersion);
+            }
+        }
+
+
+        public string Name
+        {
+            get { return _name; }
+            set
+            {
+                _name = value;
+                OnPropertyChanged(nameof(Name));
+            }
+        }
+
+        private IEventAggregator _eventAggregator;
     }
 }

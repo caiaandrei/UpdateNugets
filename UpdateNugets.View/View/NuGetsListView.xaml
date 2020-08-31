@@ -10,8 +10,11 @@
              d:DataContext="{d:DesignInstance viewModel:NuGetsListViewModel}">
     <DockPanel>
         <TextBox DockPanel.Dock="Top"
-                 Text="{Binding Path=SearchBoxText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-        <ListBox ItemsSource="{Binding Path=NuGets}">
+                 Text="{Binding Path=SearchBoxText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                 Margin="2"/>
+        <ListBox ItemsSource="{Binding Path=NuGets}"
+                 SelectedItem="{Binding SelectedNuGet, Mode=TwoWay}"
+                 Margin="2">
             <ListBox.ItemTemplate>
                 <DataTemplate>
                     <TextBlock Text="{Binding Name}" />
