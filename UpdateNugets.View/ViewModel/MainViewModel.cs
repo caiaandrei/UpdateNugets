@@ -1,4 +1,7 @@
-﻿using UpdateNugets.Core;
+﻿using Prism.Events;
+using System;
+using UpdateNugets.Core;
+using UpdateNugets.UI.Events;
 
 namespace UpdateNugets.UI.ViewModel
 {
@@ -6,6 +9,15 @@ namespace UpdateNugets.UI.ViewModel
     {
         private string _projectPath;
         private NuGetsListViewModel _nuGetsListViewModel;
+        private SelectedNuGetVersionFilesViewModel _selectedNuGetVersionFilesViewModel;
+        private SelectedNuGetDetailsViewModel _selectedNuGetDetailsViewModel;
+        private readonly IEventAggregator _eventAggregator;
+
+        public MainViewModel(IEventAggregator eventAggregator)
+        {
+            _eventAggregator = eventAggregator;
+            _eventAggregator.GetEvent<SelectedNuGetChangedEvent>().Subscribe(OnSelectedNuGetChangedEvent);
+        }
 
         public string ProjectPath
         {
@@ -14,6 +26,8 @@ namespace UpdateNugets.UI.ViewModel
             {
                 _projectPath = value;
                 OnPropertyChanged(nameof(ProjectPath));
+                ManageNuGets = new ManageNugets(_projectPath);
+                NuGetsListViewModel = new NuGetsListViewModel(ManageNuGets);
             }
         }
 
@@ -31,6 +45,32 @@ namespace UpdateNugets.UI.ViewModel
                 _nuGetsListViewModel = value;
                 OnPropertyChanged(nameof(NuGetsListViewModel));
             }
+        }
+
+        public SelectedNuGetDetailsViewModel SelectedNuGetDetailsViewModel
+        {
+            get { return _selectedNuGetDetailsViewModel; }
+            set
+            {
+                _selectedNuGetDetailsViewModel = value;
+                OnPropertyChanged(nameof(SelectedNuGetDetailsViewModel));
+            }
+        }
+
+        public SelectedNuGetVersionFilesViewModel SelectedNuGetVersionFilesViewModel
+        {
+            get { return _selectedNuGetVersionFilesViewModel; }
+            set
+            {
+                _selectedNuGetVersionFilesViewModel = value;
+                OnPropertyChanged(nameof(SelectedNuGetVersionFilesViewModel));
+            }
+        }
+
+        private void OnSelectedNuGetChangedEvent(NuGet nuGet)
+        {
+            SelectedNuGetDetailsViewModel = new SelectedNuGetDetailsViewModel(nuGet);
+            SelectedNuGetVersionFilesViewModel = new SelectedNuGetVersionFilesViewModel(nuGet);
         }
 
     }

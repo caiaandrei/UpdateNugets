@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using Prism.Events;
+using System.Windows;
 using UpdateNugets.UI.View;
 using UpdateNugets.UI.ViewModel;
 
@@ -8,7 +9,9 @@ namespace UpdateNugets.UI
     {
         public void ApplicationStart(object sender, StartupEventArgs args)
         {
-            var mainViewModel = new MainViewModel();
+            IEventAggregator eventAggregator = new EventAggregator();
+
+            var mainViewModel = new MainViewModel(eventAggregator);
 
             var mainWindow = new MainWindow(mainViewModel);
 

@@ -10,7 +10,6 @@ namespace UpdateNugets.UI.View
     public partial class MainWindow : Window
     {
         private MainViewModel _mainViewModel;
-        private NuGetsListViewModel _nuGetsListViewModel;
 
         public MainWindow(MainViewModel mainViewModel)
         {
@@ -31,14 +30,7 @@ namespace UpdateNugets.UI.View
             if (!string.IsNullOrEmpty(selectProjectPathViewModel.ProjectPath))
             {
                 _mainViewModel.ProjectPath = selectProjectPathViewModel.ProjectPath;
-                _mainViewModel.ManageNuGets = new ManageNugets(selectProjectPathViewModel.ProjectPath);
-                _mainViewModel.NuGetsListViewModel = new NuGetsListViewModel(_mainViewModel.ManageNuGets);
-                
-
             }
-
-
-
         }
     }
 }

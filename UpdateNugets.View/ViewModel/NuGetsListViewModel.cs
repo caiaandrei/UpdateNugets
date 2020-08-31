@@ -43,8 +43,5 @@ namespace UpdateNugets.UI.ViewModel
                 OnPropertyChanged(nameof(SearchBoxText));
             }
         }
-
-
-
     }
 }
