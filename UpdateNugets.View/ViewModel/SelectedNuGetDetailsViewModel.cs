@@ -7,11 +7,11 @@ namespace UpdateNugets.UI.ViewModel
 {
     public class SelectedNuGetDetailsViewModel : ViewModelBase
     {
-        private NuGet _nuGet;
+        private ProjectNuGet _nuGet;
         private ObservableCollection<Version> _version;
         private string _name;
 
-        public SelectedNuGetDetailsViewModel(NuGet nuGet, IEventAggregator eventAggregator)
+        public SelectedNuGetDetailsViewModel(ProjectNuGet nuGet, IEventAggregator eventAggregator)
         {
             _eventAggregator = eventAggregator;
             _nuGet = nuGet;

@@ -17,7 +17,7 @@ namespace UpdateNugets.UI.Command
         {
             var viewModel = parameter as NuGetsListViewModel;
             viewModel.SearchBoxText = "";
-            viewModel.Search();
+            viewModel.SearchAsync();
         }
     }
 }

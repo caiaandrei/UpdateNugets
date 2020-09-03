@@ -21,7 +21,13 @@
                     Margin="2"
                     Command="{Binding SearchCommand}"
                     CommandParameter="{Binding}"/>
-            
+
+            <CheckBox Content="Search Online"
+                      IsChecked="{Binding SearchOnline}"
+                      DockPanel.Dock="Right" 
+                      Margin="2"
+                      VerticalContentAlignment="Center"/>
+
             <TextBox Text="{Binding Path=SearchBoxText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                      Margin="2"/>
         </DockPanel>

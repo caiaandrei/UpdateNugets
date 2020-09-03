@@ -67,7 +67,7 @@ namespace UpdateNugets.UI.ViewModel
             }
         }
 
-        private void OnSelectedNuGetChangedEvent(NuGet nuGet)
+        private void OnSelectedNuGetChangedEvent(ProjectNuGet nuGet)
         {
             SelectedNuGetDetailsViewModel = new SelectedNuGetDetailsViewModel(nuGet, _eventAggregator);
         }

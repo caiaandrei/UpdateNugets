@@ -2,9 +2,9 @@
 
 namespace UpdateNugets.Core
 {
-    public class NuGet
+    public class ProjectNuGet
     {
-        public NuGet(string name, IList<Version> versions)
+        public ProjectNuGet(string name, IList<Version> versions)
         {
             Name = name;
             Versions = versions;

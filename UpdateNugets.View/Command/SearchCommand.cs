@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using System.Windows.Input;
 using UpdateNugets.UI.ViewModel;
 
@@ -8,6 +9,11 @@ namespace UpdateNugets.UI.Command
     {
         public event EventHandler CanExecuteChanged;
 
+        private Action _action;
+        public SearchCommand()
+        {
+        }
+
         public bool CanExecute(object parameter)
         {
             return true;
@@ -16,7 +22,8 @@ namespace UpdateNugets.UI.Command
         public void Execute(object parameter)
         {
             var viewModel = parameter as NuGetsListViewModel;
-            viewModel.Search();
+            _action = new Action(async () => await viewModel.SearchAsync());
+            _action.Invoke();
         }
     }
 }

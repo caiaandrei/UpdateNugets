@@ -1,7 +1,6 @@
 ﻿using Prism.Events;
-using System;
 using System.Collections.ObjectModel;
-using System.Security.Cryptography.X509Certificates;
+using System.Threading.Tasks;
 using System.Windows.Input;
 using UpdateNugets.Core;
 using UpdateNugets.UI.Command;
@@ -11,9 +10,10 @@ namespace UpdateNugets.UI.ViewModel
 {
     public class NuGetsListViewModel : ViewModelBase
     {
-        private NuGet _selectedNuGet;
-        private ObservableCollection<NuGet> _nuGets;
+        private ProjectNuGet _selectedNuGet;
+        private ObservableCollection<ProjectNuGet> _nuGets;
         private string _searchBoxText;
+        private bool _searchOnline;
         private IEventAggregator _eventAggregator;
         private ManageNugets _manageNuGets;
 
@@ -26,7 +26,7 @@ namespace UpdateNugets.UI.ViewModel
             ClearCommand = new ClearCommand();
         }
 
-        public ObservableCollection<NuGet> NuGets
+        public ObservableCollection<ProjectNuGet> NuGets
         {
             get => _nuGets;
             set
@@ -36,7 +36,7 @@ namespace UpdateNugets.UI.ViewModel
             }
         }
 
-        public NuGet SelectedNuGet
+        public ProjectNuGet SelectedNuGet
         {
             get { return _selectedNuGet; }
             set
@@ -60,13 +60,24 @@ namespace UpdateNugets.UI.ViewModel
             }
         }
 
+        public bool SearchOnline
+        {
+            get { return _searchOnline; }
+            set
+            {
+                _searchOnline = value;
+                OnPropertyChanged(nameof(SearchOnline));
+            }
+        }
+
+
         public ICommand SearchCommand { get; }
 
         public ICommand ClearCommand { get; }
 
-        public void Search()
+        public async Task SearchAsync()
         {
-            NuGets = _manageNuGets.Search(SearchBoxText);
+            NuGets = await _manageNuGets.SearchAsync(SearchBoxText, SearchOnline);
         }
     }
 }
