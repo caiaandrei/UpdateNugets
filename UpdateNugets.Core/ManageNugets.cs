@@ -121,7 +121,8 @@ namespace UpdateNugets.Core
                             new Version
                             {
                                 Files = new List<string> { projectPath },
-                                NuGetVersion = projectNuget.Value.Trim()
+                                NuGetVersion = projectNuget.Value.Trim(),
+                                IsTheCurrentVersion = true
                             }
                         }));
                     }
@@ -134,7 +135,8 @@ namespace UpdateNugets.Core
                             nuget.Versions.Add(new Version
                             {
                                 Files = new List<string> { projectPath },
-                                NuGetVersion = projectNuget.Value
+                                NuGetVersion = projectNuget.Value,
+                                IsTheCurrentVersion = true
                             });
                         }
                         else

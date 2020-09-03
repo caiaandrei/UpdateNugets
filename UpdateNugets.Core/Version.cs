@@ -6,5 +6,6 @@ namespace UpdateNugets.Core
     {
         public string NuGetVersion { get; set; }
         public IList<string> Files { get; set; }
+        public bool IsTheCurrentVersion { get; set; }
     }
 }
