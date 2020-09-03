@@ -67,8 +67,9 @@ namespace UpdateNugets.UI.ViewModel
             }
         }
 
-        private void OnSelectedNuGetChangedEvent(ProjectNuGet nuGet)
+        private async void OnSelectedNuGetChangedEvent(ProjectNuGet nuGet)
         {
+            nuGet = await ManageNuGets.SearchNuGetVersions(nuGet);
             SelectedNuGetDetailsViewModel = new SelectedNuGetDetailsViewModel(nuGet, _eventAggregator);
         }
 

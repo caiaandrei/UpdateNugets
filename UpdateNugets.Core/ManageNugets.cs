@@ -20,7 +20,7 @@ namespace UpdateNugets.Core
 
         public ObservableCollection<ProjectNuGet> NuGets { get; } = new ObservableCollection<ProjectNuGet>();
 
-        public async System.Threading.Tasks.Task<ObservableCollection<ProjectNuGet>> SearchAsync(string name, bool searchOnline = false)
+        public async Task<ObservableCollection<ProjectNuGet>> SearchAsync(string name, bool searchOnline = false)
         {
             var intergogateNuGetFeed = new InterogateNuGetFeed();
 
@@ -28,7 +28,7 @@ namespace UpdateNugets.Core
 
             if (searchOnline)
             {
-                await intergogateNuGetFeed.SearchAsync(name);
+                await intergogateNuGetFeed.SearchAsync(name, 20);
                 foreach (var item in intergogateNuGetFeed.Packages)
                 {
                     result.Add(await ConvertPackageSearchMetadataToNuGetAsync(item));
@@ -47,6 +47,42 @@ namespace UpdateNugets.Core
             }
 
             return result;
+        }
+
+        public async Task<ProjectNuGet> SearchNuGetVersions(ProjectNuGet nuGet)
+        {
+            var intergogateNuGetFeed = new InterogateNuGetFeed();
+            await intergogateNuGetFeed.SearchAsync(nuGet.Name, 1);
+            IPackageSearchMetadata result;
+            
+            if (intergogateNuGetFeed.Packages.Count != 0)
+            {
+                result = intergogateNuGetFeed.Packages[0];
+            }
+            else
+            {
+                return nuGet;
+            }
+
+            if (result.Title.Equals(nuGet.Name) || result.Identity.Id.Equals(nuGet.Name))
+            {
+                var allVersions = await result.GetVersionsAsync();
+                List<Version> versions = new List<Version>();
+
+                foreach (var item in allVersions)
+                {
+                    var packageVersion = item.Version.Version.ToString();
+                    if (!nuGet.Versions.Any(version => packageVersion.Equals(version.NuGetVersion)))
+                    {
+                        nuGet.Versions.Add(new Version
+                        {
+                            NuGetVersion = packageVersion,
+                            Files = new List<string>()
+                        });
+                    }
+                }
+            }
+            return nuGet;
         }
 
         private async Task<ProjectNuGet> ConvertPackageSearchMetadataToNuGetAsync(IPackageSearchMetadata packageSearchMetadata)
@@ -85,13 +121,13 @@ namespace UpdateNugets.Core
                             new Version
                             {
                                 Files = new List<string> { projectPath },
-                                NuGetVersion = projectNuget.Value
+                                NuGetVersion = projectNuget.Value.Trim()
                             }
                         }));
                     }
                     else
                     {
-                        var nugetVersion = nuget.Versions.FirstOrDefault(item => item.NuGetVersion == projectNuget.Value);
+                        var nugetVersion = nuget.Versions.FirstOrDefault(item => item.NuGetVersion.Equals(projectNuget.Value));
 
                         if (nugetVersion == null)
                         {

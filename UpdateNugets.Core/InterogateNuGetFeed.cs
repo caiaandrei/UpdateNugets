@@ -20,7 +20,7 @@ namespace UpdateNugets.Core
 
         public ObservableCollection<IPackageSearchMetadata> Packages { get; set; }
 
-        public async Task SearchAsync(string text)
+        public async Task SearchAsync(string text, int take)
         {
             Packages = new ObservableCollection<IPackageSearchMetadata>();
             var cancellationToken = new CancellationToken();
@@ -31,7 +31,7 @@ namespace UpdateNugets.Core
             var rawPackageSearchResouce = await _sourceRepository.GetResourceAsync<PackageSearchResource>(cancellationToken);
             var searchFilter = new SearchFilter(true);
 
-            var packages = await rawPackageSearchResouce.SearchAsync(text, searchFilter, 0, 20, NullLogger.Instance, cancellationToken);
+            var packages = await rawPackageSearchResouce.SearchAsync(text, searchFilter, 0, take, NullLogger.Instance, cancellationToken);
 
             Packages.AddRange(packages);
         }
