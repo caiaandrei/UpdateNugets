@@ -20,17 +20,6 @@ namespace UpdateNugets.UI.View
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            var browseCommand = new BrowsePathCommand();
-            var selectProjectPathViewModel = new SelectProjectPathViewModel(browseCommand);
-            var selectProjectPathView = new SelectProjectPathView(selectProjectPathViewModel);
-            selectProjectPathView.Owner = this;
-
-            selectProjectPathView.ShowDialog();
-
-            if (!string.IsNullOrEmpty(selectProjectPathViewModel.ProjectPath))
-            {
-                _mainViewModel.ProjectPath = selectProjectPathViewModel.ProjectPath;
-            }
-        }
+            _mainViewModel.ChangePathCommand.Execute(_mainViewModel);        }
     }
 }

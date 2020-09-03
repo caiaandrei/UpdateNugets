@@ -1,5 +1,4 @@
-﻿using NuGet.Packaging;
-using NuGet.Protocol.Core.Types;
+﻿using NuGet.Protocol.Core.Types;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
@@ -54,7 +53,7 @@ namespace UpdateNugets.Core
             var intergogateNuGetFeed = new InterogateNuGetFeed();
             await intergogateNuGetFeed.SearchAsync(nuGet.Name, 1);
             IPackageSearchMetadata result;
-            
+
             if (intergogateNuGetFeed.Packages.Count != 0)
             {
                 result = intergogateNuGetFeed.Packages[0];
@@ -93,7 +92,8 @@ namespace UpdateNugets.Core
 
             foreach (var item in allVersions)
             {
-                versions.Add(new Version{
+                versions.Add(new Version
+                {
                     NuGetVersion = item.Version.Version.ToString(),
                     Files = new List<string>()
                 });

@@ -1,4 +1,6 @@
 ﻿using Prism.Events;
+using System.ComponentModel.Design;
+using System.Windows.Input;
 using UpdateNugets.Core;
 using UpdateNugets.UI.Events;
 
@@ -12,12 +14,16 @@ namespace UpdateNugets.UI.ViewModel
         private SelectedNuGetDetailsViewModel _selectedNuGetDetailsViewModel;
         private readonly IEventAggregator _eventAggregator;
 
-        public MainViewModel(IEventAggregator eventAggregator)
+        public MainViewModel(IEventAggregator eventAggregator, ICommand changePathCommand)
         {
             _eventAggregator = eventAggregator;
             _eventAggregator.GetEvent<SelectedNuGetChangedEvent>().Subscribe(OnSelectedNuGetChangedEvent);
             _eventAggregator.GetEvent<SelectedVersionChanged>().Subscribe(OnSelectedVersionChangedEvent);
+
+            ChangePathCommand = changePathCommand;
         }
+
+        public ICommand ChangePathCommand { get; }
 
         public string ProjectPath
         {
