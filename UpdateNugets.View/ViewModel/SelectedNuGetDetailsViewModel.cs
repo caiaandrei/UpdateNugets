@@ -10,6 +10,7 @@ namespace UpdateNugets.UI.ViewModel
         private ProjectNuGet _nuGet;
         private ObservableCollection<Version> _version;
         private string _name;
+        private Version _selectedVersion;
 
         public SelectedNuGetDetailsViewModel(ProjectNuGet nuGet, IEventAggregator eventAggregator)
         {
@@ -30,8 +31,6 @@ namespace UpdateNugets.UI.ViewModel
             }
         }
 
-        private Version _selectedVersion;
-
         public Version SelectedVersion
         {
             get { return _selectedVersion; }
@@ -42,7 +41,6 @@ namespace UpdateNugets.UI.ViewModel
                 _eventAggregator.GetEvent<SelectedVersionChanged>().Publish(SelectedVersion);
             }
         }
-
 
         public string Name
         {

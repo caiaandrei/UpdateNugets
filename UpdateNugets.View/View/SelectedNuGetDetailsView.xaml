@@ -6,19 +6,39 @@
              xmlns:local="clr-namespace:UpdateNugets.UI.View"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
-    <DockPanel>
-        <TextBlock Text="{Binding Name}" 
-                   DockPanel.Dock="Top"
-                   Margin="5"/>
+    <Border BorderThickness="1"
+            BorderBrush="Gray">
+        <DockPanel LastChildFill="False">
+            <StackPanel DockPanel.Dock="Top"
+                        Orientation="Horizontal"
+                        Margin="5">
 
-        <ListBox ItemsSource="{Binding Versions}"
-                 SelectedItem="{Binding SelectedVersion}"
-                 Margin="5">
-            <ListBox.ItemTemplate>
-                <DataTemplate>
-                    <TextBlock Text="{Binding NuGetVersion}" />
-                </DataTemplate>
-            </ListBox.ItemTemplate>
-        </ListBox>
-    </DockPanel>
+                <TextBlock Text="NuGet Name:" 
+                           VerticalAlignment="Center"
+                           Margin="2"/>
+
+                <TextBlock Text="{Binding Name}" 
+                           Margin="2"/>
+            </StackPanel>
+            
+            <StackPanel Orientation="Horizontal"
+                        DockPanel.Dock="Top"
+                        HorizontalAlignment="Left"
+                        Margin="5">
+
+                <TextBlock Text="Versions:" 
+                           VerticalAlignment="Center"
+                           Margin="2"/>
+                <ComboBox ItemsSource="{Binding Versions}"
+                          SelectedItem="{Binding SelectedVersion}"
+                          Margin="2">
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding NuGetVersion}" />
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                </ComboBox>
+            </StackPanel>
+        </DockPanel>
+    </Border>
 </UserControl>

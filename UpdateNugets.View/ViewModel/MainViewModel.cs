@@ -12,6 +12,7 @@ namespace UpdateNugets.UI.ViewModel
         private NuGetsListViewModel _nuGetsListViewModel;
         private SelectedNuGetVersionFilesViewModel _selectedNuGetVersionFilesViewModel;
         private SelectedNuGetDetailsViewModel _selectedNuGetDetailsViewModel;
+        private bool _hasSelectedNuGet;
         private readonly IEventAggregator _eventAggregator;
 
         public MainViewModel(IEventAggregator eventAggregator, ICommand changePathCommand)
@@ -53,6 +54,16 @@ namespace UpdateNugets.UI.ViewModel
             }
         }
 
+        public bool HasSelectedNuGet
+        {
+            get { return _hasSelectedNuGet; }
+            set
+            {
+                _hasSelectedNuGet = value;
+                OnPropertyChanged(nameof(HasSelectedNuGet));
+            }
+        }
+
         public SelectedNuGetDetailsViewModel SelectedNuGetDetailsViewModel
         {
             get { return _selectedNuGetDetailsViewModel; }
@@ -77,6 +88,7 @@ namespace UpdateNugets.UI.ViewModel
         {
             nuGet = await ManageNuGets.SearchNuGetVersions(nuGet);
             SelectedNuGetDetailsViewModel = new SelectedNuGetDetailsViewModel(nuGet, _eventAggregator);
+            HasSelectedNuGet = true;
         }
 
         private void OnSelectedVersionChangedEvent(Version version)
