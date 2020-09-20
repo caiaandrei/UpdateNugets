@@ -39,6 +39,20 @@
                     </ComboBox.ItemTemplate>
                 </ComboBox>
             </StackPanel>
+
+            <StackPanel Orientation="Horizontal"
+                        DockPanel.Dock="Top"
+                        HorizontalAlignment="Left"
+                        Margin="5">
+
+                <TextBlock Text="Dependencies:" 
+                           VerticalAlignment="Center"
+                           Margin="2"/>
+
+                <ListBox ItemsSource="{Binding Dependencies}"
+                          Margin="2" />
+
+            </StackPanel>
         </DockPanel>
     </Border>
 </UserControl>
