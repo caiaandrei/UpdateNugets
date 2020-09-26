@@ -45,10 +45,10 @@ namespace UpdateNugets.Core
                 switch (versionType)
                 {
                     case VersionType.VersionAttribute:
-                        result.Add(name, versionAttribute);
+                        result.TryAdd(name, versionAttribute);
                         break;
                     case VersionType.VersionAsChild:
-                        result.Add(name, versionChild);
+                        result.TryAdd(name, versionChild);
                         break;
                     default:
                         //throw new Exception($"Something went wrong in {_filePath}");

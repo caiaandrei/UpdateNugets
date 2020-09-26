@@ -71,7 +71,9 @@ namespace UpdateNugets.Core
                 foreach (var item in allVersions)
                 {
                     var packageVersion = item.Version.Version.ToString();
-                    if (!nuGet.Versions.Any(version => packageVersion.Equals(version.NuGetVersion)))
+                    if (IsTheSameVersion(nuGet, packageVersion))
+
+
                     {
                         nuGet.Versions.Add(new Version
                         {
@@ -80,8 +82,19 @@ namespace UpdateNugets.Core
                         });
                     }
                 }
+
+                nuGet.Versions.OrderByDescending(item => item.NuGetVersion);
             }
             return nuGet;
+        }
+
+        private bool IsTheSameVersion(ProjectNuGet nuGet, string packageVersion)
+        {
+            return !nuGet.Versions.Any(version =>
+            {
+                return packageVersion.Equals(version.NuGetVersion)
+                       || (packageVersion.Contains(version.NuGetVersion) && packageVersion.LastOrDefault().Equals('0'));
+            });
         }
 
         private async Task<ProjectNuGet> ConvertPackageSearchMetadataToNuGetAsync(IPackageSearchMetadata packageSearchMetadata)

@@ -1,8 +1,4 @@
-﻿using System.IO;
-using System.Windows;
-using System.Windows.Controls;
-using UpdateNugets.Core;
-using UpdateNugets.UI.Command;
+﻿using System.Windows;
 using UpdateNugets.UI.ViewModel;
 
 namespace UpdateNugets.UI.View
@@ -20,6 +16,7 @@ namespace UpdateNugets.UI.View
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            _mainViewModel.ChangePathCommand.Execute(_mainViewModel);        }
+            _mainViewModel.ChangePathCommand.Execute(_mainViewModel);
+        }
     }
 }
