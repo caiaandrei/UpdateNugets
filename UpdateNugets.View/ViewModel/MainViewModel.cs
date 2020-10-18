@@ -17,16 +17,19 @@ namespace UpdateNugets.UI.ViewModel
         private bool _hasSelectedNuGet;
         private readonly IEventAggregator _eventAggregator;
 
-        public MainViewModel(IEventAggregator eventAggregator, ICommand changePathCommand)
+        public MainViewModel(IEventAggregator eventAggregator, ICommand changePathCommand, ICommand generateRaportCommand)
         {
             _eventAggregator = eventAggregator;
             _eventAggregator.GetEvent<SelectedNuGetChangedEvent>().Subscribe(OnSelectedNuGetChangedEvent);
             _eventAggregator.GetEvent<SelectedVersionChanged>().Subscribe(OnSelectedVersionChangedEvent);
 
             ChangePathCommand = changePathCommand;
+            GenerateRaportCommand = generateRaportCommand;
         }
 
         public ICommand ChangePathCommand { get; }
+
+        public ICommand GenerateRaportCommand { get; }
 
         public string ProjectPath
         {

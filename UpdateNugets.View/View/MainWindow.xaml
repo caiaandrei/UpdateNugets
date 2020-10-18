@@ -18,6 +18,7 @@
             <RowDefinition />
             <RowDefinition />
             <RowDefinition />
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
         <Grid.ColumnDefinitions>
@@ -58,5 +59,14 @@
               Visibility="{Binding HasSelectedNuGet, Converter={StaticResource BooleanToVisibilityConverter}, Mode=TwoWay}">
             <local:SelectedNuGetVersionFilesView DataContext="{Binding SelectedNuGetVersionFilesViewModel}"/>
         </Grid>
+
+        <Button Content="Generate Raport"
+                Grid.Column="1"
+                Grid.Row="5" 
+                VerticalAlignment="Center"
+                HorizontalAlignment="Right"
+                Margin="5 5 5 10"
+                Command="{Binding GenerateRaportCommand}"
+                CommandParameter="{Binding}"/>
     </Grid>
 </Window>

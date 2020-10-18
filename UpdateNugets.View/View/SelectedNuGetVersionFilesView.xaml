@@ -14,7 +14,8 @@
                    FontWeight="DemiBold">
         </TextBlock>
 
-        <ListBox ItemsSource="{Binding Files}">
+        <ListBox ItemsSource="{Binding Files}"
+                 Margin="0 0 0 5">
             
             <ListBox.CommandBindings>
                 <CommandBinding Command="ApplicationCommands.Copy"

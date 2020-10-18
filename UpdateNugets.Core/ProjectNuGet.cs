@@ -14,6 +14,7 @@ namespace UpdateNugets.Core
             Name = name;
             Versions = versions;
             CurrentVersion = Versions.FirstOrDefault(version => version.IsTheCurrentVersion);
+            InitialNuGetVersion = CurrentVersion.NuGetVersion;
         }
 
         public event EventHandler CurrentSelectedVersionChanged;
@@ -37,6 +38,8 @@ namespace UpdateNugets.Core
                 CurrentSelectedVersionChanged?.Invoke(this, EventArgs.Empty);
             }
         }
+
+        public string InitialNuGetVersion { get; }
 
         public override string ToString()
         {

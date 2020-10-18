@@ -19,10 +19,11 @@ namespace UpdateNugets.UI
     {
         public void ApplicationStart(object sender, StartupEventArgs args)
         {
-            IEventAggregator eventAggregator = new EventAggregator();
-            ICommand changePathCommand = new ChangePathCommand();
+            var eventAggregator = new EventAggregator();
+            var changePathCommand = new ChangePathCommand();
+            var generateRaportCommand = new GenerateRaportCommand();
 
-            var mainViewModel = new MainViewModel(eventAggregator, changePathCommand);
+            var mainViewModel = new MainViewModel(eventAggregator, changePathCommand, generateRaportCommand);
 
             var mainWindow = new MainWindow(mainViewModel);
 
