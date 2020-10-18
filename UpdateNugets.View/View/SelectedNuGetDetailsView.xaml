@@ -47,7 +47,11 @@
                           DockPanel.Dock="Top">
                     <ComboBox.ItemTemplate>
                         <DataTemplate>
-                            <TextBlock Text="{Binding NuGetVersion}" />
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="{Binding NuGetVersion}" />
+                                <TextBlock Text=" (used)" Visibility="{Binding IsTheCurrentVersion, Converter={StaticResource VisibleIfTrueConverter}}" />
+                            </StackPanel>
+                            
                         </DataTemplate>
                     </ComboBox.ItemTemplate>
                 </ComboBox>
@@ -58,7 +62,8 @@
                     HorizontalAlignment="Right"
                     DockPanel.Dock="Bottom"
                     Margin="0 5 10 10"
-                    Command="{Binding UpdateNuGetCommand}"/>
+                    Command="{Binding UpdateNuGetCommand}"
+                    CommandParameter="{Binding}"/>
 
             <DockPanel DockPanel.Dock="Top"
                         HorizontalAlignment="Stretch"

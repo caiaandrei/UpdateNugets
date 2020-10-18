@@ -2,10 +2,12 @@
 using Prism.Events;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows.Input;
 using UpdateNugets.Core;
 using UpdateNugets.UI.Events;
+using UpdateNugets.UI.ViewModel;
 
 namespace UpdateNugets.UI.Command
 {
@@ -32,6 +34,7 @@ namespace UpdateNugets.UI.Command
 
         public void Execute(object parameter)
         {
+            var viewModel = parameter as SelectedNuGetDetailsViewModel;
             _manageNuGets.UpdateNuGets(_nuGet.Name, _nuGet.CurrentSelectedVersion.NuGetVersion, _nuGet.CurrentVersion.Files);
 
             _nuGet.CurrentSelectedVersion.Files.AddRange(_nuGet.CurrentVersion.Files);
@@ -42,8 +45,11 @@ namespace UpdateNugets.UI.Command
 
             _nuGet.CurrentVersion = _nuGet.CurrentSelectedVersion;
 
+            viewModel.Versions = new ObservableCollection<Core.Version>(_nuGet.Versions);
+
             _eventAggregator.GetEvent<SelectedVersionChanged>().Publish(_nuGet.CurrentSelectedVersion);
             CanExecuteChanged?.Invoke(this, EventArgs.Empty);
+
         }
 
         private void CurrentSelectedVersionChanged(object sender, EventArgs e)

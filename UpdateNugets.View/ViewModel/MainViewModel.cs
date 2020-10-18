@@ -1,6 +1,5 @@
 ﻿using Prism.Events;
 using System.Collections.ObjectModel;
-using System.ComponentModel.Design;
 using System.Windows.Input;
 using UpdateNugets.Core;
 using UpdateNugets.UI.Command;
@@ -100,8 +99,15 @@ namespace UpdateNugets.UI.ViewModel
         private async void OnSelectedVersionChangedEvent(Version version)
         {
             SelectedNuGetVersionFilesViewModel = new SelectedNuGetVersionFilesViewModel(version);
-            var dependecies = await ManageNuGets.GetDependecies(NuGetsListViewModel.SelectedNuGet, version.NuGetVersion);
-            SelectedNuGetDetailsViewModel.Dependencies = new ObservableCollection<string>(dependecies);
+            try
+            {
+                var dependecies = await ManageNuGets.GetDependecies(NuGetsListViewModel.SelectedNuGet, version.NuGetVersion);
+                SelectedNuGetDetailsViewModel.Dependencies = new ObservableCollection<string>(dependecies);
+            }
+            catch
+            {
+
+            }
         }
 
     }
