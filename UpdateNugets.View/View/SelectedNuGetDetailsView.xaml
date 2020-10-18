@@ -8,7 +8,7 @@
              d:DesignHeight="450" d:DesignWidth="800">
     <Border BorderThickness="1"
             BorderBrush="Gray">
-        <DockPanel LastChildFill="False">
+        <DockPanel>
             <StackPanel DockPanel.Dock="Top"
                         Orientation="Horizontal"
                         Margin="5">
@@ -40,9 +40,17 @@
                 </ComboBox>
             </StackPanel>
 
+            <Button Content="Update NuGet" 
+                    VerticalAlignment="Bottom"
+                    HorizontalAlignment="Right"
+                    DockPanel.Dock="Bottom"
+                    Margin="10"
+                    Command="{Binding UpdateNuGetCommand}"/>
+
             <StackPanel Orientation="Horizontal"
                         DockPanel.Dock="Top"
                         HorizontalAlignment="Left"
+                        VerticalAlignment="Top"
                         Margin="5">
 
                 <TextBlock Text="Dependencies:" 

@@ -160,5 +160,14 @@ namespace UpdateNugets.Core
                 }
             }
         }
+
+        public void UpdateNuGets(string nugetName, string newNuGetVersion, IList<string> files)
+        {
+            foreach (var file in files)
+            {
+                var project = new Csproj(file);
+                project.UpdateANuget(nugetName, newNuGetVersion);
+            }
+        }
     }
 }

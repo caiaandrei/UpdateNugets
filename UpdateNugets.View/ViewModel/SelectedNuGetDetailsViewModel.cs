@@ -1,5 +1,7 @@
 ﻿using Prism.Events;
 using System.Collections.ObjectModel;
+using System.Linq;
+using System.Windows.Input;
 using UpdateNugets.Core;
 using UpdateNugets.UI.Events;
 
@@ -11,14 +13,16 @@ namespace UpdateNugets.UI.ViewModel
         private ObservableCollection<Version> _version;
         private string _name;
         private Version _selectedVersion;
+        private IEventAggregator _eventAggregator;
 
-        public SelectedNuGetDetailsViewModel(ProjectNuGet nuGet, IEventAggregator eventAggregator)
+        public SelectedNuGetDetailsViewModel(ProjectNuGet nuGet, IEventAggregator eventAggregator, ICommand updateNuGetCommand)
         {
             _eventAggregator = eventAggregator;
             _nuGet = nuGet;
             Versions = new ObservableCollection<Version>(_nuGet.Versions);
             Name = nuGet.Name;
-            SelectedVersion = Versions[0];
+            SelectedVersion = nuGet.CurrentVersion;
+            UpdateNuGetCommand = updateNuGetCommand;
         }
 
         public ObservableCollection<Version> Versions
@@ -37,10 +41,13 @@ namespace UpdateNugets.UI.ViewModel
             set
             {
                 _selectedVersion = value;
+                _nuGet.CurrentSelectedVersion = _selectedVersion;
                 OnPropertyChanged(nameof(SelectedVersion));
                 _eventAggregator.GetEvent<SelectedVersionChanged>().Publish(SelectedVersion);
             }
         }
+
+        public ICommand UpdateNuGetCommand { get; }
 
         public string Name
         {
@@ -51,7 +58,5 @@ namespace UpdateNugets.UI.ViewModel
                 OnPropertyChanged(nameof(Name));
             }
         }
-
-        private IEventAggregator _eventAggregator;
     }
 }

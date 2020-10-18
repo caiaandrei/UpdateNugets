@@ -2,6 +2,7 @@
 using System.ComponentModel.Design;
 using System.Windows.Input;
 using UpdateNugets.Core;
+using UpdateNugets.UI.Command;
 using UpdateNugets.UI.Events;
 
 namespace UpdateNugets.UI.ViewModel
@@ -87,7 +88,8 @@ namespace UpdateNugets.UI.ViewModel
         private async void OnSelectedNuGetChangedEvent(ProjectNuGet nuGet)
         {
             nuGet = await ManageNuGets.SearchNuGetVersions(nuGet);
-            SelectedNuGetDetailsViewModel = new SelectedNuGetDetailsViewModel(nuGet, _eventAggregator);
+            var updateNuGetCommand = new UpdateNuGetCommand(nuGet, ManageNuGets, _eventAggregator);
+            SelectedNuGetDetailsViewModel = new SelectedNuGetDetailsViewModel(nuGet, _eventAggregator, updateNuGetCommand);
             HasSelectedNuGet = true;
         }
 
