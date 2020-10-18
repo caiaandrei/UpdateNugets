@@ -4,6 +4,7 @@ using NuGet.Packaging;
 using NuGet.Protocol.Core.Types;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -11,7 +12,7 @@ namespace UpdateNugets.Core
 {
     public class InterogateNuGetFeed
     {
-        private string source = "https://api.nuget.org/v3/index.json";
+        private string source = "https://pkgs.dev.azure.com/sdl/_packaging/SDLNuget/nuget/v3/index.json";
 
         public InterogateNuGetFeed()
         {
@@ -20,7 +21,7 @@ namespace UpdateNugets.Core
 
         public ObservableCollection<IPackageSearchMetadata> Packages { get; set; }
 
-        public async Task SearchAsync(string text, int take)
+        public async Task<IList<IPackageSearchMetadata>> SearchAsync(string text, int take)
         {
             Packages = new ObservableCollection<IPackageSearchMetadata>();
             var cancellationToken = new CancellationToken();
@@ -34,6 +35,7 @@ namespace UpdateNugets.Core
             var packages = await rawPackageSearchResouce.SearchAsync(text, searchFilter, 0, take, NullLogger.Instance, cancellationToken);
 
             Packages.AddRange(packages);
+            return packages.ToList();
         }
     }
 }

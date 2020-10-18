@@ -51,40 +51,47 @@ namespace UpdateNugets.Core
         public async Task<ProjectNuGet> SearchNuGetVersions(ProjectNuGet nuGet)
         {
             var intergogateNuGetFeed = new InterogateNuGetFeed();
-            await intergogateNuGetFeed.SearchAsync(nuGet.Name, 1);
-            IPackageSearchMetadata result;
+            var foundPackages = await intergogateNuGetFeed.SearchAsync(nuGet.Name, 20);
 
-            if (intergogateNuGetFeed.Packages.Count != 0)
-            {
-                result = intergogateNuGetFeed.Packages[0];
-            }
-            else
+            if (foundPackages.Count == 0)
             {
                 return nuGet;
             }
 
-            if (result.Title.Equals(nuGet.Name) || result.Identity.Id.Equals(nuGet.Name))
+            foreach (var package in foundPackages)
             {
-                var allVersions = await result.GetVersionsAsync();
-                List<Version> versions = new List<Version>();
-
-                foreach (var item in allVersions)
+                if (package.Title.Equals(nuGet.Name) || package.Identity.Id.Equals(nuGet.Name))
                 {
-                    var packageVersion = item.Version.Version.ToString();
-                    if (IsTheSameVersion(nuGet, packageVersion))
+                    var allVersions = await package.GetVersionsAsync();
+                    List<Version> versions = new List<Version>();
 
-
+                    foreach (var item in allVersions)
                     {
-                        nuGet.Versions.Add(new Version
+                        var packageVersion = item.Version.Version.ToString();
+                        if (IsTheSameVersion(nuGet, packageVersion))
                         {
-                            NuGetVersion = packageVersion,
-                            Files = new List<string>()
-                        });
+                            nuGet.Versions.Add(new Version
+                            {
+                                NuGetVersion = packageVersion,
+                                Files = new List<string>()
+                            });
+                        }
                     }
+                    break;
                 }
-
-                nuGet.Versions.OrderByDescending(item => item.NuGetVersion);
             }
+
+            nuGet.Versions.Select(item =>
+            {
+                if (item.NuGetVersion.Last() == '0')
+                {
+                    item.NuGetVersion = item.NuGetVersion.Remove(item.NuGetVersion.Length - 2);
+                }
+                return item;
+            }).ToList();
+
+            nuGet.Versions.OrderByDescending(item => item.NuGetVersion);
+
             return nuGet;
         }
 
