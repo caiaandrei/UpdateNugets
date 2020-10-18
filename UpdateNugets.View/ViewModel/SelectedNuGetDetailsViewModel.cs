@@ -14,6 +14,7 @@ namespace UpdateNugets.UI.ViewModel
         private string _name;
         private Version _selectedVersion;
         private IEventAggregator _eventAggregator;
+        private ObservableCollection<string> _dependencies = new ObservableCollection<string>();
 
         public SelectedNuGetDetailsViewModel(ProjectNuGet nuGet, IEventAggregator eventAggregator, ICommand updateNuGetCommand)
         {
@@ -34,6 +35,19 @@ namespace UpdateNugets.UI.ViewModel
                 OnPropertyChanged(nameof(Versions));
             }
         }
+
+        public ObservableCollection<string> Dependencies
+        {
+            get => _dependencies;
+            set
+            {
+                _dependencies = value;
+                OnPropertyChanged(nameof(Dependencies));
+                OnPropertyChanged(nameof(HasDependencies));
+            }
+        }
+
+        public bool HasDependencies => Dependencies.Count != 0;
 
         public Version SelectedVersion
         {

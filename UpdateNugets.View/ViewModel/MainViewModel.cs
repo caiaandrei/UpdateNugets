@@ -1,4 +1,5 @@
 ﻿using Prism.Events;
+using System.Collections.ObjectModel;
 using System.ComponentModel.Design;
 using System.Windows.Input;
 using UpdateNugets.Core;
@@ -93,9 +94,11 @@ namespace UpdateNugets.UI.ViewModel
             HasSelectedNuGet = true;
         }
 
-        private void OnSelectedVersionChangedEvent(Version version)
+        private async void OnSelectedVersionChangedEvent(Version version)
         {
             SelectedNuGetVersionFilesViewModel = new SelectedNuGetVersionFilesViewModel(version);
+            var dependecies = await ManageNuGets.GetDependecies(NuGetsListViewModel.SelectedNuGet, version.NuGetVersion);
+            SelectedNuGetDetailsViewModel.Dependencies = new ObservableCollection<string>(dependecies);
         }
 
     }

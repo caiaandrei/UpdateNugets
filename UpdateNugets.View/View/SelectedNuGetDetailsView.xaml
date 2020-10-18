@@ -6,61 +6,99 @@
              xmlns:local="clr-namespace:UpdateNugets.UI.View"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+        <BooleanToVisibilityConverter x:Key="VisibleIfTrueConverter" />
+    </UserControl.Resources>
+    
     <Border BorderThickness="1"
             BorderBrush="Gray">
         <DockPanel>
-            <StackPanel DockPanel.Dock="Top"
-                        Orientation="Horizontal"
-                        Margin="5">
+            <DockPanel DockPanel.Dock="Top" 
+                       Margin="5"
+                       LastChildFill="False">
 
-                <TextBlock Text="NuGet Name:" 
+                <TextBlock Text="Name"
+                           FontWeight="DemiBold"
                            VerticalAlignment="Center"
-                           Margin="2"/>
+                           Margin="2"
+                           DockPanel.Dock="Top"/>
 
-                <TextBlock Text="{Binding Name}" 
-                           Margin="2"/>
-            </StackPanel>
+                <TextBox Text="{Binding Name, Mode=OneWay}"
+                         IsReadOnly="True"
+                         BorderThickness="0"
+                         Margin="2"
+                         DockPanel.Dock="Top"/>
+            </DockPanel>
             
-            <StackPanel Orientation="Horizontal"
+            <DockPanel LastChildFill="False"
                         DockPanel.Dock="Top"
                         HorizontalAlignment="Left"
                         Margin="5">
 
-                <TextBlock Text="Versions:" 
+                <TextBlock Text="Versions"
+                           FontWeight="DemiBold"
                            VerticalAlignment="Center"
-                           Margin="2"/>
+                           Margin="2"
+                           DockPanel.Dock="Top"/>
+                
                 <ComboBox ItemsSource="{Binding Versions}"
                           SelectedItem="{Binding SelectedVersion}"
-                          Margin="2">
+                          Margin="2"
+                          DockPanel.Dock="Top">
                     <ComboBox.ItemTemplate>
                         <DataTemplate>
                             <TextBlock Text="{Binding NuGetVersion}" />
                         </DataTemplate>
                     </ComboBox.ItemTemplate>
                 </ComboBox>
-            </StackPanel>
+            </DockPanel>
 
             <Button Content="Update NuGet" 
                     VerticalAlignment="Bottom"
                     HorizontalAlignment="Right"
                     DockPanel.Dock="Bottom"
-                    Margin="10"
+                    Margin="0 5 10 10"
                     Command="{Binding UpdateNuGetCommand}"/>
 
-            <StackPanel Orientation="Horizontal"
-                        DockPanel.Dock="Top"
-                        HorizontalAlignment="Left"
+            <DockPanel DockPanel.Dock="Top"
+                        HorizontalAlignment="Stretch"
                         VerticalAlignment="Top"
                         Margin="5">
 
-                <TextBlock Text="Dependencies:" 
+                <TextBlock Text="Dependencies" 
                            VerticalAlignment="Center"
-                           Margin="2"/>
+                           Margin="2"
+                           DockPanel.Dock="Top"
+                           FontWeight="DemiBold"/>
 
                 <ListBox ItemsSource="{Binding Dependencies}"
-                          Margin="2" />
+                         Margin="2" 
+                         Visibility="{Binding HasDependencies, Converter={StaticResource VisibleIfTrueConverter}}">
+                    <ListBox.CommandBindings>
+                        <CommandBinding Command="ApplicationCommands.Copy"
+                                CanExecute="CtrlCCopyCmdCanExecute" 
+                                Executed="CtrlCCopyCmdExecuted"/>
+                    </ListBox.CommandBindings>
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding}">
+                                <TextBlock.ContextMenu>
+                                    <ContextMenu>
+                                        <MenuItem Command="Copy">
+                                            <MenuItem.CommandBindings>
+                                                <CommandBinding Command="ApplicationCommands.Copy" 
+                                                        CanExecute="RightClickCopyCmdCanExecute"
+                                                        Executed="RightClickCopyCmdExecuted" />
+                                            </MenuItem.CommandBindings>
+                                        </MenuItem>
+                                    </ContextMenu>
+                                </TextBlock.ContextMenu>
+                            </TextBlock>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
 
-            </StackPanel>
+            </DockPanel>
         </DockPanel>
     </Border>
 </UserControl>

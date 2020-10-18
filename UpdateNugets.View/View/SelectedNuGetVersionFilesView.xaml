@@ -8,14 +8,11 @@
              d:DesignHeight="450" d:DesignWidth="800">
     <DockPanel>
 
-        <StackPanel Orientation="Horizontal"
-                    DockPanel.Dock="Top"
-                    Margin="3">
-            <TextBlock Text="In used:"
-                       Margin="3"/>
-            <TextBlock Text="{Binding NumberOfFilesInUsed}" 
-                       Margin="3"/>
-        </StackPanel>
+        <TextBlock DockPanel.Dock="Top"
+                   Margin="5"
+                   Text="{Binding NumberOfFilesInUsed, StringFormat=In used (0)}"
+                   FontWeight="DemiBold">
+        </TextBlock>
 
         <ListBox ItemsSource="{Binding Files}">
             

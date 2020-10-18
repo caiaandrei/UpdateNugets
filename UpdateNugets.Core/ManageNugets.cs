@@ -104,6 +104,12 @@ namespace UpdateNugets.Core
             });
         }
 
+        public async Task<IList<string>> GetDependecies(ProjectNuGet selectedNuGet, string nuGetVersion)
+        {
+            var interogateNuGetFeed = new InterogateNuGetFeed();
+            return await interogateNuGetFeed.GetDependecies(selectedNuGet.Name, nuGetVersion);
+        }
+
         private async Task<ProjectNuGet> ConvertPackageSearchMetadataToNuGetAsync(IPackageSearchMetadata packageSearchMetadata)
         {
             var packageName = packageSearchMetadata.Title;
