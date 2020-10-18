@@ -31,6 +31,14 @@
             <TextBox Text="{Binding Path=SearchBoxText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                      Margin="2"/>
         </DockPanel>
+        <StackPanel Orientation="Horizontal"
+                    DockPanel.Dock="Top"
+                    Margin="3">
+            <TextBlock Text="In used:"
+                       Margin="3"/>
+            <TextBlock Text="{Binding NumberOfNugetsInUsed}" 
+                       Margin="3"/>
+        </StackPanel>
         <ListBox ItemsSource="{Binding Path=NuGets}"
                  SelectedItem="{Binding SelectedNuGet, Mode=TwoWay}"
                  Margin="2">

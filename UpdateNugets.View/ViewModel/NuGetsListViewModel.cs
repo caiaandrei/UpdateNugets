@@ -36,6 +36,8 @@ namespace UpdateNugets.UI.ViewModel
             }
         }
 
+        public int NumberOfNugetsInUsed => NuGets.Count;
+
         public ProjectNuGet SelectedNuGet
         {
             get { return _selectedNuGet; }

@@ -5,8 +5,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="NuGet.Commands" Version="5.8.0-preview.2.6776" />
-    <PackageReference Include="NuGet.PackageManagement" Version="5.7.0" />
+    <PackageReference Include="NuGet.Commands" Version="5.8.0-preview.3.6823" />
+    <PackageReference Include="NuGet.PackageManagement" Version="5.8.0-preview.3.6823" />
   </ItemGroup>
 
 </Project>

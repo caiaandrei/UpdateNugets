@@ -24,5 +24,8 @@ namespace UpdateNugets.UI.ViewModel
             }
         }
 
+        public int NumberOfFilesInUsed => Files.Count;
+
+
     }
 }
