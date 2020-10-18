@@ -79,7 +79,7 @@ namespace UpdateNugets.UI.ViewModel
 
         public async Task SearchAsync()
         {
-            NuGets = await _manageNuGets.SearchAsync(SearchBoxText, SearchOnline);
+            NuGets = await _manageNuGets.SearchAsync(SearchBoxText.Trim(), SearchOnline);
         }
     }
 }

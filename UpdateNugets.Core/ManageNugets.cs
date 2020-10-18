@@ -38,7 +38,7 @@ namespace UpdateNugets.Core
             {
                 foreach (var item in NuGets)
                 {
-                    if (item.Name.ToLower().Contains(name))
+                    if (item.Name.ToLower().Contains(name.ToLower()))
                     {
                         result.Add(item);
                     }

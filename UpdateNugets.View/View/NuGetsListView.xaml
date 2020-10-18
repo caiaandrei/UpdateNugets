@@ -29,7 +29,14 @@
                       VerticalContentAlignment="Center"/>
 
             <TextBox Text="{Binding Path=SearchBoxText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                     Margin="2"/>
+                     Margin="2"
+                     AcceptsReturn="False">
+                <TextBox.InputBindings>
+                    <KeyBinding Key="Enter" 
+                                Command="{Binding SearchCommand}"
+                                CommandParameter="{Binding}"/>
+                </TextBox.InputBindings>
+            </TextBox>
         </DockPanel>
         <StackPanel Orientation="Horizontal"
                     DockPanel.Dock="Top"
@@ -42,9 +49,26 @@
         <ListBox ItemsSource="{Binding Path=NuGets}"
                  SelectedItem="{Binding SelectedNuGet, Mode=TwoWay}"
                  Margin="2">
+            <ListBox.CommandBindings>
+                <CommandBinding Command="ApplicationCommands.Copy"
+                                CanExecute="CtrlCCopyCmdCanExecute" 
+                                Executed="CtrlCCopyCmdExecuted"/>
+            </ListBox.CommandBindings>
             <ListBox.ItemTemplate>
                 <DataTemplate>
-                    <TextBlock Text="{Binding Name}" />
+                    <TextBlock Text="{Binding Name}">
+                        <TextBlock.ContextMenu>
+                            <ContextMenu>
+                                <MenuItem Command="Copy">
+                                    <MenuItem.CommandBindings>
+                                        <CommandBinding Command="ApplicationCommands.Copy" 
+                                                        CanExecute="RightClickCopyCmdCanExecute"
+                                                        Executed="RightClickCopyCmdExecuted" />
+                                    </MenuItem.CommandBindings>
+                                </MenuItem>
+                            </ContextMenu>
+                        </TextBlock.ContextMenu>
+                    </TextBlock>
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>

@@ -18,9 +18,28 @@
         </StackPanel>
 
         <ListBox ItemsSource="{Binding Files}">
+            
+            <ListBox.CommandBindings>
+                <CommandBinding Command="ApplicationCommands.Copy"
+                                CanExecute="CtrlCCopyCmdCanExecute" 
+                                Executed="CtrlCCopyCmdExecuted"/>
+            </ListBox.CommandBindings>
+            
             <ListBox.ItemTemplate>
                 <DataTemplate>
-                    <TextBlock Text="{Binding}" />
+                    <TextBlock Text="{Binding}">
+                        <TextBlock.ContextMenu>
+                            <ContextMenu>
+                                <MenuItem Command="Copy">
+                                    <MenuItem.CommandBindings>
+                                        <CommandBinding Command="ApplicationCommands.Copy" 
+                                                        CanExecute="RightClickCopyCmdCanExecute"
+                                                        Executed="RightClickCopyCmdExecuted" />
+                                    </MenuItem.CommandBindings>
+                                </MenuItem>
+                            </ContextMenu>
+                        </TextBlock.ContextMenu>
+                    </TextBlock>
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>

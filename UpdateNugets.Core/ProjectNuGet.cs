@@ -37,5 +37,10 @@ namespace UpdateNugets.Core
                 CurrentSelectedVersionChanged?.Invoke(this, EventArgs.Empty);
             }
         }
+
+        public override string ToString()
+        {
+            return Name;
+        }
     }
 }
