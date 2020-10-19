@@ -83,10 +83,13 @@ namespace UpdateNugets.Core
 
             nuGet.Versions.Select(item =>
             {
-                if (item.NuGetVersion[item.NuGetVersion.Length - 1] == '0' && item.NuGetVersion[item.NuGetVersion.Length - 2] == '.')
+                var splitedVersion = item.NuGetVersion.Split('.');
+
+                if (splitedVersion.Length == 4 && splitedVersion[splitedVersion.Length - 1] == "0")
                 {
                     item.NuGetVersion = item.NuGetVersion.Remove(item.NuGetVersion.Length - 2);
                 }
+
                 return item;
             }).ToList();
 
