@@ -30,13 +30,12 @@ namespace UpdateNugets.UI.Command
                 dialog.AddExtension = true;
                 dialog.ShowDialog();
                 filePath = dialog.FileName;
+                GenerateReport(filePath, namesAndInitialVersions, namesAndCurrentVersions);
             }
             catch (System.Exception)
             {
                 return;
             }
-
-            GenerateReport(filePath, namesAndInitialVersions, namesAndCurrentVersions);
         }
 
         private void GenerateReport(string filePath, IList<string> nameAndInitialVersions, List<string> nameAndCurrentVersions)
