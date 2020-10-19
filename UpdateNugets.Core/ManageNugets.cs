@@ -81,14 +81,14 @@ namespace UpdateNugets.Core
                 }
             }
 
-            //nuGet.Versions.Select(item =>
-            //{
-            //    if (item.NuGetVersion.LastIndexOf('0') == )
-            //    {
-            //        item.NuGetVersion = item.NuGetVersion.Remove(item.NuGetVersion.Length - 2);
-            //    }
-            //    return item;
-            //}).ToList();
+            nuGet.Versions.Select(item =>
+            {
+                if (item.NuGetVersion[item.NuGetVersion.Length - 1] == '0' && item.NuGetVersion[item.NuGetVersion.Length - 2] == '.')
+                {
+                    item.NuGetVersion = item.NuGetVersion.Remove(item.NuGetVersion.Length - 2);
+                }
+                return item;
+            }).ToList();
 
             nuGet.Versions.OrderByDescending(item => item.NuGetVersion);
 
