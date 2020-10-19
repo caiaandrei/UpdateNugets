@@ -27,7 +27,7 @@
         </Grid.ColumnDefinitions>
 
         <DockPanel Margin="5" Grid.ColumnSpan="2">
-            <Button Content="Chnage The Path" 
+            <Button Content="Change Path" 
                     DockPanel.Dock="Right"
                     Margin="2" 
                     Command="{Binding ChangePathCommand}"
