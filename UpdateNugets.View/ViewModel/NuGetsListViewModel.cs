@@ -12,7 +12,7 @@ namespace UpdateNugets.UI.ViewModel
     {
         private ProjectNuGet _selectedNuGet;
         private ObservableCollection<ProjectNuGet> _nuGets;
-        private string _searchBoxText;
+        private string _searchBoxText = string.Empty;
         private bool _searchOnline;
         private IEventAggregator _eventAggregator;
         private ManageNugets _manageNuGets;
