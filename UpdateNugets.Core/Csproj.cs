@@ -86,7 +86,8 @@ namespace UpdateNugets.Core
                         versionChild.InnerText = newNuGetVersion;
                         break;
                     default:
-                        throw new Exception($"Something went wrong in {_filePath}");
+                        break;
+                        //throw new Exception($"Something went wrong in {_filePath}");
                 }
 
                 break;
