@@ -10,7 +10,7 @@
 
         <TextBlock DockPanel.Dock="Top"
                    Margin="5"
-                   Text="{Binding NumberOfFilesInUsed, StringFormat=In used (0)}"
+                   Text="{Binding NumberOfFilesInUsed, StringFormat=Present in projects (0)}"
                    FontWeight="DemiBold">
         </TextBlock>
 
