@@ -32,7 +32,7 @@ namespace UpdateNugets.Core
             var sourceRepository = new SourceRepository(packageSource, Repository.Provider.GetCoreV3());
 
             var rawPackageSearchResouce = await sourceRepository.GetResourceAsync<PackageSearchResource>(cancellationToken);
-            var searchFilter = new SearchFilter(true);
+            var searchFilter = new SearchFilter(false);
 
             var packages = await rawPackageSearchResouce.SearchAsync(text, searchFilter, 0, take, NullLogger.Instance, cancellationToken);
 
@@ -64,7 +64,7 @@ namespace UpdateNugets.Core
             using PackageArchiveReader packageReader = new PackageArchiveReader(packageStream);
             NuspecReader nuspecReader = await packageReader.GetNuspecReaderAsync(cancellationToken);
             var packages = nuspecReader.GetDependencyGroups().SelectMany(item => item.Packages);
-            return packages.Select(item => item.Id).ToList();
+            return packages.Select(item => item.ToString()).ToList();
         }
     }
 }
