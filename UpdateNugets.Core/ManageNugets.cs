@@ -81,21 +81,24 @@ namespace UpdateNugets.Core
                 }
             }
 
-            nuGet.Versions.Select(item =>
-            {
-                var splitedVersion = item.NuGetVersion.Split('.');
-
-                if (splitedVersion.Length == 4 && splitedVersion[splitedVersion.Length - 1] == "0")
-                {
-                    item.NuGetVersion = item.NuGetVersion.Remove(item.NuGetVersion.Length - 2);
-                }
-
-                return item;
-            }).ToList();
-
-            nuGet.Versions.OrderByDescending(item => item.NuGetVersion);
+            OrderNuGetVersions(nuGet);
 
             return nuGet;
+        }
+
+        public async Task<IList<string>> GetDependecies(ProjectNuGet selectedNuGet, string nuGetVersion)
+        {
+            var interogateNuGetFeed = new InterogateNuGetFeed();
+            return await interogateNuGetFeed.GetDependecies(selectedNuGet.Name, nuGetVersion);
+        }
+
+        public void UpdateNuGets(string nugetName, string newNuGetVersion, IList<string> files)
+        {
+            foreach (var file in files)
+            {
+                var project = new Csproj(file);
+                project.UpdateANuget(nugetName, newNuGetVersion);
+            }
         }
 
         private bool IsTheSameVersion(ProjectNuGet nuGet, string packageVersion)
@@ -105,12 +108,6 @@ namespace UpdateNugets.Core
                 return packageVersion.Equals(version.NuGetVersion)
                        || (packageVersion.Contains(version.NuGetVersion) && packageVersion.LastOrDefault().Equals('0'));
             });
-        }
-
-        public async Task<IList<string>> GetDependecies(ProjectNuGet selectedNuGet, string nuGetVersion)
-        {
-            var interogateNuGetFeed = new InterogateNuGetFeed();
-            return await interogateNuGetFeed.GetDependecies(selectedNuGet.Name, nuGetVersion);
         }
 
         private async Task<ProjectNuGet> ConvertPackageSearchMetadataToNuGetAsync(IPackageSearchMetadata packageSearchMetadata)
@@ -177,13 +174,21 @@ namespace UpdateNugets.Core
             }
         }
 
-        public void UpdateNuGets(string nugetName, string newNuGetVersion, IList<string> files)
+        private static void OrderNuGetVersions(ProjectNuGet nuGet)
         {
-            foreach (var file in files)
+            nuGet.Versions.Select(item =>
             {
-                var project = new Csproj(file);
-                project.UpdateANuget(nugetName, newNuGetVersion);
-            }
+                var splitedVersion = item.NuGetVersion.Split('.');
+
+                if (splitedVersion.Length == 4 && splitedVersion[splitedVersion.Length - 1] == "0")
+                {
+                    item.NuGetVersion = item.NuGetVersion.Remove(item.NuGetVersion.Length - 2);
+                }
+
+                return item;
+            }).ToList();
+
+            nuGet.Versions.ToList().Sort(new OrderingVersions());
         }
     }
 }
