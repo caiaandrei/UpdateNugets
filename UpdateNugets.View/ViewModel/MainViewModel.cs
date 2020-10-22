@@ -96,12 +96,17 @@ namespace UpdateNugets.UI.ViewModel
             HasSelectedNuGet = true;
         }
 
-        private async void OnSelectedVersionChangedEvent(Version version)
+        private async void OnSelectedVersionChangedEvent()
         {
-            SelectedNuGetVersionFilesViewModel = new SelectedNuGetVersionFilesViewModel(version);
+            if (NuGetsListViewModel.SelectedNuGet is null)
+            {
+                return;
+            }
+
+            SelectedNuGetVersionFilesViewModel = new SelectedNuGetVersionFilesViewModel(NuGetsListViewModel.SelectedNuGet.CurrentSelectedVersion);
             try
             {
-                var dependecies = await ManageNuGets.GetDependecies(NuGetsListViewModel.SelectedNuGet, version.NuGetVersion);
+                var dependecies = await ManageNuGets.GetDependecies(NuGetsListViewModel.SelectedNuGet, NuGetsListViewModel.SelectedNuGet.CurrentSelectedVersion.NuGetVersion);
                 SelectedNuGetDetailsViewModel.Dependencies = new ObservableCollection<string>(dependecies);
             }
             catch

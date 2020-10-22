@@ -57,7 +57,7 @@ namespace UpdateNugets.UI.ViewModel
                 _selectedVersion = value;
                 _nuGet.CurrentSelectedVersion = _selectedVersion;
                 OnPropertyChanged(nameof(SelectedVersion));
-                _eventAggregator.GetEvent<SelectedVersionChanged>().Publish(SelectedVersion);
+                _eventAggregator.GetEvent<SelectedVersionChanged>().Publish();
             }
         }
 

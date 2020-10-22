@@ -1,5 +1,6 @@
 ﻿using Prism.Events;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using UpdateNugets.Core;
@@ -20,10 +21,10 @@ namespace UpdateNugets.UI.ViewModel
         public NuGetsListViewModel(ManageNugets manageNuGets, IEventAggregator eventAggregator)
         {
             _manageNuGets = manageNuGets;
-            NuGets = manageNuGets.NuGets;
             _eventAggregator = eventAggregator;
             SearchCommand = new SearchCommand();
             ClearCommand = new ClearCommand();
+            NuGets = manageNuGets.NuGets;
         }
 
         public ObservableCollection<ProjectNuGet> NuGets
@@ -32,7 +33,18 @@ namespace UpdateNugets.UI.ViewModel
             set
             {
                 _nuGets = value;
+
+                if (!_nuGets.Any())
+                {
+                    SelectedNuGet = null;
+                }
+                else
+                {
+                    SelectedNuGet = _nuGets[0];
+                }
+
                 OnPropertyChanged(nameof(NuGets));
+                OnPropertyChanged(nameof(NumberOfNugetsInUsed));
             }
         }
 
@@ -58,6 +70,7 @@ namespace UpdateNugets.UI.ViewModel
             set
             {
                 _searchBoxText = value;
+                SearchCommand?.Execute(this);
                 OnPropertyChanged(nameof(SearchBoxText));
             }
         }
@@ -71,7 +84,6 @@ namespace UpdateNugets.UI.ViewModel
                 OnPropertyChanged(nameof(SearchOnline));
             }
         }
-
 
         public ICommand SearchCommand { get; }
 

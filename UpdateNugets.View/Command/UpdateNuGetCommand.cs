@@ -47,7 +47,7 @@ namespace UpdateNugets.UI.Command
 
             viewModel.Versions = new ObservableCollection<Core.Version>(_nuGet.Versions);
 
-            _eventAggregator.GetEvent<SelectedVersionChanged>().Publish(_nuGet.CurrentSelectedVersion);
+            _eventAggregator.GetEvent<SelectedVersionChanged>().Publish();
             CanExecuteChanged?.Invoke(this, EventArgs.Empty);
 
         }
