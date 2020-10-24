@@ -7,7 +7,12 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <UserControl.Resources>
-        <BooleanToVisibilityConverter x:Key="VisibleIfTrueConverter" />
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/Resources/UpdateNugetsIcons.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+            <BooleanToVisibilityConverter x:Key="VisibleIfTrueConverter" />
+        </ResourceDictionary>
     </UserControl.Resources>
     <GroupBox>
         <GroupBox.Header>
@@ -53,8 +58,29 @@
                     <ComboBox.ItemTemplate>
                         <DataTemplate>
                             <StackPanel Orientation="Horizontal">
-                                <TextBlock Text="{Binding NuGetVersion}" />
-                                <TextBlock Text=" (used)" Visibility="{Binding IsTheCurrentVersion, Converter={StaticResource VisibleIfTrueConverter}}" />
+                                <TextBlock Text="{Binding NuGetVersion}"
+                                           VerticalAlignment="Center"/>
+
+                                <Image Source="{StaticResource CheckIcon}" 
+                                       Width="16"
+                                       Height="16"
+                                       Margin="2"
+                                       Visibility="{Binding IsTheCurrentVersion, Converter={StaticResource VisibleIfTrueConverter}}" />
+
+
+                                <Image Source="{StaticResource WarningIcon}" 
+                                       Width="16"
+                                       Height="16"
+                                       Margin="2" />
+
+
+                                <Image Source="{StaticResource ArrowUpIcon}" 
+                                       Width="16"
+                                       Height="16"
+                                       Margin="2" />
+
+
+
                             </StackPanel>
 
                         </DataTemplate>

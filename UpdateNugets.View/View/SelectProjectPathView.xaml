@@ -13,7 +13,25 @@
         WindowStartupLocation="CenterOwner"
         Style="{DynamicResource MahApps.Styles.MetroWindow.Clean}"
         GlowBrush="{DynamicResource MahApps.Brushes.Accent}"
-        >
+                       Icon="{DynamicResource AppIcon}"
+    >
+
+    <Controls:MetroWindow.IconTemplate>
+        <DataTemplate>
+                <Image Source="{DynamicResource AppIcon}" 
+                                       Width="16"
+                                       Height="16" />
+            </DataTemplate>
+    </Controls:MetroWindow.IconTemplate>
+
+    <Controls:MetroWindow.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/Resources/UpdateNugetsIcons.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Controls:MetroWindow.Resources>
+    
     <GroupBox>
         <GroupBox.Header>
             <TextBlock Text="Enter the project path"

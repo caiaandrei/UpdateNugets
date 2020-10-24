@@ -13,11 +13,20 @@
                       x:Name="ThisView"
                       Style="{DynamicResource MahApps.Styles.MetroWindow.Clean}"
                       GlowBrush="{DynamicResource MahApps.Brushes.Accent}"
+                      Icon="{DynamicResource AppIcon}"
                       >
+    <Controls:MetroWindow.IconTemplate>
+        <DataTemplate>
+            <Image Source="{DynamicResource AppIcon}" 
+                                       Width="16"
+                                       Height="16" />
+        </DataTemplate>
+    </Controls:MetroWindow.IconTemplate>
+    
     <Window.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                
+                <ResourceDictionary Source="pack://application:,,,/Resources/UpdateNugetsIcons.xaml" />
             </ResourceDictionary.MergedDictionaries>
              
             <helpers:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
