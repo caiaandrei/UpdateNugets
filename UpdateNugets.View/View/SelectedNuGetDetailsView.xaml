@@ -9,9 +9,14 @@
     <UserControl.Resources>
         <BooleanToVisibilityConverter x:Key="VisibleIfTrueConverter" />
     </UserControl.Resources>
-    
-    <Border BorderThickness="1"
-            BorderBrush="Gray">
+    <GroupBox>
+        <GroupBox.Header>
+            <TextBlock Padding="5"
+                   Text="NuGet Details"
+                   FontWeight="DemiBold"
+                   FontSize="15">
+            </TextBlock>
+        </GroupBox.Header>
         <DockPanel>
             <DockPanel DockPanel.Dock="Top" 
                        Margin="5"
@@ -29,7 +34,7 @@
                          Margin="2"
                          DockPanel.Dock="Top"/>
             </DockPanel>
-            
+
             <DockPanel LastChildFill="False"
                         DockPanel.Dock="Top"
                         HorizontalAlignment="Left"
@@ -40,7 +45,7 @@
                            VerticalAlignment="Center"
                            Margin="2"
                            DockPanel.Dock="Top"/>
-                
+
                 <ComboBox ItemsSource="{Binding Versions}"
                           SelectedItem="{Binding SelectedVersion}"
                           Margin="2"
@@ -51,7 +56,7 @@
                                 <TextBlock Text="{Binding NuGetVersion}" />
                                 <TextBlock Text=" (used)" Visibility="{Binding IsTheCurrentVersion, Converter={StaticResource VisibleIfTrueConverter}}" />
                             </StackPanel>
-                            
+
                         </DataTemplate>
                     </ComboBox.ItemTemplate>
                 </ComboBox>
@@ -105,5 +110,5 @@
 
             </DockPanel>
         </DockPanel>
-    </Border>
+    </GroupBox>
 </UserControl>

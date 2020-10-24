@@ -3,7 +3,7 @@ using UpdateNugets.UI.ViewModel;
 
 namespace UpdateNugets.UI.View
 {
-    public partial class MainWindow : Window
+    public partial class MainWindow
     {
         private MainViewModel _mainViewModel;
 

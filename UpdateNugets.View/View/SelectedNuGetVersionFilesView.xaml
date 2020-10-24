@@ -6,40 +6,45 @@
              xmlns:local="clr-namespace:UpdateNugets.UI.View"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
-    <DockPanel>
-
-        <TextBlock DockPanel.Dock="Top"
-                   Margin="5"
+    <GroupBox>
+        <GroupBox.Header>
+            <TextBlock Padding="5"
                    Text="{Binding NumberOfFilesInUsed, StringFormat=Present in projects (0)}"
-                   FontWeight="DemiBold">
-        </TextBlock>
+                   FontWeight="DemiBold"
+                   FontSize="15">
+            </TextBlock>
+        </GroupBox.Header>
+        <DockPanel>
 
-        <ListBox ItemsSource="{Binding Files}"
-                 Margin="0 0 0 5">
             
-            <ListBox.CommandBindings>
-                <CommandBinding Command="ApplicationCommands.Copy"
+
+            <ListBox ItemsSource="{Binding Files}"
+                 Margin="0 0 0 5">
+
+                <ListBox.CommandBindings>
+                    <CommandBinding Command="ApplicationCommands.Copy"
                                 CanExecute="CtrlCCopyCmdCanExecute" 
                                 Executed="CtrlCCopyCmdExecuted"/>
-            </ListBox.CommandBindings>
-            
-            <ListBox.ItemTemplate>
-                <DataTemplate>
-                    <TextBlock Text="{Binding}">
-                        <TextBlock.ContextMenu>
-                            <ContextMenu>
-                                <MenuItem Command="Copy">
-                                    <MenuItem.CommandBindings>
-                                        <CommandBinding Command="ApplicationCommands.Copy" 
+                </ListBox.CommandBindings>
+
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding}">
+                            <TextBlock.ContextMenu>
+                                <ContextMenu>
+                                    <MenuItem Command="Copy">
+                                        <MenuItem.CommandBindings>
+                                            <CommandBinding Command="ApplicationCommands.Copy" 
                                                         CanExecute="RightClickCopyCmdCanExecute"
                                                         Executed="RightClickCopyCmdExecuted" />
-                                    </MenuItem.CommandBindings>
-                                </MenuItem>
-                            </ContextMenu>
-                        </TextBlock.ContextMenu>
-                    </TextBlock>
-                </DataTemplate>
-            </ListBox.ItemTemplate>
-        </ListBox>
-    </DockPanel>
+                                        </MenuItem.CommandBindings>
+                                    </MenuItem>
+                                </ContextMenu>
+                            </TextBlock.ContextMenu>
+                        </TextBlock>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+        </DockPanel>
+    </GroupBox>
 </UserControl>
