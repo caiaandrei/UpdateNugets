@@ -3,7 +3,6 @@ using Prism.Commands;
 using Prism.Events;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
-using System.Windows.Input;
 using UpdateNugets.Core;
 using UpdateNugets.UI.Events;
 
@@ -13,11 +12,15 @@ namespace UpdateNugets.UI.ViewModel
     {
         private ProjectNuGet _nuGet;
         private string _name;
+        private bool _areVersionsLoading;
         private Version _selectedVersion;
         private IEventAggregator _eventAggregator;
         private ObservableCollection<Version> _versions = new ObservableCollection<Version>();
         private ObservableCollection<string> _dependencies = new ObservableCollection<string>();
         private ManageNugets _manageNugets;
+        private bool _areVersionsVisible = true;
+        private bool _areDependeciesVisible;
+        private bool _areDependeciesLoading;
 
         public SelectedNuGetDetailsViewModel(IEventAggregator eventAggregator)
         {
@@ -71,6 +74,51 @@ namespace UpdateNugets.UI.ViewModel
                 OnPropertyChanged(nameof(Name));
             }
         }
+
+        public bool AreVersionsLoading
+        {
+            get { return _areVersionsLoading; }
+            set
+            {
+                _areVersionsLoading = value;
+                AreVersionsVisible = !_areVersionsLoading;
+                OnPropertyChanged(nameof(AreVersionsLoading));
+            }
+        }
+
+        public bool AreVersionsVisible
+        {
+            get { return _areVersionsVisible; }
+            set
+            {
+                _areVersionsVisible = value;
+                OnPropertyChanged(nameof(AreVersionsVisible));
+            }
+        }
+
+        public bool AreDependenciesLoading
+        {
+            get { return _areDependeciesLoading; }
+            set
+            {
+                _areDependeciesLoading = value;
+                AreDependenciesVisible = !_areDependeciesLoading;
+                OnPropertyChanged(nameof(AreDependenciesLoading));
+            }
+        }
+
+
+        public bool AreDependenciesVisible
+        {
+            get { return _areDependeciesVisible; }
+            set
+            {
+                _areDependeciesVisible = value;
+                OnPropertyChanged(nameof(AreDependenciesVisible));
+            }
+        }
+
+
 
         public async Task LoadAsync(ProjectNuGet nuGet, ManageNugets manageNugets)
         {

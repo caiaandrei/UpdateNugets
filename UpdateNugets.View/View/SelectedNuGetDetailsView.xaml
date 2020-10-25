@@ -3,7 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:UpdateNugets.UI.View"
+             xmlns:local="clr-namespace:UpdateNugets.UI.View" xmlns:Controls="http://metro.mahapps.com/winfx/xaml/controls"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <UserControl.Resources>
@@ -22,73 +22,74 @@
                    FontSize="15">
             </TextBlock>
         </GroupBox.Header>
-        <DockPanel>
-            <DockPanel DockPanel.Dock="Top" 
+        <Grid>
+            <DockPanel Visibility="{Binding AreVersionsVisible, Converter={StaticResource VisibleIfTrueConverter}}">
+                <DockPanel DockPanel.Dock="Top" 
                        Margin="5"
                        LastChildFill="False">
 
-                <TextBlock Text="Name"
+                    <TextBlock Text="Name"
                            FontWeight="DemiBold"
                            VerticalAlignment="Center"
                            Margin="2"
                            DockPanel.Dock="Top"/>
 
-                <TextBox Text="{Binding Name, Mode=OneWay}"
+                    <TextBox Text="{Binding Name, Mode=OneWay}"
                          IsReadOnly="True"
                          BorderThickness="0"
                          Margin="2"
                          DockPanel.Dock="Top"/>
-            </DockPanel>
+                </DockPanel>
 
-            <DockPanel LastChildFill="False"
+                <DockPanel LastChildFill="False"
                         DockPanel.Dock="Top"
                         HorizontalAlignment="Left"
                         Margin="5">
 
-                <TextBlock Text="Versions"
+                    <TextBlock Text="Versions"
                            FontWeight="DemiBold"
                            VerticalAlignment="Center"
                            Margin="2"
                            DockPanel.Dock="Top"/>
 
-                <ComboBox ItemsSource="{Binding Versions}"
+                    <ComboBox ItemsSource="{Binding Versions}"
                           SelectedItem="{Binding SelectedVersion}"
                           Margin="2"
                           DockPanel.Dock="Top">
-                    <ComboBox.ItemTemplate>
-                        <DataTemplate>
-                            <StackPanel Orientation="Horizontal">
-                                <TextBlock Text="{Binding NuGetVersion}"
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="{Binding NuGetVersion}"
                                            VerticalAlignment="Center"/>
 
-                                <Image Source="{StaticResource CheckIcon}" 
+                                    <Image Source="{StaticResource CheckIcon}" 
                                        Width="16"
                                        Height="16"
                                        Margin="2"
                                        Visibility="{Binding IsTheCurrentVersion, Converter={StaticResource VisibleIfTrueConverter}}" />
 
 
-                                <Image Source="{StaticResource WarningIcon}" 
+                                    <Image Source="{StaticResource WarningIcon}" 
                                        Width="16"
                                        Height="16"
                                        Margin="2" />
 
 
-                                <Image Source="{StaticResource ArrowUpIcon}" 
+                                    <Image Source="{StaticResource ArrowUpIcon}" 
                                        Width="16"
                                        Height="16"
                                        Margin="2" />
 
 
 
-                            </StackPanel>
+                                </StackPanel>
 
-                        </DataTemplate>
-                    </ComboBox.ItemTemplate>
-                </ComboBox>
-            </DockPanel>
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
+                </DockPanel>
 
-            <Button Content="Update NuGet" 
+                <Button Content="Update NuGet" 
                     VerticalAlignment="Bottom"
                     HorizontalAlignment="Right"
                     DockPanel.Dock="Bottom"
@@ -96,45 +97,55 @@
                     Command="{Binding UpdateNuGetCommand}"
                     CommandParameter="{Binding}"/>
 
-            <DockPanel DockPanel.Dock="Top"
+                <DockPanel DockPanel.Dock="Top"
                         HorizontalAlignment="Stretch"
                         VerticalAlignment="Top"
                         Margin="5">
 
-                <TextBlock Text="Dependencies" 
+                    <TextBlock Text="Dependencies" 
                            VerticalAlignment="Center"
                            Margin="2"
                            DockPanel.Dock="Top"
                            FontWeight="DemiBold"/>
 
-                <ListBox ItemsSource="{Binding Dependencies}"
-                         Margin="2" 
-                         Visibility="{Binding HasDependencies, Converter={StaticResource VisibleIfTrueConverter}}">
-                    <ListBox.CommandBindings>
-                        <CommandBinding Command="ApplicationCommands.Copy"
+                    <Grid>
+                        <Controls:ProgressRing Width="40"
+                                               Height="40"
+                                               IsActive="True"
+                                               Visibility="{Binding AreDependenciesLoading, Converter={StaticResource VisibleIfTrueConverter}}" />
+                        <ListBox ItemsSource="{Binding Dependencies}"
+                                 Margin="2" 
+                                 Visibility="{Binding AreDependenciesVisible, Converter={StaticResource VisibleIfTrueConverter}}">
+                            <ListBox.CommandBindings>
+                                <CommandBinding Command="ApplicationCommands.Copy"
                                 CanExecute="CtrlCCopyCmdCanExecute" 
                                 Executed="CtrlCCopyCmdExecuted"/>
-                    </ListBox.CommandBindings>
-                    <ListBox.ItemTemplate>
-                        <DataTemplate>
-                            <TextBlock Text="{Binding}">
-                                <TextBlock.ContextMenu>
-                                    <ContextMenu>
-                                        <MenuItem Command="Copy">
-                                            <MenuItem.CommandBindings>
-                                                <CommandBinding Command="ApplicationCommands.Copy" 
+                            </ListBox.CommandBindings>
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding}">
+                                        <TextBlock.ContextMenu>
+                                            <ContextMenu>
+                                                <MenuItem Command="Copy">
+                                                    <MenuItem.CommandBindings>
+                                                        <CommandBinding Command="ApplicationCommands.Copy" 
                                                         CanExecute="RightClickCopyCmdCanExecute"
                                                         Executed="RightClickCopyCmdExecuted" />
-                                            </MenuItem.CommandBindings>
-                                        </MenuItem>
-                                    </ContextMenu>
-                                </TextBlock.ContextMenu>
-                            </TextBlock>
-                        </DataTemplate>
-                    </ListBox.ItemTemplate>
-                </ListBox>
-
+                                                    </MenuItem.CommandBindings>
+                                                </MenuItem>
+                                            </ContextMenu>
+                                        </TextBlock.ContextMenu>
+                                    </TextBlock>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
+                    </Grid>
+                </DockPanel>
             </DockPanel>
-        </DockPanel>
+            <Controls:ProgressRing Width="40"
+                                   Height="40"
+                                   IsActive="True"
+                                   Visibility="{Binding AreVersionsLoading, Converter={StaticResource VisibleIfTrueConverter}}" />
+        </Grid>
     </GroupBox>
 </UserControl>

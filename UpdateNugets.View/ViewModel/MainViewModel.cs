@@ -15,6 +15,8 @@ namespace UpdateNugets.UI.ViewModel
         private bool _searchOnline;
         private bool _includePrerelease;
         private string _searchBoxText;
+        private string _statusText;
+        private bool _isStatusVisible;
 
         public MainViewModel(IEventAggregator eventAggregator, NuGetsListViewModel nuGetsListViewModel, SelectedNuGetDetailsViewModel selectedNuGetDetailsViewModel, SelectedNuGetVersionFilesViewModel selectedNuGetVersionFilesViewModel)
         {
@@ -107,9 +109,43 @@ namespace UpdateNugets.UI.ViewModel
             }
         }
 
+        public string StatusText
+        {
+            get { return _statusText; }
+            set
+            {
+                _statusText = value;
+
+                IsStatusVisible = !string.IsNullOrEmpty(_statusText);
+                OnPropertyChanged(nameof(StatusText));
+            }
+        }
+
+        public bool IsStatusVisible
+        {
+            get => _isStatusVisible;
+            private set
+            {
+                _isStatusVisible = value;
+                OnPropertyChanged(nameof(IsStatusVisible));
+            }
+        }
+
         private async void OnSelectedNuGetChangedEvent(ProjectNuGet nuGet)
         {
+            SelectedNuGetDetailsViewModel.AreVersionsLoading = true;
+            SelectedNuGetVersionFilesViewModel.AreVersionsLoading = true;
+            var status = "Loading NuGet Details...";
+            StatusText = status;
             await SelectedNuGetDetailsViewModel.LoadAsync(nuGet, ManageNuGets);
+            SelectedNuGetDetailsViewModel.AreVersionsLoading = false;
+            SelectedNuGetVersionFilesViewModel.AreVersionsLoading = false;
+
+            if (StatusText == status)
+            {
+                StatusText = string.Empty;
+            }
+
             HasSelectedNuGet = true;
         }
 
@@ -121,7 +157,11 @@ namespace UpdateNugets.UI.ViewModel
             }
 
             SelectedNuGetVersionFilesViewModel.Load(selectedVersion);
+            SelectedNuGetDetailsViewModel.AreDependenciesLoading = true;
+            StatusText = "Loading Dependecies...";
             await SelectedNuGetDetailsViewModel.LoadDependenciesAsync(ManageNuGets);
+            SelectedNuGetDetailsViewModel.AreDependenciesLoading = false;
+            StatusText = string.Empty;
         }
 
         private async Task ExecuteSearchAsyncCommand()

@@ -103,14 +103,7 @@
 
         <StatusBar Grid.Row="2"
                    Grid.ColumnSpan="3">
-            <StatusBarItem>Status</StatusBarItem>
-            <Separator Style="{StaticResource MahApps.Styles.Separator.Clean}" />
             <StatusBarItem>
-                <StatusBarItem.CommandBindings>
-                    <CommandBinding Command="ApplicationCommands.Copy"
-                                CanExecute="CtrlCCopyCmdCanExecute" 
-                                Executed="CtrlCCopyCmdExecuted"/>
-                </StatusBarItem.CommandBindings>
                 <DockPanel>
                     <TextBlock DockPanel.Dock="Left"
                                Text="Workspace Path:"
@@ -125,6 +118,9 @@
                               />
                 </DockPanel>
             </StatusBarItem>
+            <Separator Style="{StaticResource MahApps.Styles.Separator.Clean}" 
+                       Visibility="{Binding IsStatusVisible, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+            <StatusBarItem Content="{Binding StatusText}" />
         </StatusBar>
     </Grid>
 </Controls:MetroWindow>
