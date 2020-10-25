@@ -8,61 +8,40 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800"
              d:DataContext="{d:DesignInstance viewModel:NuGetsListViewModel}">
-    <DockPanel>
-        <DockPanel DockPanel.Dock="Top">
-
-            <CheckBox Content="Search Online"
-                      IsChecked="{Binding SearchOnline}"
-                      DockPanel.Dock="Right" 
-                      Margin="2"
-                      VerticalContentAlignment="Center"/>
-
-            <TextBox Text="{Binding Path=SearchBoxText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                     Margin="2"
-                     AcceptsReturn="False">
-                <TextBox.InputBindings>
-                    <KeyBinding Key="Enter" 
-                                Command="{Binding SearchCommand}"
-                                CommandParameter="{Binding}"/>
-                </TextBox.InputBindings>
-            </TextBox>
-        </DockPanel>
-
-        <GroupBox>
-            <GroupBox.Header>
-                <TextBlock Padding="5"
+    <GroupBox>
+        <GroupBox.Header>
+            <TextBlock Padding="5"
                            Text="{Binding NumberOfNugetsInUsed, StringFormat=NuGets used (0)}"
                            FontWeight="DemiBold"
                            FontSize="15" />
-            </GroupBox.Header>
+        </GroupBox.Header>
 
-            <ListBox ItemsSource="{Binding Path=NuGets}"
+        <ListBox ItemsSource="{Binding Path=NuGets}"
                  SelectedItem="{Binding SelectedNuGet, Mode=TwoWay}"
                  Margin="2">
-                <ListBox.CommandBindings>
-                    <CommandBinding Command="ApplicationCommands.Copy"
+            <ListBox.CommandBindings>
+                <CommandBinding Command="ApplicationCommands.Copy"
                                 CanExecute="CtrlCCopyCmdCanExecute" 
                                 Executed="CtrlCCopyCmdExecuted"/>
-                </ListBox.CommandBindings>
-                <ListBox.ItemTemplate>
-                    <DataTemplate>
-                        <TextBlock Text="{Binding Name}">
-                            <TextBlock.ContextMenu>
-                                <ContextMenu>
-                                    <MenuItem Command="Copy">
-                                        <MenuItem.CommandBindings>
-                                            <CommandBinding Command="ApplicationCommands.Copy" 
+            </ListBox.CommandBindings>
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock Text="{Binding Name}">
+                        <TextBlock.ContextMenu>
+                            <ContextMenu>
+                                <MenuItem Command="Copy">
+                                    <MenuItem.CommandBindings>
+                                        <CommandBinding Command="ApplicationCommands.Copy" 
                                                         CanExecute="RightClickCopyCmdCanExecute"
                                                         Executed="RightClickCopyCmdExecuted" />
-                                        </MenuItem.CommandBindings>
-                                    </MenuItem>
-                                </ContextMenu>
-                            </TextBlock.ContextMenu>
-                        </TextBlock>
-                    </DataTemplate>
-                </ListBox.ItemTemplate>
-            </ListBox>
-        </GroupBox>
-    </DockPanel>
-        
+                                    </MenuItem.CommandBindings>
+                                </MenuItem>
+                            </ContextMenu>
+                        </TextBlock.ContextMenu>
+                    </TextBlock>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+    </GroupBox>
+
 </UserControl>

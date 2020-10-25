@@ -18,5 +18,25 @@ namespace UpdateNugets.UI.View
         {
             _mainViewModel.ChangePathCommand.Execute(_mainViewModel);
         }
+
+        private void CtrlCCopyCmdCanExecute(object sender, System.Windows.Input.CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = true;
+        }
+
+        private void RightClickCopyCmdCanExecute(object sender, System.Windows.Input.CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = true;
+        }
+
+        private void CtrlCCopyCmdExecuted(object sender, System.Windows.Input.ExecutedRoutedEventArgs e)
+        {
+            Clipboard.SetText(_mainViewModel.ProjectPath);
+        }
+
+        private void RightClickCopyCmdExecuted(object sender, System.Windows.Input.ExecutedRoutedEventArgs e)
+        {
+            Clipboard.SetText(_mainViewModel.ProjectPath);
+        }
     }
 }

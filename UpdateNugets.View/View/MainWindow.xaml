@@ -22,7 +22,22 @@
                                        Height="16" />
         </DataTemplate>
     </Controls:MetroWindow.IconTemplate>
+
+    <Controls:MetroWindow.LeftWindowCommands>
+        <Controls:WindowCommands>
+            <Button Content="Refresh Project" />
+            <Button Content="New Project" />
+            <Button Content="Open Project" />
+        </Controls:WindowCommands>
+    </Controls:MetroWindow.LeftWindowCommands>
     
+    <Controls:MetroWindow.RightWindowCommands>
+        <Controls:WindowCommands>
+            <Button Content="Finish Project" />
+            <Button Content="Settings" />
+        </Controls:WindowCommands>
+    </Controls:MetroWindow.RightWindowCommands>
+
     <Window.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -37,59 +52,77 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition />
-            <RowDefinition />
-            <RowDefinition />
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
         <Grid.ColumnDefinitions>
             <ColumnDefinition />
-            <ColumnDefinition Width="2*"/>
             <ColumnDefinition />
+            <ColumnDefinition Width="2*"/>
         </Grid.ColumnDefinitions>
 
-        <DockPanel Margin="5" Grid.ColumnSpan="3">
-            <Button Content="Change Path" 
-                    DockPanel.Dock="Right"
-                    Margin="2" 
-                    Command="{Binding ChangePathCommand}"
-                    CommandParameter="{Binding}"/>
+        <DockPanel Grid.ColumnSpan="2">
 
-            <TextBox Text="{Binding ProjectPath}" 
-                     Margin="2"
-                     IsReadOnly="True"/>
+            <CheckBox Content="Include Prerelease"
+                      DockPanel.Dock="Right" 
+                      Margin="2"
+                      VerticalContentAlignment="Center"/>
+            
+            <CheckBox Content="Search Online"
+                      DockPanel.Dock="Right" 
+                      Margin="2"
+                      VerticalContentAlignment="Center"/>
 
+            <TextBox Margin="2"
+                     Controls:TextBoxHelper.ButtonCommand="{Binding SearchCommand, Mode=OneWay}"
+                     Controls:TextBoxHelper.ButtonCommandParameter="{Binding}"
+                     Controls:TextBoxHelper.Watermark="Search NuGet..."
+                     Style="{DynamicResource MahApps.Styles.TextBox.Search}" />
         </DockPanel>
-
-        <local:NuGetsListView x:Name="NuGetsListView" 
+        
+        <local:NuGetsListView x:Name="NuGetsListView"
                               Grid.Row="1"
-                              Grid.RowSpan="3"
                               Margin="5"
                               DataContext="{Binding NuGetsListViewModel}"/>
 
-        <Grid Grid.Column="1"
+        <Grid Grid.Column="2"
               Grid.Row="1"
-              Grid.RowSpan="3"
               Margin="5"
               Visibility="{Binding HasSelectedNuGet, Converter={StaticResource BooleanToVisibilityConverter}, Mode=TwoWay}">
             <local:SelectedNuGetVersionFilesView DataContext="{Binding SelectedNuGetVersionFilesViewModel}"/>
         </Grid>
 
-        <Grid Grid.Column="2"
+        <Grid Grid.Column="1"
               Grid.Row="1"
-              Grid.RowSpan="3"
               Margin="5"
               Visibility="{Binding HasSelectedNuGet, Converter={StaticResource BooleanToVisibilityConverter}, Mode=TwoWay}">
             <local:SelectedNuGetDetailsView DataContext="{Binding SelectedNuGetDetailsViewModel}" />
         </Grid>
 
-        <Button Content="Generate Raport"
-                Grid.Column="2"
-                Grid.Row="5" 
-                VerticalAlignment="Center"
-                HorizontalAlignment="Right"
-                Margin="5 5 5 10"
-                Command="{Binding GenerateRaportCommand}"
-                CommandParameter="{Binding}"/>
+        <StatusBar Grid.Row="2"
+                   Grid.ColumnSpan="3">
+            <StatusBarItem>Status</StatusBarItem>
+            <Separator Style="{StaticResource MahApps.Styles.Separator.Clean}" />
+            <StatusBarItem>
+                <StatusBarItem.CommandBindings>
+                    <CommandBinding Command="ApplicationCommands.Copy"
+                                CanExecute="CtrlCCopyCmdCanExecute" 
+                                Executed="CtrlCCopyCmdExecuted"/>
+                </StatusBarItem.CommandBindings>
+                <DockPanel>
+                    <TextBlock DockPanel.Dock="Left"
+                               Text="Workspace Path:"
+                               VerticalAlignment="Center"
+                               />
+                    
+                    <TextBox Text="{Binding ProjectPath, Mode=OneWay}"
+                             IsReadOnly="True"
+                             BorderThickness="0"
+                             VerticalAlignment="Center"
+                             VerticalContentAlignment="Center"
+                              />
+                </DockPanel>
+            </StatusBarItem>
+        </StatusBar>
     </Grid>
 </Controls:MetroWindow>
