@@ -3,7 +3,7 @@ using UpdateNugets.Core;
 
 namespace UpdateNugets.UI.Events
 {
-    public class SelectedVersionChanged : PubSubEvent
+    public class SelectedVersionChanged : PubSubEvent<Version>
     {
     }
 }

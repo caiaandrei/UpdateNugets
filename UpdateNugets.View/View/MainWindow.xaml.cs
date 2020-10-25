@@ -1,4 +1,5 @@
 ﻿using System.Windows;
+using UpdateNugets.UI.Command;
 using UpdateNugets.UI.ViewModel;
 
 namespace UpdateNugets.UI.View
@@ -16,27 +17,17 @@ namespace UpdateNugets.UI.View
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            _mainViewModel.ChangePathCommand.Execute(_mainViewModel);
-        }
+            var browseCommand = new BrowsePathCommand();
+            var selectProjectPathViewModel = new SelectProjectPathViewModel(browseCommand);
+            var selectProjectPathView = new SelectProjectPathView(selectProjectPathViewModel);
+            selectProjectPathView.Owner = App.Current.MainWindow;
 
-        private void CtrlCCopyCmdCanExecute(object sender, System.Windows.Input.CanExecuteRoutedEventArgs e)
-        {
-            e.CanExecute = true;
-        }
+            selectProjectPathView.ShowDialog();
 
-        private void RightClickCopyCmdCanExecute(object sender, System.Windows.Input.CanExecuteRoutedEventArgs e)
-        {
-            e.CanExecute = true;
-        }
-
-        private void CtrlCCopyCmdExecuted(object sender, System.Windows.Input.ExecutedRoutedEventArgs e)
-        {
-            Clipboard.SetText(_mainViewModel.ProjectPath);
-        }
-
-        private void RightClickCopyCmdExecuted(object sender, System.Windows.Input.ExecutedRoutedEventArgs e)
-        {
-            Clipboard.SetText(_mainViewModel.ProjectPath);
+            if (!string.IsNullOrEmpty(selectProjectPathViewModel.ProjectPath))
+            {
+                _mainViewModel.WorkspacePath = selectProjectPathViewModel.ProjectPath;
+            }
         }
     }
 }

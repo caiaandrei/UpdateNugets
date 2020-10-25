@@ -23,7 +23,7 @@ namespace UpdateNugets.Core
 
         public ObservableCollection<IPackageSearchMetadata> Packages { get; set; }
 
-        public async Task<IList<IPackageSearchMetadata>> SearchAsync(string text, int take)
+        public async Task<IList<IPackageSearchMetadata>> SearchAsync(string text, int take, bool includePrerelease = false)
         {
             Packages = new ObservableCollection<IPackageSearchMetadata>();
             var cancellationToken = new CancellationToken();
@@ -32,7 +32,7 @@ namespace UpdateNugets.Core
             var sourceRepository = new SourceRepository(packageSource, Repository.Provider.GetCoreV3());
 
             var rawPackageSearchResouce = await sourceRepository.GetResourceAsync<PackageSearchResource>(cancellationToken);
-            var searchFilter = new SearchFilter(false);
+            var searchFilter = new SearchFilter(includePrerelease);
 
             var packages = await rawPackageSearchResouce.SearchAsync(text, searchFilter, 0, take, NullLogger.Instance, cancellationToken);
 

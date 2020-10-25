@@ -66,18 +66,20 @@
             <CheckBox Content="Include Prerelease"
                       DockPanel.Dock="Right" 
                       Margin="2"
-                      VerticalContentAlignment="Center"/>
+                      VerticalContentAlignment="Center"
+                      IsChecked="{Binding IncludePrerelease}"/>
             
             <CheckBox Content="Search Online"
                       DockPanel.Dock="Right" 
                       Margin="2"
-                      VerticalContentAlignment="Center"/>
+                      VerticalContentAlignment="Center"
+                      IsChecked="{Binding SearchOnline}"/>
 
             <TextBox Margin="2"
                      Controls:TextBoxHelper.ButtonCommand="{Binding SearchCommand, Mode=OneWay}"
-                     Controls:TextBoxHelper.ButtonCommandParameter="{Binding}"
                      Controls:TextBoxHelper.Watermark="Search NuGet..."
-                     Style="{DynamicResource MahApps.Styles.TextBox.Search}" />
+                     Style="{DynamicResource MahApps.Styles.TextBox.Search}"
+                     Text="{Binding SearchBoxText, UpdateSourceTrigger=PropertyChanged}"/>
         </DockPanel>
         
         <local:NuGetsListView x:Name="NuGetsListView"
@@ -114,8 +116,8 @@
                                Text="Workspace Path:"
                                VerticalAlignment="Center"
                                />
-                    
-                    <TextBox Text="{Binding ProjectPath, Mode=OneWay}"
+
+                    <TextBox Text="{Binding WorkspacePath, Mode=OneWay}"
                              IsReadOnly="True"
                              BorderThickness="0"
                              VerticalAlignment="Center"

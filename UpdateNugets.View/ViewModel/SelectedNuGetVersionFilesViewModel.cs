@@ -5,14 +5,7 @@ namespace UpdateNugets.UI.ViewModel
 {
     public class SelectedNuGetVersionFilesViewModel : ViewModelBase
     {
-        private Version _version;
-        private ObservableCollection<string> _files;
-
-        public SelectedNuGetVersionFilesViewModel(Version version)
-        {
-            _version = version;
-            Files = new ObservableCollection<string>(_version.Files);
-        }
+        private ObservableCollection<string> _files = new ObservableCollection<string>();
 
         public ObservableCollection<string> Files
         {
@@ -21,11 +14,15 @@ namespace UpdateNugets.UI.ViewModel
             {
                 _files = value;
                 OnPropertyChanged(nameof(Files));
+                OnPropertyChanged(nameof(NumberOfFilesInUsed));
             }
         }
 
         public int NumberOfFilesInUsed => Files.Count;
 
-
+        public void Load(Version selectedVersion)
+        {
+            Files = new ObservableCollection<string>(selectedVersion.Files);
+        }
     }
 }

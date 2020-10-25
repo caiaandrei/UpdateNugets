@@ -1,6 +1,8 @@
-﻿using Prism.Events;
+﻿using NuGet.Packaging;
+using Prism.Commands;
+using Prism.Events;
 using System.Collections.ObjectModel;
-using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Input;
 using UpdateNugets.Core;
 using UpdateNugets.UI.Events;
@@ -10,28 +12,25 @@ namespace UpdateNugets.UI.ViewModel
     public class SelectedNuGetDetailsViewModel : ViewModelBase
     {
         private ProjectNuGet _nuGet;
-        private ObservableCollection<Version> _version;
         private string _name;
         private Version _selectedVersion;
         private IEventAggregator _eventAggregator;
+        private ObservableCollection<Version> _versions = new ObservableCollection<Version>();
         private ObservableCollection<string> _dependencies = new ObservableCollection<string>();
+        private ManageNugets _manageNugets;
 
-        public SelectedNuGetDetailsViewModel(ProjectNuGet nuGet, IEventAggregator eventAggregator, ICommand updateNuGetCommand)
+        public SelectedNuGetDetailsViewModel(IEventAggregator eventAggregator)
         {
             _eventAggregator = eventAggregator;
-            _nuGet = nuGet;
-            Versions = new ObservableCollection<Version>(_nuGet.Versions);
-            Name = nuGet.Name;
-            SelectedVersion = nuGet.CurrentVersion;
-            UpdateNuGetCommand = updateNuGetCommand;
+            UpdateNuGetCommand = new DelegateCommand(async () => await OnExecuteUpdateCommand(), OnCanExecuteUpdateCommand).ObservesProperty(() => SelectedVersion);
         }
 
         public ObservableCollection<Version> Versions
         {
-            get { return _version; }
+            get { return _versions; }
             set
             {
-                _version = value;
+                _versions = value;
                 OnPropertyChanged(nameof(Versions));
             }
         }
@@ -57,11 +56,11 @@ namespace UpdateNugets.UI.ViewModel
                 _selectedVersion = value;
                 _nuGet.CurrentSelectedVersion = _selectedVersion;
                 OnPropertyChanged(nameof(SelectedVersion));
-                _eventAggregator.GetEvent<SelectedVersionChanged>().Publish();
+                _eventAggregator.GetEvent<SelectedVersionChanged>().Publish(SelectedVersion);
             }
         }
 
-        public ICommand UpdateNuGetCommand { get; }
+        public DelegateCommand UpdateNuGetCommand { get; }
 
         public string Name
         {
@@ -71,6 +70,47 @@ namespace UpdateNugets.UI.ViewModel
                 _name = value;
                 OnPropertyChanged(nameof(Name));
             }
+        }
+
+        public async Task LoadAsync(ProjectNuGet nuGet, ManageNugets manageNugets)
+        {
+            _manageNugets = manageNugets;
+            nuGet = await manageNugets.SearchNuGetVersions(nuGet);
+            _nuGet = nuGet;
+            Versions = new ObservableCollection<Version>(_nuGet.Versions);
+            Name = nuGet.Name;
+            SelectedVersion = nuGet.CurrentVersion;
+        }
+
+        public async Task LoadDependenciesAsync(ManageNugets manageNugets)
+        {
+            var dependencies = await manageNugets.GetDependecies(_nuGet, SelectedVersion.NuGetVersion);
+            Dependencies = new ObservableCollection<string>(dependencies);
+        }
+
+        private bool OnCanExecuteUpdateCommand()
+        {
+            return _nuGet != null && _nuGet.CurrentVersion != _nuGet.CurrentSelectedVersion;
+        }
+
+        private async Task OnExecuteUpdateCommand()
+        {
+            _manageNugets.UpdateNuGets(_nuGet.Name, _nuGet.CurrentSelectedVersion.NuGetVersion, _nuGet.CurrentVersion.Files);
+
+            _nuGet.CurrentSelectedVersion.Files.AddRange(_nuGet.CurrentVersion.Files);
+            _nuGet.CurrentSelectedVersion.IsTheCurrentVersion = true;
+
+            _nuGet.CurrentVersion.IsTheCurrentVersion = false;
+            _nuGet.CurrentVersion.Files.Clear();
+
+            _nuGet.CurrentVersion = _nuGet.CurrentSelectedVersion;
+
+            Versions = new ObservableCollection<Version>(_nuGet.Versions);
+            UpdateNuGetCommand.RaiseCanExecuteChanged();
+            _eventAggregator.GetEvent<SelectedVersionChanged>().Publish(SelectedVersion);
+
+            var dependencies = await _manageNugets.GetDependecies(_nuGet, SelectedVersion.NuGetVersion);
+            Dependencies = new ObservableCollection<string>(dependencies);
         }
     }
 }

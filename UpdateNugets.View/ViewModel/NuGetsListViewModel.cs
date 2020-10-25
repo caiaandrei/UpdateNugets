@@ -1,10 +1,7 @@
 ﻿using Prism.Events;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Threading.Tasks;
-using System.Windows.Input;
 using UpdateNugets.Core;
-using UpdateNugets.UI.Command;
 using UpdateNugets.UI.Events;
 
 namespace UpdateNugets.UI.ViewModel
@@ -12,19 +9,12 @@ namespace UpdateNugets.UI.ViewModel
     public class NuGetsListViewModel : ViewModelBase
     {
         private ProjectNuGet _selectedNuGet;
-        private ObservableCollection<ProjectNuGet> _nuGets;
-        private string _searchBoxText = string.Empty;
-        private bool _searchOnline;
+        private ObservableCollection<ProjectNuGet> _nuGets = new ObservableCollection<ProjectNuGet>();
         private IEventAggregator _eventAggregator;
-        private ManageNugets _manageNuGets;
 
-        public NuGetsListViewModel(ManageNugets manageNuGets, IEventAggregator eventAggregator)
+        public NuGetsListViewModel(IEventAggregator eventAggregator)
         {
-            _manageNuGets = manageNuGets;
             _eventAggregator = eventAggregator;
-            SearchCommand = new SearchCommand();
-            ClearCommand = new ClearCommand();
-            NuGets = manageNuGets.NuGets;
         }
 
         public ObservableCollection<ProjectNuGet> NuGets
@@ -64,34 +54,9 @@ namespace UpdateNugets.UI.ViewModel
             }
         }
 
-        public string SearchBoxText
+        public void Load(ManageNugets manageNuGets)
         {
-            get { return _searchBoxText; }
-            set
-            {
-                _searchBoxText = value;
-                SearchCommand?.Execute(this);
-                OnPropertyChanged(nameof(SearchBoxText));
-            }
-        }
-
-        public bool SearchOnline
-        {
-            get { return _searchOnline; }
-            set
-            {
-                _searchOnline = value;
-                OnPropertyChanged(nameof(SearchOnline));
-            }
-        }
-
-        public ICommand SearchCommand { get; }
-
-        public ICommand ClearCommand { get; }
-
-        public async Task SearchAsync()
-        {
-            NuGets = await _manageNuGets.SearchAsync(SearchBoxText.Trim(), SearchOnline);
+            NuGets = manageNuGets.NuGets;
         }
     }
 }

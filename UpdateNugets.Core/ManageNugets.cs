@@ -19,7 +19,7 @@ namespace UpdateNugets.Core
 
         public ObservableCollection<ProjectNuGet> NuGets { get; } = new ObservableCollection<ProjectNuGet>();
 
-        public async Task<ObservableCollection<ProjectNuGet>> SearchAsync(string name, bool searchOnline = false)
+        public async Task<ObservableCollection<ProjectNuGet>> SearchAsync(string name, bool searchOnline = false, bool includePrerelease = false)
         {
             var intergogateNuGetFeed = new InterogateNuGetFeed();
 
@@ -27,7 +27,7 @@ namespace UpdateNugets.Core
 
             if (searchOnline)
             {
-                await intergogateNuGetFeed.SearchAsync(name, 20);
+                await intergogateNuGetFeed.SearchAsync(name, 20, includePrerelease);
                 foreach (var item in intergogateNuGetFeed.Packages)
                 {
                     result.Add(await ConvertPackageSearchMetadataToNuGetAsync(item));

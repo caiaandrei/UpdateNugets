@@ -1,8 +1,8 @@
-﻿using Prism.Events;
-using System.Collections.ObjectModel;
+﻿using Prism.Commands;
+using Prism.Events;
+using System.Threading.Tasks;
 using System.Windows.Input;
 using UpdateNugets.Core;
-using UpdateNugets.UI.Command;
 using UpdateNugets.UI.Events;
 
 namespace UpdateNugets.UI.ViewModel
@@ -10,35 +10,64 @@ namespace UpdateNugets.UI.ViewModel
     public class MainViewModel : ViewModelBase
     {
         private string _projectPath;
-        private NuGetsListViewModel _nuGetsListViewModel;
-        private SelectedNuGetVersionFilesViewModel _selectedNuGetVersionFilesViewModel;
-        private SelectedNuGetDetailsViewModel _selectedNuGetDetailsViewModel;
         private bool _hasSelectedNuGet;
         private readonly IEventAggregator _eventAggregator;
+        private bool _searchOnline;
+        private bool _includePrerelease;
+        private string _searchBoxText;
 
-        public MainViewModel(IEventAggregator eventAggregator, ICommand changePathCommand, ICommand generateRaportCommand)
+        public MainViewModel(IEventAggregator eventAggregator, NuGetsListViewModel nuGetsListViewModel, SelectedNuGetDetailsViewModel selectedNuGetDetailsViewModel, SelectedNuGetVersionFilesViewModel selectedNuGetVersionFilesViewModel)
         {
             _eventAggregator = eventAggregator;
+
+            NuGetsListViewModel = nuGetsListViewModel;
+            SelectedNuGetDetailsViewModel = selectedNuGetDetailsViewModel;
+            SelectedNuGetVersionFilesViewModel = selectedNuGetVersionFilesViewModel;
+
+            SearchCommand = new DelegateCommand(async () => await ExecuteSearchAsyncCommand());
+
             _eventAggregator.GetEvent<SelectedNuGetChangedEvent>().Subscribe(OnSelectedNuGetChangedEvent);
             _eventAggregator.GetEvent<SelectedVersionChanged>().Subscribe(OnSelectedVersionChangedEvent);
-
-            ChangePathCommand = changePathCommand;
-            GenerateRaportCommand = generateRaportCommand;
         }
 
-        public ICommand ChangePathCommand { get; }
+        public SelectedNuGetDetailsViewModel SelectedNuGetDetailsViewModel { get; }
 
-        public ICommand GenerateRaportCommand { get; }
+        public SelectedNuGetVersionFilesViewModel SelectedNuGetVersionFilesViewModel { get; }
 
-        public string ProjectPath
+        public NuGetsListViewModel NuGetsListViewModel { get; }
+
+        public ICommand RefreshProjectCommand { get; }
+
+        public ICommand NewProjectCommand { get; }
+
+        public ICommand OpenProjectCommand { get; }
+
+        public ICommand FinishProjectCommand { get; }
+
+        public ICommand SettingsCommand { get; }
+
+        public ICommand SearchCommand { get; }
+
+        public string SearchBoxText
+        {
+            get { return _searchBoxText; }
+            set
+            {
+                _searchBoxText = value;
+                SearchCommand?.Execute(this);
+                OnPropertyChanged(nameof(SearchBoxText));
+            }
+        }
+
+        public string WorkspacePath
         {
             get { return _projectPath; }
             set
             {
                 _projectPath = value;
-                OnPropertyChanged(nameof(ProjectPath));
+                OnPropertyChanged(nameof(WorkspacePath));
                 ManageNuGets = new ManageNugets(_projectPath);
-                NuGetsListViewModel = new NuGetsListViewModel(ManageNuGets, _eventAggregator);
+                NuGetsListViewModel.Load(ManageNuGets);
             }
         }
 
@@ -46,16 +75,6 @@ namespace UpdateNugets.UI.ViewModel
         {
             get;
             set;
-        }
-
-        public NuGetsListViewModel NuGetsListViewModel
-        {
-            get { return _nuGetsListViewModel; }
-            set
-            {
-                _nuGetsListViewModel = value;
-                OnPropertyChanged(nameof(NuGetsListViewModel));
-            }
         }
 
         public bool HasSelectedNuGet
@@ -68,51 +87,47 @@ namespace UpdateNugets.UI.ViewModel
             }
         }
 
-        public SelectedNuGetDetailsViewModel SelectedNuGetDetailsViewModel
+        public bool SearchOnline
         {
-            get { return _selectedNuGetDetailsViewModel; }
+            get { return _searchOnline; }
             set
             {
-                _selectedNuGetDetailsViewModel = value;
-                OnPropertyChanged(nameof(SelectedNuGetDetailsViewModel));
+                _searchOnline = value;
+                OnPropertyChanged(nameof(SearchOnline));
             }
         }
 
-        public SelectedNuGetVersionFilesViewModel SelectedNuGetVersionFilesViewModel
+        public bool IncludePrerelease
         {
-            get { return _selectedNuGetVersionFilesViewModel; }
+            get { return _includePrerelease; }
             set
             {
-                _selectedNuGetVersionFilesViewModel = value;
-                OnPropertyChanged(nameof(SelectedNuGetVersionFilesViewModel));
+                _includePrerelease = value;
+                OnPropertyChanged(nameof(IncludePrerelease));
             }
         }
 
         private async void OnSelectedNuGetChangedEvent(ProjectNuGet nuGet)
         {
-            nuGet = await ManageNuGets.SearchNuGetVersions(nuGet);
-            var updateNuGetCommand = new UpdateNuGetCommand(nuGet, ManageNuGets, _eventAggregator);
-            SelectedNuGetDetailsViewModel = new SelectedNuGetDetailsViewModel(nuGet, _eventAggregator, updateNuGetCommand);
+            await SelectedNuGetDetailsViewModel.LoadAsync(nuGet, ManageNuGets);
             HasSelectedNuGet = true;
         }
 
-        private async void OnSelectedVersionChangedEvent()
+        private async void OnSelectedVersionChangedEvent(Version selectedVersion)
         {
-            if (NuGetsListViewModel.SelectedNuGet is null)
+            if (selectedVersion is null)
             {
                 return;
             }
 
-            SelectedNuGetVersionFilesViewModel = new SelectedNuGetVersionFilesViewModel(NuGetsListViewModel.SelectedNuGet.CurrentSelectedVersion);
-            try
-            {
-                var dependecies = await ManageNuGets.GetDependecies(NuGetsListViewModel.SelectedNuGet, NuGetsListViewModel.SelectedNuGet.CurrentSelectedVersion.NuGetVersion);
-                SelectedNuGetDetailsViewModel.Dependencies = new ObservableCollection<string>(dependecies);
-            }
-            catch
-            {
+            SelectedNuGetVersionFilesViewModel.Load(selectedVersion);
+            await SelectedNuGetDetailsViewModel.LoadDependenciesAsync(ManageNuGets);
+        }
 
-            }
+        private async Task ExecuteSearchAsyncCommand()
+        {
+            var allNuGets = await ManageNuGets.SearchAsync(SearchBoxText.Trim(), false, false);
+            NuGetsListViewModel.NuGets = allNuGets;
         }
 
     }
