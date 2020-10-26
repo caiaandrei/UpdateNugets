@@ -17,6 +17,8 @@ namespace UpdateNugets.UI.ViewModel
         private string _searchBoxText;
         private string _statusText;
         private bool _isStatusVisible;
+        private string _nuGetDetailsStatus = "Loading NuGet Details...";
+        private string _nuGetDependenciesStatus = "Loading Dependecies...";
 
         public MainViewModel(IEventAggregator eventAggregator, NuGetsListViewModel nuGetsListViewModel, SelectedNuGetDetailsViewModel selectedNuGetDetailsViewModel, SelectedNuGetVersionFilesViewModel selectedNuGetVersionFilesViewModel)
         {
@@ -135,13 +137,12 @@ namespace UpdateNugets.UI.ViewModel
         {
             SelectedNuGetDetailsViewModel.AreVersionsLoading = true;
             SelectedNuGetVersionFilesViewModel.AreVersionsLoading = true;
-            var status = "Loading NuGet Details...";
-            StatusText = status;
+            StatusText = _nuGetDetailsStatus;
             await SelectedNuGetDetailsViewModel.LoadAsync(nuGet, ManageNuGets);
             SelectedNuGetDetailsViewModel.AreVersionsLoading = false;
             SelectedNuGetVersionFilesViewModel.AreVersionsLoading = false;
 
-            if (StatusText == status)
+            if (StatusText == _nuGetDetailsStatus)
             {
                 StatusText = string.Empty;
             }
@@ -158,7 +159,7 @@ namespace UpdateNugets.UI.ViewModel
 
             SelectedNuGetVersionFilesViewModel.Load(selectedVersion);
             SelectedNuGetDetailsViewModel.AreDependenciesLoading = true;
-            StatusText = "Loading Dependecies...";
+            StatusText = _nuGetDependenciesStatus;
             await SelectedNuGetDetailsViewModel.LoadDependenciesAsync(ManageNuGets);
             SelectedNuGetDetailsViewModel.AreDependenciesLoading = false;
             StatusText = string.Empty;

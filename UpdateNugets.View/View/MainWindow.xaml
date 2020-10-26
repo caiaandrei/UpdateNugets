@@ -89,15 +89,13 @@
 
         <Grid Grid.Column="2"
               Grid.Row="1"
-              Margin="5"
-              Visibility="{Binding HasSelectedNuGet, Converter={StaticResource BooleanToVisibilityConverter}, Mode=TwoWay}">
+              Margin="5">
             <local:SelectedNuGetVersionFilesView DataContext="{Binding SelectedNuGetVersionFilesViewModel}"/>
         </Grid>
 
         <Grid Grid.Column="1"
               Grid.Row="1"
-              Margin="5"
-              Visibility="{Binding HasSelectedNuGet, Converter={StaticResource BooleanToVisibilityConverter}, Mode=TwoWay}">
+              Margin="5">
             <local:SelectedNuGetDetailsView DataContext="{Binding SelectedNuGetDetailsViewModel}" />
         </Grid>
 
