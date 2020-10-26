@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections.ObjectModel;
 
 namespace UpdateNugets.Core
 {
@@ -6,7 +6,7 @@ namespace UpdateNugets.Core
     {
         public string NuGetVersion { get; set; }
 
-        public IList<string> Files { get; set; } = new List<string>();
+        public ObservableCollection<string> Files { get; set; } = new ObservableCollection<string>();
 
         public bool IsTheCurrentVersion { get; set; }
     }

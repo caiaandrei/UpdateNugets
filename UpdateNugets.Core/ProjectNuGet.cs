@@ -72,8 +72,7 @@ namespace UpdateNugets.Core
                         {
                             nuGet.Versions.Add(new Version
                             {
-                                NuGetVersion = packageVersion,
-                                Files = new List<string>()
+                                NuGetVersion = packageVersion
                             });
                         }
                     }

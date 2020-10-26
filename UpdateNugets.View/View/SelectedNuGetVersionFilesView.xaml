@@ -22,8 +22,8 @@
         </GroupBox.Header>
         <DockPanel>
             <TextBox Margin="2"
+                     Text="{Binding SearchBoxText, UpdateSourceTrigger=PropertyChanged}"
                      Controls:TextBoxHelper.ButtonCommand="{Binding SearchCommand, Mode=OneWay}"
-                     Controls:TextBoxHelper.ButtonCommandParameter="{Binding}"
                      Controls:TextBoxHelper.Watermark="Search File..."
                      Style="{DynamicResource MahApps.Styles.TextBox.Search}" 
                      DockPanel.Dock="Top"/>

@@ -59,8 +59,7 @@ namespace UpdateNugets.Core
             {
                 versions.Add(new Version
                 {
-                    NuGetVersion = item.Version.Version.ToString(),
-                    Files = new List<string>()
+                    NuGetVersion = item.Version.Version.ToString()
                 });
             }
 
@@ -85,7 +84,7 @@ namespace UpdateNugets.Core
                         {
                             new Version
                             {
-                                Files = new List<string> { projectPath },
+                                Files = new ObservableCollection<string> { projectPath },
                                 NuGetVersion = projectNuget.Value.Trim(),
                                 IsTheCurrentVersion = true
                             }
@@ -101,7 +100,7 @@ namespace UpdateNugets.Core
                         {
                             nuget.Versions.Add(new Version
                             {
-                                Files = new List<string> { projectPath },
+                                Files = new ObservableCollection<string> { projectPath },
                                 NuGetVersion = projectNuget.Value,
                                 IsTheCurrentVersion = true
                             });
