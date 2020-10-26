@@ -17,10 +17,9 @@ namespace UpdateNugets.UI.ViewModel
         private IEventAggregator _eventAggregator;
         private ObservableCollection<Version> _versions = new ObservableCollection<Version>();
         private ObservableCollection<string> _dependencies = new ObservableCollection<string>();
-        private ManageNugets _manageNugets;
         private bool _areVersionsVisible = true;
         private bool _areDependeciesVisible;
-        private bool _areDependeciesLoading;
+        private bool _areDependeciesLoading = true;
 
         public SelectedNuGetDetailsViewModel(IEventAggregator eventAggregator)
         {
@@ -120,19 +119,18 @@ namespace UpdateNugets.UI.ViewModel
 
 
 
-        public async Task LoadAsync(ProjectNuGet nuGet, ManageNugets manageNugets)
+        public async Task LoadAsync(ProjectNuGet nuGet)
         {
-            _manageNugets = manageNugets;
-            nuGet = await manageNugets.SearchNuGetVersions(nuGet);
+            nuGet = await nuGet.SearchNuGetVersions(nuGet);
             _nuGet = nuGet;
             Versions = new ObservableCollection<Version>(_nuGet.Versions);
             Name = nuGet.Name;
             SelectedVersion = nuGet.CurrentVersion;
         }
 
-        public async Task LoadDependenciesAsync(ManageNugets manageNugets)
+        public async Task LoadDependenciesAsync()
         {
-            var dependencies = await manageNugets.GetDependecies(_nuGet, SelectedVersion.NuGetVersion);
+            var dependencies = await _nuGet.GetDependecies(_nuGet, SelectedVersion.NuGetVersion);
             Dependencies = new ObservableCollection<string>(dependencies);
         }
 
@@ -143,7 +141,7 @@ namespace UpdateNugets.UI.ViewModel
 
         private async Task OnExecuteUpdateCommand()
         {
-            _manageNugets.UpdateNuGets(_nuGet.Name, _nuGet.CurrentSelectedVersion.NuGetVersion, _nuGet.CurrentVersion.Files);
+            _nuGet.UpdateNuGets(_nuGet.Name, _nuGet.CurrentSelectedVersion.NuGetVersion, _nuGet.CurrentVersion.Files);
 
             _nuGet.CurrentSelectedVersion.Files.AddRange(_nuGet.CurrentVersion.Files);
             _nuGet.CurrentSelectedVersion.IsTheCurrentVersion = true;
@@ -157,7 +155,7 @@ namespace UpdateNugets.UI.ViewModel
             UpdateNuGetCommand.RaiseCanExecuteChanged();
             _eventAggregator.GetEvent<SelectedVersionChanged>().Publish(SelectedVersion);
 
-            var dependencies = await _manageNugets.GetDependecies(_nuGet, SelectedVersion.NuGetVersion);
+            var dependencies = await _nuGet.GetDependecies(_nuGet, SelectedVersion.NuGetVersion);
             Dependencies = new ObservableCollection<string>(dependencies);
         }
     }

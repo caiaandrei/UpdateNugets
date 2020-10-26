@@ -138,7 +138,7 @@ namespace UpdateNugets.UI.ViewModel
             SelectedNuGetDetailsViewModel.AreVersionsLoading = true;
             SelectedNuGetVersionFilesViewModel.AreVersionsLoading = true;
             StatusText = _nuGetDetailsStatus;
-            await SelectedNuGetDetailsViewModel.LoadAsync(nuGet, ManageNuGets);
+            await SelectedNuGetDetailsViewModel.LoadAsync(nuGet);
             SelectedNuGetDetailsViewModel.AreVersionsLoading = false;
             SelectedNuGetVersionFilesViewModel.AreVersionsLoading = false;
 
@@ -160,7 +160,7 @@ namespace UpdateNugets.UI.ViewModel
             SelectedNuGetVersionFilesViewModel.Load(selectedVersion);
             SelectedNuGetDetailsViewModel.AreDependenciesLoading = true;
             StatusText = _nuGetDependenciesStatus;
-            await SelectedNuGetDetailsViewModel.LoadDependenciesAsync(ManageNuGets);
+            await SelectedNuGetDetailsViewModel.LoadDependenciesAsync();
             SelectedNuGetDetailsViewModel.AreDependenciesLoading = false;
             StatusText = string.Empty;
         }
