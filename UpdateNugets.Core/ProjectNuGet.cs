@@ -1,4 +1,4 @@
-﻿using System;
+﻿using NuGet.Packaging;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -45,13 +45,13 @@ namespace UpdateNugets.Core
             return Name;
         }
 
-        public async Task<ProjectNuGet> SearchNuGetVersions()
+        public async Task<IList<Version>> SearchNuGetVersions()
         {
             var foundPackages = await _interogateNuGetFeed.SearchAsync(Name, 20);
 
             if (foundPackages.Count == 0)
             {
-                return this;
+                return Versions;
             }
 
             foreach (var package in foundPackages)
@@ -78,7 +78,7 @@ namespace UpdateNugets.Core
 
             OrderNuGetVersions();
 
-            return this;
+            return Versions;
         }
 
         public async Task<IList<string>> GetDependecies()
@@ -93,6 +93,15 @@ namespace UpdateNugets.Core
                 var project = new Csproj(file);
                 project.UpdateANuget(Name, CurrentSelectedVersion.NuGetVersion);
             }
+
+            CurrentSelectedVersion.Files.AddRange(CurrentVersion.Files);
+            CurrentSelectedVersion.IsTheCurrentVersion = true;
+
+            CurrentVersion.IsTheCurrentVersion = false;
+            CurrentVersion.Files.Clear();
+
+            CurrentVersion = CurrentSelectedVersion;
+
         }
 
         public bool IsHigherVersionAvailable()

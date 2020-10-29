@@ -32,6 +32,7 @@ namespace UpdateNugets.UI.ViewModel
 
             _eventAggregator.GetEvent<SelectedNuGetChangedEvent>().Subscribe(OnSelectedNuGetChangedEvent);
             _eventAggregator.GetEvent<SelectedVersionChanged>().Subscribe(OnSelectedVersionChangedEvent);
+            _eventAggregator.GetEvent<NuGetUpdated>().Subscribe(OnSelectedVersionChangedEvent);
         }
 
         public SelectedNuGetDetailsViewModel SelectedNuGetDetailsViewModel { get; }

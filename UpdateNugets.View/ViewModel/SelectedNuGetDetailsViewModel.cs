@@ -147,10 +147,10 @@ namespace UpdateNugets.UI.ViewModel
 
         public async Task LoadAsync(ProjectNuGet nuGet)
         {
-            nuGet = await nuGet.SearchNuGetVersions();
             _nuGet = nuGet;
-            Versions = new ObservableCollection<Version>(_nuGet.Versions);
             Name = nuGet.Name;
+            var versions = await nuGet.SearchNuGetVersions();
+            Versions = new ObservableCollection<Version>(versions);
             SelectedVersion = nuGet.CurrentVersion;
         }
 
@@ -169,17 +169,9 @@ namespace UpdateNugets.UI.ViewModel
         {
             _nuGet.UpdateNuGets();
 
-            _nuGet.CurrentSelectedVersion.Files.AddRange(_nuGet.CurrentVersion.Files);
-            _nuGet.CurrentSelectedVersion.IsTheCurrentVersion = true;
-
-            _nuGet.CurrentVersion.IsTheCurrentVersion = false;
-            _nuGet.CurrentVersion.Files.Clear();
-
-            _nuGet.CurrentVersion = _nuGet.CurrentSelectedVersion;
-
             Versions = new ObservableCollection<Version>(_nuGet.Versions);
             UpdateNuGetCommand.RaiseCanExecuteChanged();
-            _eventAggregator.GetEvent<SelectedVersionChanged>().Publish(SelectedVersion);
+            _eventAggregator.GetEvent<NuGetUpdated>().Publish(SelectedVersion);
 
             var dependencies = await _nuGet.GetDependecies();
             Dependencies = new ObservableCollection<string>(dependencies);
