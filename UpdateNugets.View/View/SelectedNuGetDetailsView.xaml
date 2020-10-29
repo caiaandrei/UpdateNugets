@@ -14,7 +14,7 @@
             <BooleanToVisibilityConverter x:Key="VisibleIfTrueConverter" />
         </ResourceDictionary>
     </UserControl.Resources>
-    <GroupBox>
+    <GroupBox HorizontalAlignment="Stretch">
         <GroupBox.Header>
             <TextBlock Padding="5"
                    Text="NuGet Details"
@@ -22,8 +22,9 @@
                    FontSize="15">
             </TextBlock>
         </GroupBox.Header>
-        <Grid>
-            <DockPanel Visibility="{Binding AreVersionsVisible, Converter={StaticResource VisibleIfTrueConverter}}">
+        <Grid HorizontalAlignment="Stretch">
+            <DockPanel Visibility="{Binding AreVersionsVisible, Converter={StaticResource VisibleIfTrueConverter}}"
+                       HorizontalAlignment="Stretch">
                 <DockPanel DockPanel.Dock="Top" 
                        Margin="5"
                        LastChildFill="False">
@@ -41,10 +42,9 @@
                          DockPanel.Dock="Top"/>
                 </DockPanel>
 
-                <DockPanel LastChildFill="False"
-                        DockPanel.Dock="Top"
-                        HorizontalAlignment="Left"
-                        Margin="5">
+                <DockPanel DockPanel.Dock="Top"
+                           HorizontalAlignment="Stretch"
+                           Margin="5">
 
                     <TextBlock Text="Versions"
                            FontWeight="DemiBold"
@@ -52,50 +52,46 @@
                            Margin="2"
                            DockPanel.Dock="Top"/>
 
-                    <ComboBox ItemsSource="{Binding Versions}"
-                          SelectedItem="{Binding SelectedVersion}"
-                          Margin="2"
-                          DockPanel.Dock="Top">
-                        <ComboBox.ItemTemplate>
-                            <DataTemplate>
-                                <StackPanel Orientation="Horizontal">
-                                    <TextBlock Text="{Binding NuGetVersion}"
-                                           VerticalAlignment="Center"/>
+                    <DockPanel>
+                        <ComboBox ItemsSource="{Binding Versions}"
+                                  SelectedItem="{Binding SelectedVersion}"
+                                  DockPanel.Dock="Left"
+                                  Margin="2"
+                                  >
+                            <ComboBox.ItemTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="{Binding NuGetVersion}"
+                                           VerticalAlignment="Center" />
+                                    </StackPanel>
+                                </DataTemplate>
+                            </ComboBox.ItemTemplate>
+                        </ComboBox>
 
-                                    <Image Source="{StaticResource CheckIcon}" 
-                                       Width="16"
-                                       Height="16"
-                                       Margin="2"
-                                       Visibility="{Binding IsTheCurrentVersion, Converter={StaticResource VisibleIfTrueConverter}}" />
+                        <Image Source="{StaticResource ArrowUpIcon}" 
+                               Width="16"
+                               Height="16"          
+                               Margin="3" 
+                               DockPanel.Dock="Left"
+                               Visibility="{Binding IsHigherVersionAvaiable, Converter={StaticResource VisibleIfTrueConverter}}" />
 
+                        <Image Source="{StaticResource WarningIcon}"             
+                               DockPanel.Dock="Left"
+                               Width="16"            
+                               Height="16"            
+                               Margin="3"            
+                               Visibility="{Binding AreMultipleVersions, Converter={StaticResource VisibleIfTrueConverter}}" />
 
-                                    <Image Source="{StaticResource WarningIcon}" 
-                                       Width="16"
-                                       Height="16"
-                                       Margin="2" />
-
-
-                                    <Image Source="{StaticResource ArrowUpIcon}" 
-                                       Width="16"
-                                       Height="16"
-                                       Margin="2" />
-
-
-
-                                </StackPanel>
-
-                            </DataTemplate>
-                        </ComboBox.ItemTemplate>
-                    </ComboBox>
+                        <Button Content="Update NuGet"
+                                Grid.Column="3"
+                                Margin="3"
+                                HorizontalAlignment="Right"
+                                VerticalAlignment="Center"
+                                Command="{Binding UpdateNuGetCommand}"
+                                CommandParameter="{Binding}"
+                                />
+                    </DockPanel>
                 </DockPanel>
-
-                <Button Content="Update NuGet" 
-                    VerticalAlignment="Bottom"
-                    HorizontalAlignment="Right"
-                    DockPanel.Dock="Bottom"
-                    Margin="0 5 10 10"
-                    Command="{Binding UpdateNuGetCommand}"
-                    CommandParameter="{Binding}"/>
 
                 <DockPanel DockPanel.Dock="Top"
                         HorizontalAlignment="Stretch"

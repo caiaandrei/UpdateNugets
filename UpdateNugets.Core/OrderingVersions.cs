@@ -8,7 +8,7 @@ namespace UpdateNugets.Core
         public int Compare(Version version1, Version version2)
         {
             var splitedVersion1 = version1.NuGetVersion.Split('.').Select(item => int.Parse(item)).ToArray();
-            var splitedVersion2 = version1.NuGetVersion.Split('.').Select(item => int.Parse(item)).ToArray();
+            var splitedVersion2 = version2.NuGetVersion.Split('.').Select(item => int.Parse(item)).ToArray();
 
             if (splitedVersion1[0] == splitedVersion2[0])
             {

@@ -20,7 +20,8 @@ namespace UpdateNugets.UI.ViewModel
         private bool _areVersionsVisible = true;
         private bool _areDependeciesVisible;
         private bool _areDependeciesLoading = true;
-
+        private bool _isHigherVersionAvaiable;
+        private bool _areMultipleVersions;
         public SelectedNuGetDetailsViewModel(IEventAggregator eventAggregator)
         {
             _eventAggregator = eventAggregator;
@@ -34,6 +35,11 @@ namespace UpdateNugets.UI.ViewModel
             {
                 _versions = value;
                 OnPropertyChanged(nameof(Versions));
+                if (Versions.Count > 1)
+                {
+                    IsHigherVersionAvaiable = _nuGet.IsHigherVersionAvailable(_nuGet);
+                    AreMultipleVersions = _nuGet.AreMultipleVersionUsed;
+                }
             }
         }
 
@@ -117,6 +123,26 @@ namespace UpdateNugets.UI.ViewModel
             }
         }
 
+        public bool IsHigherVersionAvaiable
+        {
+            get { return _isHigherVersionAvaiable; }
+            set
+            {
+                _isHigherVersionAvaiable = value;
+                OnPropertyChanged(nameof(IsHigherVersionAvaiable));
+
+            }
+        }
+
+        public bool AreMultipleVersions
+        {
+            get { return _areMultipleVersions; }
+            set
+            {
+                _areMultipleVersions = value;
+                OnPropertyChanged(nameof(AreMultipleVersions));
+            }
+        }
 
 
         public async Task LoadAsync(ProjectNuGet nuGet)

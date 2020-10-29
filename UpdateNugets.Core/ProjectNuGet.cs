@@ -44,6 +44,8 @@ namespace UpdateNugets.Core
 
         public string InitialNuGetVersion { get; }
 
+        public bool AreMultipleVersionUsed => Versions.Count(item => item.IsTheCurrentVersion) > 1;
+
         public override string ToString()
         {
             return Name;
@@ -99,6 +101,22 @@ namespace UpdateNugets.Core
             }
         }
 
+        public bool IsHigherVersionAvailable(ProjectNuGet nuGet)
+        {
+            if (nuGet.Versions.Count > 1)
+            {
+                var higherVersion = nuGet.Versions.FirstOrDefault(item => !item.IsTheCurrentVersion);
+                foreach (var version in nuGet.Versions)
+                {
+                    if (higherVersion != null && version.IsTheCurrentVersion && higherVersion.IsGreaterThan(version))
+                    {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+
         private bool IsTheSameVersion(ProjectNuGet nuGet, string packageVersion)
         {
             return !nuGet.Versions.Any(version =>
@@ -108,7 +126,7 @@ namespace UpdateNugets.Core
             });
         }
 
-        private static void OrderNuGetVersions(ProjectNuGet nuGet)
+        private void OrderNuGetVersions(ProjectNuGet nuGet)
         {
             nuGet.Versions.Select(item =>
             {

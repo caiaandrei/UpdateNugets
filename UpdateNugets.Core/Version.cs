@@ -9,5 +9,10 @@ namespace UpdateNugets.Core
         public ObservableCollection<string> Files { get; set; } = new ObservableCollection<string>();
 
         public bool IsTheCurrentVersion { get; set; }
+
+        public bool IsGreaterThan(Version version)
+        {
+            return new OrderingVersions().Compare(this, version) > 0;
+        }
     }
 }
