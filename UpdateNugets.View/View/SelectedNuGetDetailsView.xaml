@@ -75,7 +75,8 @@
                                DockPanel.Dock="Left"
                                Visibility="{Binding IsHigherVersionAvaiable, Converter={StaticResource VisibleIfTrueConverter}}" />
 
-                        <Image Source="{StaticResource WarningIcon}"             
+                        <Image Source="{StaticResource WarningIcon}"  
+                               ToolTip="Different Versions in different files"
                                DockPanel.Dock="Left"
                                Width="16"            
                                Height="16"            
