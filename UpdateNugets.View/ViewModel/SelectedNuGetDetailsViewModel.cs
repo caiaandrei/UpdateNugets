@@ -37,7 +37,7 @@ namespace UpdateNugets.UI.ViewModel
                 OnPropertyChanged(nameof(Versions));
                 if (Versions.Count > 1)
                 {
-                    IsHigherVersionAvaiable = _nuGet.IsHigherVersionAvailable(_nuGet);
+                    IsHigherVersionAvaiable = _nuGet.IsHigherVersionAvailable();
                     AreMultipleVersions = _nuGet.AreMultipleVersionUsed;
                 }
             }
@@ -147,7 +147,7 @@ namespace UpdateNugets.UI.ViewModel
 
         public async Task LoadAsync(ProjectNuGet nuGet)
         {
-            nuGet = await nuGet.SearchNuGetVersions(nuGet);
+            nuGet = await nuGet.SearchNuGetVersions();
             _nuGet = nuGet;
             Versions = new ObservableCollection<Version>(_nuGet.Versions);
             Name = nuGet.Name;
@@ -156,7 +156,7 @@ namespace UpdateNugets.UI.ViewModel
 
         public async Task LoadDependenciesAsync()
         {
-            var dependencies = await _nuGet.GetDependecies(_nuGet, SelectedVersion.NuGetVersion);
+            var dependencies = await _nuGet.GetDependecies();
             Dependencies = new ObservableCollection<string>(dependencies);
         }
 
@@ -167,7 +167,7 @@ namespace UpdateNugets.UI.ViewModel
 
         private async Task OnExecuteUpdateCommand()
         {
-            _nuGet.UpdateNuGets(_nuGet.Name, _nuGet.CurrentSelectedVersion.NuGetVersion, _nuGet.CurrentVersion.Files);
+            _nuGet.UpdateNuGets();
 
             _nuGet.CurrentSelectedVersion.Files.AddRange(_nuGet.CurrentVersion.Files);
             _nuGet.CurrentSelectedVersion.IsTheCurrentVersion = true;
@@ -181,7 +181,7 @@ namespace UpdateNugets.UI.ViewModel
             UpdateNuGetCommand.RaiseCanExecuteChanged();
             _eventAggregator.GetEvent<SelectedVersionChanged>().Publish(SelectedVersion);
 
-            var dependencies = await _nuGet.GetDependecies(_nuGet, SelectedVersion.NuGetVersion);
+            var dependencies = await _nuGet.GetDependecies();
             Dependencies = new ObservableCollection<string>(dependencies);
         }
     }

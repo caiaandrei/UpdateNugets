@@ -28,8 +28,8 @@ namespace UpdateNugets.Core
 
             if (searchOnline)
             {
-                await _interogateNuGetFeed.SearchAsync(name, 20, includePrerelease);
-                foreach (var item in _interogateNuGetFeed.Packages)
+                var packages = await _interogateNuGetFeed.SearchAsync(name, 20, includePrerelease);
+                foreach (var item in packages)
                 {
                     result.Add(await ConvertPackageSearchMetadataToNuGetAsync(item));
                 }

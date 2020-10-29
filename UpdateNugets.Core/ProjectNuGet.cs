@@ -20,8 +20,6 @@ namespace UpdateNugets.Core
             _interogateNuGetFeed = interogateNuGetFeed;
         }
 
-        public event EventHandler CurrentSelectedVersionChanged;
-
         public string Name { get; }
 
         public IList<Version> Versions { get; }
@@ -35,11 +33,7 @@ namespace UpdateNugets.Core
         public Version CurrentSelectedVersion
         {
             get => _currentSelectedVersion;
-            set
-            {
-                _currentSelectedVersion = value;
-                CurrentSelectedVersionChanged?.Invoke(this, EventArgs.Empty);
-            }
+            set => _currentSelectedVersion = value;
         }
 
         public string InitialNuGetVersion { get; }
@@ -51,18 +45,18 @@ namespace UpdateNugets.Core
             return Name;
         }
 
-        public async Task<ProjectNuGet> SearchNuGetVersions(ProjectNuGet nuGet)
+        public async Task<ProjectNuGet> SearchNuGetVersions()
         {
-            var foundPackages = await _interogateNuGetFeed.SearchAsync(nuGet.Name, 20);
+            var foundPackages = await _interogateNuGetFeed.SearchAsync(Name, 20);
 
             if (foundPackages.Count == 0)
             {
-                return nuGet;
+                return this;
             }
 
             foreach (var package in foundPackages)
             {
-                if (package.Title.Equals(nuGet.Name) || package.Identity.Id.Equals(nuGet.Name))
+                if (package.Title.Equals(Name) || package.Identity.Id.Equals(Name))
                 {
                     var allVersions = await package.GetVersionsAsync();
                     List<Version> versions = new List<Version>();
@@ -70,9 +64,9 @@ namespace UpdateNugets.Core
                     foreach (var item in allVersions)
                     {
                         var packageVersion = item.Version.Version.ToString();
-                        if (IsTheSameVersion(nuGet, packageVersion))
+                        if (IsTheSameVersion(packageVersion))
                         {
-                            nuGet.Versions.Add(new Version
+                            Versions.Add(new Version
                             {
                                 NuGetVersion = packageVersion
                             });
@@ -82,31 +76,31 @@ namespace UpdateNugets.Core
                 }
             }
 
-            OrderNuGetVersions(nuGet);
+            OrderNuGetVersions();
 
-            return nuGet;
+            return this;
         }
 
-        public async Task<IList<string>> GetDependecies(ProjectNuGet selectedNuGet, string nuGetVersion)
+        public async Task<IList<string>> GetDependecies()
         {
-            return await _interogateNuGetFeed.GetDependecies(selectedNuGet.Name, nuGetVersion);
+            return await _interogateNuGetFeed.GetDependecies(Name, CurrentSelectedVersion.NuGetVersion);
         }
 
-        public void UpdateNuGets(string nugetName, string newNuGetVersion, IList<string> files)
+        public void UpdateNuGets()
         {
-            foreach (var file in files)
+            foreach (var file in CurrentVersion.Files)
             {
                 var project = new Csproj(file);
-                project.UpdateANuget(nugetName, newNuGetVersion);
+                project.UpdateANuget(Name, CurrentSelectedVersion.NuGetVersion);
             }
         }
 
-        public bool IsHigherVersionAvailable(ProjectNuGet nuGet)
+        public bool IsHigherVersionAvailable()
         {
-            if (nuGet.Versions.Count > 1)
+            if (Versions.Count > 1)
             {
-                var higherVersion = nuGet.Versions.FirstOrDefault(item => !item.IsTheCurrentVersion);
-                foreach (var version in nuGet.Versions)
+                var higherVersion = Versions.FirstOrDefault(item => !item.IsTheCurrentVersion);
+                foreach (var version in Versions)
                 {
                     if (higherVersion != null && version.IsTheCurrentVersion && higherVersion.IsGreaterThan(version))
                     {
@@ -117,18 +111,18 @@ namespace UpdateNugets.Core
             return false;
         }
 
-        private bool IsTheSameVersion(ProjectNuGet nuGet, string packageVersion)
+        private bool IsTheSameVersion(string packageVersion)
         {
-            return !nuGet.Versions.Any(version =>
+            return !Versions.Any(version =>
             {
                 return packageVersion.Equals(version.NuGetVersion)
                        || (packageVersion.Contains(version.NuGetVersion) && packageVersion.LastOrDefault().Equals('0'));
             });
         }
 
-        private void OrderNuGetVersions(ProjectNuGet nuGet)
+        private void OrderNuGetVersions()
         {
-            nuGet.Versions.Select(item =>
+            Versions.Select(item =>
             {
                 var splitedVersion = item.NuGetVersion.Split('.');
 
@@ -140,7 +134,7 @@ namespace UpdateNugets.Core
                 return item;
             }).ToList();
 
-            nuGet.Versions.ToList().Sort(new OrderingVersions());
+            Versions.ToList().Sort(new OrderingVersions());
         }
     }
 }

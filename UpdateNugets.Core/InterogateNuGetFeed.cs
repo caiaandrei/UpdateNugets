@@ -4,7 +4,6 @@ using NuGet.Packaging;
 using NuGet.Protocol.Core.Types;
 using NuGet.Versioning;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -21,11 +20,8 @@ namespace UpdateNugets.Core
 
         }
 
-        public ObservableCollection<IPackageSearchMetadata> Packages { get; set; }
-
         public async Task<IList<IPackageSearchMetadata>> SearchAsync(string text, int take, bool includePrerelease = false)
         {
-            Packages = new ObservableCollection<IPackageSearchMetadata>();
             var cancellationToken = new CancellationToken();
 
             var packageSource = new PackageSource(source);
@@ -36,10 +32,9 @@ namespace UpdateNugets.Core
 
             var packages = await rawPackageSearchResouce.SearchAsync(text, searchFilter, 0, take, NullLogger.Instance, cancellationToken);
 
-            Packages.AddRange(packages);
             return packages.ToList();
         }
-    
+
         public async Task<IList<string>> GetDependecies(string packageId, string version)
         {
             ILogger logger = NullLogger.Instance;
