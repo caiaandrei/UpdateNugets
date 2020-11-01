@@ -19,16 +19,36 @@ namespace UpdateNugets.UI.ViewModel
         private bool _isStatusVisible;
         private string _nuGetDetailsStatus = "Loading NuGet Details...";
         private string _nuGetDependenciesStatus = "Loading Dependecies...";
+        private bool _isNewProjectFlyoutOpen;
+        private bool _isOpenProjectFlyoutOpen;
+        private bool _isSettingsFlyoutOpen;
+        private bool _isFinishProjectFlyoutOpen;
 
-        public MainViewModel(IEventAggregator eventAggregator, NuGetsListViewModel nuGetsListViewModel, SelectedNuGetDetailsViewModel selectedNuGetDetailsViewModel, SelectedNuGetVersionFilesViewModel selectedNuGetVersionFilesViewModel)
+        public MainViewModel(IEventAggregator eventAggregator,
+                             NuGetsListViewModel nuGetsListViewModel,
+                             SelectedNuGetDetailsViewModel selectedNuGetDetailsViewModel,
+                             SelectedNuGetVersionFilesViewModel selectedNuGetVersionFilesViewModel,
+                             NewProjectViewModel newProjectViewModel,
+                             OpenProjectViewModel openProjectViewModel,
+                             FinishProjectViewModel finishProjectViewModel,
+                             ProjectSettingsViewModel projectSettingsViewModel)
         {
             _eventAggregator = eventAggregator;
 
             NuGetsListViewModel = nuGetsListViewModel;
             SelectedNuGetDetailsViewModel = selectedNuGetDetailsViewModel;
             SelectedNuGetVersionFilesViewModel = selectedNuGetVersionFilesViewModel;
+            NewProjectViewModel = newProjectViewModel;
+            OpenProjectViewModel = openProjectViewModel;
+            FinishProjectViewModel = finishProjectViewModel;
+            ProjectSettingsViewModel = projectSettingsViewModel;
 
             SearchCommand = new DelegateCommand(async () => await ExecuteSearchAsyncCommand());
+
+            NewProjectCommand = new DelegateCommand(() => ExecuteNewProjectCommand());
+            OpenProjectCommand = new DelegateCommand(() => ExecuteOpenProjectCommand());
+            SettingsCommand = new DelegateCommand(() => ExecuteSettingsCommand());
+            FinishProjectCommand = new DelegateCommand(() => ExecuteFinishProjectCommand());
 
             _eventAggregator.GetEvent<SelectedNuGetChangedEvent>().Subscribe(OnSelectedNuGetChangedEvent);
             _eventAggregator.GetEvent<SelectedVersionChanged>().Subscribe(OnSelectedVersionChangedEvent);
@@ -41,6 +61,14 @@ namespace UpdateNugets.UI.ViewModel
 
         public NuGetsListViewModel NuGetsListViewModel { get; }
 
+        public NewProjectViewModel NewProjectViewModel { get; }
+
+        public OpenProjectViewModel OpenProjectViewModel { get; }
+
+        public FinishProjectViewModel FinishProjectViewModel { get; }
+
+        public ProjectSettingsViewModel ProjectSettingsViewModel { get; }
+
         public ICommand RefreshProjectCommand { get; }
 
         public ICommand NewProjectCommand { get; }
@@ -52,6 +80,27 @@ namespace UpdateNugets.UI.ViewModel
         public ICommand SettingsCommand { get; }
 
         public ICommand SearchCommand { get; }
+
+        public bool IsNewProjectFlyoutOpen
+        {
+            get { return _isNewProjectFlyoutOpen; }
+            set
+            {
+                _isNewProjectFlyoutOpen = value;
+                OnPropertyChanged(nameof(IsNewProjectFlyoutOpen));
+            }
+        }
+
+        public bool IsOpenProjectFlyoutOpen
+        {
+            get { return _isOpenProjectFlyoutOpen; }
+            set
+            {
+                _isOpenProjectFlyoutOpen = value;
+                OnPropertyChanged(nameof(IsOpenProjectFlyoutOpen));
+            }
+        }
+
 
         public string SearchBoxText
         {
@@ -134,6 +183,26 @@ namespace UpdateNugets.UI.ViewModel
             }
         }
 
+        public bool IsSettingsFlyoutOpen
+        {
+            get => _isSettingsFlyoutOpen;
+            set
+            {
+                _isSettingsFlyoutOpen = value;
+                OnPropertyChanged(nameof(IsSettingsFlyoutOpen));
+            }
+        }
+
+        public bool IsFinishProjectFlyoutOpen
+        {
+            get => _isFinishProjectFlyoutOpen;
+            set
+            {
+                _isFinishProjectFlyoutOpen = value;
+                OnPropertyChanged(nameof(IsFinishProjectFlyoutOpen));
+            }
+        }
+
         private async void OnSelectedNuGetChangedEvent(ProjectNuGet nuGet)
         {
             SelectedNuGetDetailsViewModel.AreVersionsLoading = true;
@@ -172,5 +241,24 @@ namespace UpdateNugets.UI.ViewModel
             NuGetsListViewModel.NuGets = allNuGets;
         }
 
+        private void ExecuteOpenProjectCommand()
+        {
+            IsOpenProjectFlyoutOpen = true;
+        }
+
+        private void ExecuteNewProjectCommand()
+        {
+            IsNewProjectFlyoutOpen = true;
+        }
+
+        private void ExecuteSettingsCommand()
+        {
+            IsSettingsFlyoutOpen = true;
+        }
+
+        private void ExecuteFinishProjectCommand()
+        {
+            IsFinishProjectFlyoutOpen = true;
+        }
     }
 }

@@ -25,18 +25,19 @@
 
     <Controls:MetroWindow.LeftWindowCommands>
         <Controls:WindowCommands>
-            <Button Content="Refresh Project" />
-            <Button Content="New Project" />
-            <Button Content="Open Project" />
+            <Button Content="New Project" 
+                    Command="{Binding NewProjectCommand}"/>
+            
+            <Button Content="Open Project"
+                    Command="{Binding OpenProjectCommand}"/>
+            
+            <Button Content="Finish Project"
+                    Command="{Binding FinishProjectCommand}"/>
+            
+            <Button Content="Project Settings"
+                    Command="{Binding SettingsCommand}"/>
         </Controls:WindowCommands>
     </Controls:MetroWindow.LeftWindowCommands>
-    
-    <Controls:MetroWindow.RightWindowCommands>
-        <Controls:WindowCommands>
-            <Button Content="Finish Project" />
-            <Button Content="Settings" />
-        </Controls:WindowCommands>
-    </Controls:MetroWindow.RightWindowCommands>
 
     <Window.Resources>
         <ResourceDictionary>
@@ -47,6 +48,41 @@
             <helpers:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
         </ResourceDictionary>
     </Window.Resources>
+
+    <Controls:MetroWindow.Flyouts>
+        <Controls:FlyoutsControl>
+            <Controls:Flyout Header="New Project"
+                             Position="Right"
+                             IsOpen="{Binding IsNewProjectFlyoutOpen}"
+                             Theme="Inverse"
+                             MinWidth="500"
+                             >
+                <local:NewProjectView DataContext="{Binding NewProjectViewModel}"/>
+            </Controls:Flyout>
+
+            <Controls:Flyout Header="Open Project"
+                             Position="Right"
+                             IsOpen="{Binding IsOpenProjectFlyoutOpen}"
+                             MinWidth="500">
+                <local:OpenProjectView DataContext="{Binding OpenProjectViewModel}"/>
+            </Controls:Flyout>
+
+            <Controls:Flyout Header="Finish Project"
+                             Position="Right"
+                             IsOpen="{Binding IsFinishProjectFlyoutOpen}"
+                             MinWidth="500">
+                <local:FinishProjectView DataContext="{Binding FinishProjectViewModel}"/>
+            </Controls:Flyout>
+
+            <Controls:Flyout Header="Project Settings"
+                             Position="Right"
+                             IsOpen="{Binding IsSettingsFlyoutOpen}"
+                             MinWidth="500">
+                <local:ProjectSettingsView DataContext="{Binding ProjectSettingsViewModel}"/>
+            </Controls:Flyout>
+        </Controls:FlyoutsControl>
+
+    </Controls:MetroWindow.Flyouts>
 
     <Grid>
         <Grid.RowDefinitions>

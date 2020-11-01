@@ -20,6 +20,10 @@ namespace UpdateNugets.UI.Startup
             builder.RegisterType<NuGetsListViewModel>().AsSelf();
             builder.RegisterType<SelectedNuGetDetailsViewModel>().AsSelf();
             builder.RegisterType<SelectedNuGetVersionFilesViewModel>().AsSelf();
+            builder.RegisterType<NewProjectViewModel>().AsSelf();
+            builder.RegisterType<OpenProjectViewModel>().AsSelf();
+            builder.RegisterType<ProjectSettingsViewModel>().AsSelf();
+            builder.RegisterType<FinishProjectViewModel>().AsSelf();
 
             builder.RegisterType<MainViewModel>().AsSelf();
 
