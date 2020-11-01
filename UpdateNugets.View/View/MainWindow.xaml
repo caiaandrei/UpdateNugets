@@ -9,7 +9,6 @@
                       mc:Ignorable="d"
                       Title="Update NuGets App" 
                       WindowState="Maximized"
-                      Loaded="Window_Loaded"
                       x:Name="ThisView"
                       Style="{DynamicResource MahApps.Styles.MetroWindow.Clean}"
                       GlowBrush="{DynamicResource MahApps.Brushes.Accent}"

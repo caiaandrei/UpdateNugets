@@ -53,6 +53,8 @@ namespace UpdateNugets.UI.ViewModel
             _eventAggregator.GetEvent<SelectedNuGetChangedEvent>().Subscribe(OnSelectedNuGetChangedEvent);
             _eventAggregator.GetEvent<SelectedVersionChanged>().Subscribe(OnSelectedVersionChangedEvent);
             _eventAggregator.GetEvent<NuGetUpdated>().Subscribe(OnSelectedVersionChangedEvent);
+
+            NewProjectViewModel.ProjectCreated += ExecuteProjectCreated;
         }
 
         public SelectedNuGetDetailsViewModel SelectedNuGetDetailsViewModel { get; }
@@ -259,6 +261,12 @@ namespace UpdateNugets.UI.ViewModel
         private void ExecuteFinishProjectCommand()
         {
             IsFinishProjectFlyoutOpen = true;
+        }
+
+        private void ExecuteProjectCreated(object sender, System.EventArgs e)
+        {
+            WorkspacePath = NewProjectViewModel.WorkspacePath;
+            IsNewProjectFlyoutOpen = false;
         }
     }
 }

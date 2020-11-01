@@ -10,28 +10,38 @@
         <TextBlock DockPanel.Dock="Top"
                        Text="Name" />
 
-        <TextBox DockPanel.Dock="Top" />
+        <TextBox DockPanel.Dock="Top"
+                 Text="{Binding ProjectName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
         
         <DockPanel DockPanel.Dock="Top">
             <TextBlock Text="Project Path" 
                        DockPanel.Dock="Top"/>
             <Button Content="Browse" 
-                    DockPanel.Dock="Right"/>
-            <TextBox />
+                    DockPanel.Dock="Right"
+                    Command="{Binding BrowseProjectPathCommand}"
+                    CommandParameter="{Binding}"/>
+            <TextBox Text="{Binding ProjectPath, Mode=OneWay}"
+                     IsReadOnly="True"/>
         </DockPanel>
 
         <DockPanel DockPanel.Dock="Top">
             <TextBlock Text="Workspace Path" 
                        DockPanel.Dock="Top"/>
             <Button Content="Browse" 
-                    DockPanel.Dock="Right"/>
-            <TextBox />
+                    DockPanel.Dock="Right"
+                    Command="{Binding BrowseWorkspacePathCommand}"
+                    CommandParameter="{Binding}"/>
+            <TextBox Text="{Binding WorkspacePath, Mode=OneWay}"
+                     IsReadOnly="True"/>
         </DockPanel>
 
         <Button Content="Create"
                 DockPanel.Dock="Top"
                 VerticalAlignment="Center"
-                HorizontalAlignment="Center"/>
+                HorizontalAlignment="Center"
+                Command="{Binding CreateProjectCommand}"
+                CommandParameter="{Binding}"
+                />
 
     </DockPanel>
 </UserControl>

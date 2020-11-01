@@ -1,5 +1,7 @@
 ﻿using Autofac;
 using Prism.Events;
+using System.Windows.Input;
+using UpdateNugets.UI.Command;
 using UpdateNugets.UI.Helpers;
 using UpdateNugets.UI.View;
 using UpdateNugets.UI.ViewModel;
@@ -16,6 +18,11 @@ namespace UpdateNugets.UI.Startup
             builder.RegisterType<UIService>().As<IUIServices>();
 
             builder.RegisterType<MainWindow>().AsSelf();
+
+            builder.RegisterType<BrowsePathHelper>().AsSelf();
+            builder.RegisterType<BrowseProjectPathCommand>().As<IBrowseProjectPathCommand>();
+            builder.RegisterType<BrowseWorkspacePathCommand>().As<IBrowseWorkspacePathCommand>();
+            builder.RegisterType<CreateProjectCommand>().As<ICreateProjectCommand>();
 
             builder.RegisterType<NuGetsListViewModel>().AsSelf();
             builder.RegisterType<SelectedNuGetDetailsViewModel>().AsSelf();
