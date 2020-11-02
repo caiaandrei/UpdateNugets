@@ -116,28 +116,32 @@
                      Style="{DynamicResource MahApps.Styles.TextBox.Search}"
                      Text="{Binding SearchBoxText, UpdateSourceTrigger=PropertyChanged}"/>
         </DockPanel>
-        
-        <local:NuGetsListView x:Name="NuGetsListView"
-                              Grid.Row="1"
-                              Margin="5"
-                              DataContext="{Binding NuGetsListViewModel}"/>
 
+        <Grid Grid.Row="1"                
+              Margin="5"
+              Visibility="{Binding IsWorkspaceSet, Converter={StaticResource BooleanToVisibilityConverter}}">
+            <local:NuGetsListView x:Name="NuGetsListView"
+                                  DataContext="{Binding NuGetsListViewModel}"/>
+        </Grid>
+        
         <Grid Grid.Column="2"
               Grid.Row="1"
-              Margin="5">
+              Margin="5"
+              Visibility="{Binding IsWorkspaceSet, Converter={StaticResource BooleanToVisibilityConverter}}">
             <local:SelectedNuGetVersionFilesView DataContext="{Binding SelectedNuGetVersionFilesViewModel}"/>
         </Grid>
 
         <Grid Grid.Column="1"
               Grid.Row="1"
-              Margin="5">
+              Margin="5"
+              Visibility="{Binding IsWorkspaceSet, Converter={StaticResource BooleanToVisibilityConverter}}">
             <local:SelectedNuGetDetailsView DataContext="{Binding SelectedNuGetDetailsViewModel}" />
         </Grid>
 
         <StatusBar Grid.Row="2"
                    Grid.ColumnSpan="3">
             <StatusBarItem>
-                <DockPanel>
+                <DockPanel Visibility="{Binding IsWorkspaceSet, Converter={StaticResource BooleanToVisibilityConverter}}">
                     <TextBlock DockPanel.Dock="Left"
                                Text="Workspace Path:"
                                VerticalAlignment="Center"

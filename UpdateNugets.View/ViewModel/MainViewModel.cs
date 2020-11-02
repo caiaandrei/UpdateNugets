@@ -123,6 +123,7 @@ namespace UpdateNugets.UI.ViewModel
             {
                 _projectPath = value;
                 OnPropertyChanged(nameof(WorkspacePath));
+                OnPropertyChanged(nameof(IsWorkspaceSet));
                 ManageNuGets = new ManageNugets(_projectPath);
                 NuGetsListViewModel.Load(ManageNuGets);
             }
@@ -205,6 +206,8 @@ namespace UpdateNugets.UI.ViewModel
                 OnPropertyChanged(nameof(IsFinishProjectFlyoutOpen));
             }
         }
+
+        public bool IsWorkspaceSet => !string.IsNullOrEmpty(WorkspacePath);
 
         private async void OnSelectedNuGetChangedEvent(ProjectNuGet nuGet)
         {

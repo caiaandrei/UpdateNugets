@@ -7,40 +7,56 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <DockPanel LastChildFill="False">
-        <TextBlock DockPanel.Dock="Top"
-                       Text="Name" />
-
-        <TextBox DockPanel.Dock="Top"
-                 Text="{Binding ProjectName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+        <DockPanel DockPanel.Dock="Top"
+                   Margin="5">
+            <TextBlock DockPanel.Dock="Top"
+                       Text="Name" 
+                       Margin="2"
+                       FontWeight="DemiBold"/>
+            <TextBox DockPanel.Dock="Top"
+                     Text="{Binding ProjectName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                     Margin="2"/>
+        </DockPanel>
         
-        <DockPanel DockPanel.Dock="Top">
+        <DockPanel DockPanel.Dock="Top"
+                   Margin="5">
             <TextBlock Text="Project Path" 
-                       DockPanel.Dock="Top"/>
+                       DockPanel.Dock="Top"
+                       Margin="2"
+                       FontWeight="DemiBold"/>
             <Button Content="Browse" 
                     DockPanel.Dock="Right"
                     Command="{Binding BrowseProjectPathCommand}"
-                    CommandParameter="{Binding}"/>
+                    CommandParameter="{Binding}"
+                    Margin="2"/>
             <TextBox Text="{Binding ProjectFolderPath, Mode=OneWay}"
-                     IsReadOnly="True"/>
+                     IsReadOnly="True"
+                     Margin="2"/>
         </DockPanel>
 
-        <DockPanel DockPanel.Dock="Top">
+        <DockPanel DockPanel.Dock="Top"
+                   Margin="5">
             <TextBlock Text="Workspace Path" 
-                       DockPanel.Dock="Top"/>
+                       DockPanel.Dock="Top"
+                       Margin="2"
+                       FontWeight="DemiBold"/>
             <Button Content="Browse" 
                     DockPanel.Dock="Right"
                     Command="{Binding BrowseWorkspacePathCommand}"
-                    CommandParameter="{Binding}"/>
+                    CommandParameter="{Binding}"
+                    Margin="2"/>
             <TextBox Text="{Binding WorkspacePath, Mode=OneWay}"
-                     IsReadOnly="True"/>
+                     IsReadOnly="True"
+                     Margin="2"/>
         </DockPanel>
 
         <Button Content="Create"
                 DockPanel.Dock="Top"
                 VerticalAlignment="Center"
-                HorizontalAlignment="Center"
+                HorizontalAlignment="Right"
                 Command="{Binding CreateProjectCommand}"
                 CommandParameter="{Binding}"
+                Margin="5 20 7 5"
                 />
 
     </DockPanel>
