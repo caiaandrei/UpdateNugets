@@ -24,6 +24,8 @@ namespace UpdateNugets.UI.Startup
             builder.RegisterType<BrowseWorkspacePathCommand>().As<IBrowseWorkspacePathCommand>();
             builder.RegisterType<CreateProjectCommand>().As<ICreateProjectCommand>();
 
+            builder.RegisterType<ProjectFileHelper>().AsSelf();
+
             builder.RegisterType<NuGetsListViewModel>().AsSelf();
             builder.RegisterType<SelectedNuGetDetailsViewModel>().AsSelf();
             builder.RegisterType<SelectedNuGetVersionFilesViewModel>().AsSelf();

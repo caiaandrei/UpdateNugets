@@ -14,22 +14,7 @@ namespace UpdateNugets.UI.Command
         public void Execute(object parameter)
         {
             var viewModel = parameter as NewProjectViewModel;
-
-            var xmlDocument = new XmlDocument();
-
-            var root = xmlDocument.CreateElement("Root");
-
-            var projectElement = xmlDocument.CreateElement("Project");
-            projectElement.SetAttribute("Name", viewModel.ProjectName);
-            projectElement.SetAttribute("WorkspacePath", viewModel.WorkspacePath);
-            projectElement.SetAttribute("CreatedAt", DateTime.UtcNow.ToString());
-            projectElement.SetAttribute("Status", "InProgress");
-
-            root.AppendChild(projectElement);
-            xmlDocument.AppendChild(root);
-
-            Directory.CreateDirectory(viewModel.ProjectPath);
-            xmlDocument.Save(Path.Combine(viewModel.ProjectPath, viewModel.ProjectName + ".xml"));
+            viewModel.ProjectFileHelper.GenerateProjectFile(viewModel.ProjectName, viewModel.ProjectFolderPath, viewModel.WorkspacePath);
             viewModel.OnProjectCreated();
         }
     }

@@ -1,9 +1,8 @@
 ﻿using Prism.Commands;
 using Prism.Events;
-using System.IO;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using System.Xml;
 using UpdateNugets.Core;
 using UpdateNugets.UI.Events;
 
@@ -274,24 +273,24 @@ namespace UpdateNugets.UI.ViewModel
 
         private void AddNuGetsInProjectFile()
         {
-            var filePath = Path.Combine(NewProjectViewModel.ProjectPath, NewProjectViewModel.ProjectName + ".xml");
-            var document = new XmlDocument();
-            document.Load(Path.Combine(NewProjectViewModel.ProjectPath, NewProjectViewModel.ProjectName + ".xml"));
-            var root = document.DocumentElement;
-            var packages = document.CreateElement("Packages");
+            var packages = new Dictionary<string, IList<string>>();
+
             foreach (var item in NuGetsListViewModel.NuGets)
             {
                 foreach (var version in item.Versions)
                 {
-                    var packageItem = document.CreateElement("PackageItem");
-                    packageItem.SetAttribute("Name", item.Name);
-                    packageItem.SetAttribute("InitialVersion", version.NuGetVersion);
-                    packageItem.SetAttribute("CurrentVersion", version.NuGetVersion);
-                    packages.AppendChild(packageItem);
+                    if (!packages.ContainsKey(item.Name))
+                    {
+                        packages.Add(item.Name, new List<string> { version.NuGetVersion });
+                    }
+                    else
+                    {
+                        packages[item.Name].Add(version.NuGetVersion);
+                    }
                 }
             }
-            root.FirstChild.AppendChild(packages);
-            document.Save(filePath);
+
+            NewProjectViewModel.ProjectFileHelper.AddPackagesInProjectFile(NewProjectViewModel.ProjectName, NewProjectViewModel.ProjectFolderPath, packages);
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Windows.Input;
 using UpdateNugets.UI.Command;
+using UpdateNugets.UI.Helpers;
 
 namespace UpdateNugets.UI.ViewModel
 {
@@ -12,11 +13,13 @@ namespace UpdateNugets.UI.ViewModel
 
         public NewProjectViewModel(IBrowseProjectPathCommand browseProjectPathCommand,
                                    IBrowseWorkspacePathCommand browseWorkspacePathCommand,
-                                   ICreateProjectCommand createProjectCommand)
+                                   ICreateProjectCommand createProjectCommand,
+                                   ProjectFileHelper projectFileHelper)
         {
             BrowseProjectPathCommand = browseProjectPathCommand;
             BrowseWorkspacePathCommand = browseWorkspacePathCommand;
             CreateProjectCommand = createProjectCommand;
+            ProjectFileHelper = projectFileHelper;
         }
 
         public event EventHandler ProjectCreated;
@@ -26,6 +29,8 @@ namespace UpdateNugets.UI.ViewModel
         public ICommand BrowseWorkspacePathCommand { get; }
 
         public ICommand CreateProjectCommand { get; }
+
+        public ProjectFileHelper ProjectFileHelper { get; }
 
         public string ProjectName 
         {
@@ -37,13 +42,13 @@ namespace UpdateNugets.UI.ViewModel
             }
         }
 
-        public string ProjectPath
+        public string ProjectFolderPath
         {
             get => _projectPath;
             set
             {
                 _projectPath = value;
-                OnPropertyChanged(nameof(ProjectPath));
+                OnPropertyChanged(nameof(ProjectFolderPath));
             }
         }
 

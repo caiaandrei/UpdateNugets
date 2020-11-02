@@ -20,7 +20,7 @@
                     DockPanel.Dock="Right"
                     Command="{Binding BrowseProjectPathCommand}"
                     CommandParameter="{Binding}"/>
-            <TextBox Text="{Binding ProjectPath, Mode=OneWay}"
+            <TextBox Text="{Binding ProjectFolderPath, Mode=OneWay}"
                      IsReadOnly="True"/>
         </DockPanel>
 

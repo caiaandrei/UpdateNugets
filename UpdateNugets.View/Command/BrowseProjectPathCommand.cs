@@ -1,6 +1,5 @@
 ﻿using System;
 using System.IO;
-using System.Windows.Input;
 using UpdateNugets.UI.Helpers;
 using UpdateNugets.UI.ViewModel;
 
@@ -23,7 +22,7 @@ namespace UpdateNugets.UI.Command
         {
             var viewModel = parameter as NewProjectViewModel;
             var selectedPath = _browsePathHelper.GetFolderPath();
-            viewModel.ProjectPath = Path.Combine(selectedPath, viewModel.ProjectName);
+            viewModel.ProjectFolderPath = Path.Combine(selectedPath, viewModel.ProjectName);
         }
     }
 }
