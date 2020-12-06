@@ -23,7 +23,7 @@
     </Controls:MetroWindow.IconTemplate>
 
     <Controls:MetroWindow.LeftWindowCommands>
-        <Controls:WindowCommands>
+        <Controls:WindowCommands Visibility="{Binding IsWorkspaceSet, Converter={StaticResource BooleanToVisibilityConverter}}">
             <Button Content="New Project" 
                     Command="{Binding NewProjectCommand}"/>
             
@@ -45,6 +45,7 @@
             </ResourceDictionary.MergedDictionaries>
              
             <helpers:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+            <helpers:InvertBooleanToVisibilityConverter x:Key="InvertBooleanToVisibilityConverter" />
         </ResourceDictionary>
     </Window.Resources>
 
@@ -84,80 +85,96 @@
     </Controls:MetroWindow.Flyouts>
 
     <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition />
-            <RowDefinition Height="Auto"/>
-        </Grid.RowDefinitions>
+        <Grid>
+            <DockPanel LastChildFill="False"
+                       VerticalAlignment="Center"
+                       HorizontalAlignment="Center"
+                       Visibility="{Binding IsWorkspaceSet, Converter={StaticResource InvertBooleanToVisibilityConverter}}">
+                <Button Content="Create a new Project" 
+                        Command="{Binding NewProjectCommand}"
+                        Margin="10"/>
+                <Button Content="Open a Project" 
+                        Command="{Binding OpenProjectCommand}"
+                        Margin="10"/>
+                <Button Content="Continue without Project" 
+                        Command="{Binding NewProjectCommand}"
+                        Margin="10"/>
+            </DockPanel>   
+        </Grid>
+        
+        <Grid Visibility="{Binding IsWorkspaceSet, Converter={StaticResource BooleanToVisibilityConverter}}">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition />
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
 
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition />
-            <ColumnDefinition />
-            <ColumnDefinition Width="2*"/>
-        </Grid.ColumnDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition />
+                <ColumnDefinition />
+                <ColumnDefinition Width="2*"/>
+            </Grid.ColumnDefinitions>
 
-        <DockPanel Grid.ColumnSpan="2">
+            <DockPanel Grid.ColumnSpan="2">
 
-            <CheckBox Content="Include Prerelease"
+                <CheckBox Content="Include Prerelease"
                       DockPanel.Dock="Right" 
                       Margin="2"
                       VerticalContentAlignment="Center"
                       IsChecked="{Binding IncludePrerelease}"/>
-            
-            <CheckBox Content="Search Online"
+
+                <CheckBox Content="Search Online"
                       DockPanel.Dock="Right" 
                       Margin="2"
                       VerticalContentAlignment="Center"
                       IsChecked="{Binding SearchOnline}"/>
 
-            <TextBox Margin="2"
+                <TextBox Margin="2"
                      Controls:TextBoxHelper.ButtonCommand="{Binding SearchCommand, Mode=OneWay}"
                      Controls:TextBoxHelper.Watermark="Search NuGet..."
                      Style="{DynamicResource MahApps.Styles.TextBox.Search}"
                      Text="{Binding SearchBoxText, UpdateSourceTrigger=PropertyChanged}"/>
-        </DockPanel>
+            </DockPanel>
 
-        <Grid Grid.Row="1"                
-              Margin="5"
-              Visibility="{Binding IsWorkspaceSet, Converter={StaticResource BooleanToVisibilityConverter}}">
-            <local:NuGetsListView x:Name="NuGetsListView"
+            <Grid Grid.Row="1"                
+              Margin="5">
+                <local:NuGetsListView x:Name="NuGetsListView"
                                   DataContext="{Binding NuGetsListViewModel}"/>
-        </Grid>
-        
-        <Grid Grid.Column="2"
-              Grid.Row="1"
-              Margin="5"
-              Visibility="{Binding IsWorkspaceSet, Converter={StaticResource BooleanToVisibilityConverter}}">
-            <local:SelectedNuGetVersionFilesView DataContext="{Binding SelectedNuGetVersionFilesViewModel}"/>
-        </Grid>
+            </Grid>
 
-        <Grid Grid.Column="1"
+            <Grid Grid.Column="2"
               Grid.Row="1"
-              Margin="5"
-              Visibility="{Binding IsWorkspaceSet, Converter={StaticResource BooleanToVisibilityConverter}}">
-            <local:SelectedNuGetDetailsView DataContext="{Binding SelectedNuGetDetailsViewModel}" />
-        </Grid>
+              Margin="5">
+                <local:SelectedNuGetVersionFilesView DataContext="{Binding SelectedNuGetVersionFilesViewModel}"/>
+            </Grid>
 
-        <StatusBar Grid.Row="2"
+            <Grid Grid.Column="1"
+              Grid.Row="1"
+              Margin="5">
+                <local:SelectedNuGetDetailsView DataContext="{Binding SelectedNuGetDetailsViewModel}" />
+            </Grid>
+
+            <StatusBar Grid.Row="2"
                    Grid.ColumnSpan="3">
-            <StatusBarItem>
-                <DockPanel Visibility="{Binding IsWorkspaceSet, Converter={StaticResource BooleanToVisibilityConverter}}">
-                    <TextBlock DockPanel.Dock="Left"
+                <StatusBarItem>
+                    <DockPanel>
+                        <TextBlock DockPanel.Dock="Left"
                                Text="Workspace Path:"
                                VerticalAlignment="Center"
                                />
 
-                    <TextBox Text="{Binding WorkspacePath, Mode=OneWay}"
+                        <TextBox Text="{Binding WorkspacePath, Mode=OneWay}"
                              IsReadOnly="True"
                              BorderThickness="0"
                              VerticalAlignment="Center"
                              VerticalContentAlignment="Center"
                               />
-                </DockPanel>
-            </StatusBarItem>
-            <Separator Style="{StaticResource MahApps.Styles.Separator.Clean}" 
+                    </DockPanel>
+                </StatusBarItem>
+                <Separator Style="{StaticResource MahApps.Styles.Separator.Clean}" 
                        Visibility="{Binding IsStatusVisible, Converter={StaticResource BooleanToVisibilityConverter}}"/>
-            <StatusBarItem Content="{Binding StatusText}" />
-        </StatusBar>
+                <StatusBarItem Content="{Binding StatusText}" />
+            </StatusBar>
+        </Grid>
     </Grid>
 </Controls:MetroWindow>
