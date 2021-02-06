@@ -56,6 +56,8 @@ namespace UpdateNugets.UI.ViewModel
             _eventAggregator.GetEvent<NuGetUpdated>().Subscribe(OnSelectedVersionChangedEvent);
 
             NewProjectViewModel.ProjectCreated += ExecuteProjectCreated;
+
+            WorkspacePath = @"C:\Workspace\Studio_master\TranslationStudio";
         }
 
         public SelectedNuGetDetailsViewModel SelectedNuGetDetailsViewModel { get; }

@@ -23,7 +23,7 @@
     </Controls:MetroWindow.IconTemplate>
 
     <Controls:MetroWindow.LeftWindowCommands>
-        <Controls:WindowCommands Visibility="{Binding IsWorkspaceSet, Converter={StaticResource BooleanToVisibilityConverter}}">
+        <Controls:WindowCommands Visibility="Collapsed">
             <Button Content="New Project" 
                     Command="{Binding NewProjectCommand}"/>
             
@@ -50,7 +50,7 @@
     </Window.Resources>
 
     <Controls:MetroWindow.Flyouts>
-        <Controls:FlyoutsControl>
+        <Controls:FlyoutsControl Visibility="Collapsed">
             <Controls:Flyout Header="New Project"
                              Position="Right"
                              IsOpen="{Binding IsNewProjectFlyoutOpen}"
@@ -85,7 +85,7 @@
     </Controls:MetroWindow.Flyouts>
 
     <Grid>
-        <Grid>
+        <Grid Visibility="Collapsed">
             <DockPanel LastChildFill="False"
                        VerticalAlignment="Center"
                        HorizontalAlignment="Center"
@@ -121,13 +121,15 @@
                       DockPanel.Dock="Right" 
                       Margin="2"
                       VerticalContentAlignment="Center"
-                      IsChecked="{Binding IncludePrerelease}"/>
+                      IsChecked="{Binding IncludePrerelease}"
+                          Visibility="Collapsed"/>
 
                 <CheckBox Content="Search Online"
                       DockPanel.Dock="Right" 
                       Margin="2"
                       VerticalContentAlignment="Center"
-                      IsChecked="{Binding SearchOnline}"/>
+                      IsChecked="{Binding SearchOnline}"
+                          Visibility="Collapsed"/>
 
                 <TextBox Margin="2"
                      Controls:TextBoxHelper.ButtonCommand="{Binding SearchCommand, Mode=OneWay}"
