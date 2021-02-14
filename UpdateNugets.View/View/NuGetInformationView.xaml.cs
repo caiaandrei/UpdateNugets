@@ -4,9 +4,9 @@ using System.Windows.Input;
 
 namespace UpdateNugets.UI.View
 {
-    public partial class SelectedNuGetDetailsView : UserControl
+    public partial class NuGetInformationView : UserControl
     {
-        public SelectedNuGetDetailsView()
+        public NuGetInformationView()
         {
             InitializeComponent();
         }

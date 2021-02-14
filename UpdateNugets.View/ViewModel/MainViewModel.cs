@@ -1,6 +1,8 @@
 ﻿using Prism.Commands;
 using Prism.Events;
+using UpdateNugets.UI.Model;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using UpdateNugets.Core;
@@ -34,11 +36,15 @@ namespace UpdateNugets.UI.ViewModel
 
             SearchCommand = new DelegateCommand(async () => await ExecuteSearchAsyncCommand());
 
+            SelectedNuGets = new ObservableCollection<Nuget>();
+
             _eventAggregator.GetEvent<SelectedNuGetChangedEvent>().Subscribe(OnSelectedNuGetChangedEvent);
             _eventAggregator.GetEvent<SelectedVersionChanged>().Subscribe(OnSelectedVersionChangedEvent);
             _eventAggregator.GetEvent<NuGetUpdated>().Subscribe(OnSelectedVersionChangedEvent);
             _eventAggregator.GetEvent<WorkspacePathSelectedEvent>().Subscribe(OnWorkspacePathChangedEvent);
         }
+
+        public ObservableCollection<Nuget> SelectedNuGets { get; }
 
         public SelectedNuGetDetailsViewModel SelectedNuGetDetailsViewModel { get; }
 
@@ -114,21 +120,25 @@ namespace UpdateNugets.UI.ViewModel
 
         public bool IsWorkspaceSet { get; private set; }
 
-        private async void OnSelectedNuGetChangedEvent(ProjectNuGet nuGet)
+        private void OnSelectedNuGetChangedEvent(ProjectNuGet nuGet)
         {
-            SelectedNuGetDetailsViewModel.AreVersionsLoading = true;
-            SelectedNuGetVersionFilesViewModel.AreVersionsLoading = true;
-            StatusText = _nuGetDetailsStatus;
-            await SelectedNuGetDetailsViewModel.LoadAsync(nuGet);
-            SelectedNuGetDetailsViewModel.AreVersionsLoading = false;
-            SelectedNuGetVersionFilesViewModel.AreVersionsLoading = false;
+            //SelectedNuGetDetailsViewModel.AreVersionsLoading = true;
+            //SelectedNuGetVersionFilesViewModel.AreVersionsLoading = true;
+            //StatusText = _nuGetDetailsStatus;
+            //await SelectedNuGetDetailsViewModel.LoadAsync(nuGet);
+            //SelectedNuGetDetailsViewModel.AreVersionsLoading = false;
+            //SelectedNuGetVersionFilesViewModel.AreVersionsLoading = false;
 
-            if (StatusText == _nuGetDetailsStatus)
+            //if (StatusText == _nuGetDetailsStatus)
+            //{
+            //    StatusText = string.Empty;
+            //}
+
+            //HasSelectedNuGet = true;
+            SelectedNuGets.Add(new Nuget
             {
-                StatusText = string.Empty;
-            }
-
-            HasSelectedNuGet = true;
+                Name = nuGet.Name
+            });
         }
 
         private async void OnSelectedVersionChangedEvent(Version selectedVersion)
