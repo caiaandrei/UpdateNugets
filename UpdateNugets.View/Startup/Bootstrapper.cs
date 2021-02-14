@@ -33,6 +33,7 @@ namespace UpdateNugets.UI.Startup
             builder.RegisterType<OpenProjectViewModel>().AsSelf();
             builder.RegisterType<ProjectSettingsViewModel>().AsSelf();
             builder.RegisterType<FinishProjectViewModel>().AsSelf();
+            builder.RegisterType<SelectWorkspaceViewModel>().AsSelf();
 
             builder.RegisterType<MainViewModel>().AsSelf();
 

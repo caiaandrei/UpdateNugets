@@ -85,24 +85,12 @@
     </Controls:MetroWindow.Flyouts>
 
     <Grid>
-        <Grid Visibility="Collapsed">
-            <DockPanel LastChildFill="False"
-                       VerticalAlignment="Center"
-                       HorizontalAlignment="Center"
-                       Visibility="{Binding IsWorkspaceSet, Converter={StaticResource InvertBooleanToVisibilityConverter}}">
-                <Button Content="Create a new Project" 
-                        Command="{Binding NewProjectCommand}"
-                        Margin="10"/>
-                <Button Content="Open a Project" 
-                        Command="{Binding OpenProjectCommand}"
-                        Margin="10"/>
-                <Button Content="Continue without Project" 
-                        Command="{Binding NewProjectCommand}"
-                        Margin="10"/>
-            </DockPanel>   
+
+        <Grid Visibility="{Binding IsWorkspaceSet, Converter={StaticResource InvertBooleanToVisibilityConverter}}">
+            <local:SelectWorkspaceView DataContext="{Binding SelectWorkspaceViewModel}" />
         </Grid>
-        
-        <Grid Visibility="{Binding IsWorkspaceSet, Converter={StaticResource BooleanToVisibilityConverter}}">
+
+        <Grid Visibility="{Binding IsWorkspaceSet, Converter={StaticResource BooleanToVisibilityConverter}}" >
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition />
@@ -145,14 +133,17 @@
             </Grid>
 
             <Grid Grid.Column="2"
-              Grid.Row="1"
-              Margin="5">
+                  Grid.Row="1"
+                  Margin="5"
+                  Visibility="{Binding HasSelectedNuGet, Converter={StaticResource BooleanToVisibilityConverter}}"
+                  >
                 <local:SelectedNuGetVersionFilesView DataContext="{Binding SelectedNuGetVersionFilesViewModel}"/>
             </Grid>
 
             <Grid Grid.Column="1"
-              Grid.Row="1"
-              Margin="5">
+                  Grid.Row="1"
+                  Margin="5"
+                  Visibility="{Binding HasSelectedNuGet, Converter={StaticResource BooleanToVisibilityConverter}}">
                 <local:SelectedNuGetDetailsView DataContext="{Binding SelectedNuGetDetailsViewModel}" />
             </Grid>
 
@@ -178,5 +169,22 @@
                 <StatusBarItem Content="{Binding StatusText}" />
             </StatusBar>
         </Grid>
+
+        <!--<Grid Visibility="{Binding IsWorkspaceSet, Converter={StaticResource BooleanToVisibilityConverter}}">
+            <DockPanel LastChildFill="False"
+                       VerticalAlignment="Center"
+                       HorizontalAlignment="Center"
+                       Visibility="{Binding IsWorkspaceSet, Converter={StaticResource InvertBooleanToVisibilityConverter}}">
+                <Button Content="Create a new Project" 
+                        Command="{Binding NewProjectCommand}"
+                        Margin="10"/>
+                <Button Content="Open a Project" 
+                        Command="{Binding OpenProjectCommand}"
+                        Margin="10"/>
+                <Button Content="Continue without Project" 
+                        Command="{Binding NewProjectCommand}"
+                        Margin="10"/>
+            </DockPanel>   
+        </Grid>-->
     </Grid>
 </Controls:MetroWindow>

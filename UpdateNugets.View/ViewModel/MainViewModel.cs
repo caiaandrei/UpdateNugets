@@ -32,7 +32,8 @@ namespace UpdateNugets.UI.ViewModel
                              NewProjectViewModel newProjectViewModel,
                              OpenProjectViewModel openProjectViewModel,
                              FinishProjectViewModel finishProjectViewModel,
-                             ProjectSettingsViewModel projectSettingsViewModel)
+                             ProjectSettingsViewModel projectSettingsViewModel,
+                             SelectWorkspaceViewModel selectWorkspaceViewModel)
         {
             _eventAggregator = eventAggregator;
 
@@ -43,6 +44,7 @@ namespace UpdateNugets.UI.ViewModel
             OpenProjectViewModel = openProjectViewModel;
             FinishProjectViewModel = finishProjectViewModel;
             ProjectSettingsViewModel = projectSettingsViewModel;
+            SelectWorkspaceViewModel = selectWorkspaceViewModel;
 
             SearchCommand = new DelegateCommand(async () => await ExecuteSearchAsyncCommand());
 
@@ -54,10 +56,9 @@ namespace UpdateNugets.UI.ViewModel
             _eventAggregator.GetEvent<SelectedNuGetChangedEvent>().Subscribe(OnSelectedNuGetChangedEvent);
             _eventAggregator.GetEvent<SelectedVersionChanged>().Subscribe(OnSelectedVersionChangedEvent);
             _eventAggregator.GetEvent<NuGetUpdated>().Subscribe(OnSelectedVersionChangedEvent);
+            _eventAggregator.GetEvent<WorkspacePathSelectedEvent>().Subscribe(OnWorkspacePathChangedEvent);
 
             NewProjectViewModel.ProjectCreated += ExecuteProjectCreated;
-
-            WorkspacePath = @"C:\Workspace\Studio_master\TranslationStudio";
         }
 
         public SelectedNuGetDetailsViewModel SelectedNuGetDetailsViewModel { get; }
@@ -73,6 +74,8 @@ namespace UpdateNugets.UI.ViewModel
         public FinishProjectViewModel FinishProjectViewModel { get; }
 
         public ProjectSettingsViewModel ProjectSettingsViewModel { get; }
+
+        public SelectWorkspaceViewModel SelectWorkspaceViewModel { get; }
 
         public ICommand RefreshProjectCommand { get; }
 
@@ -209,7 +212,7 @@ namespace UpdateNugets.UI.ViewModel
             }
         }
 
-        public bool IsWorkspaceSet => !string.IsNullOrEmpty(WorkspacePath);
+        public bool IsWorkspaceSet { get; private set; }
 
         private async void OnSelectedNuGetChangedEvent(ProjectNuGet nuGet)
         {
@@ -296,6 +299,12 @@ namespace UpdateNugets.UI.ViewModel
             }
 
             NewProjectViewModel.ProjectFileHelper.AddPackagesInProjectFile(NewProjectViewModel.ProjectName, NewProjectViewModel.ProjectFolderPath, packages);
+        }
+
+        private void OnWorkspacePathChangedEvent(string path)
+        {
+            IsWorkspaceSet = true;
+            WorkspacePath = path;
         }
     }
 }
