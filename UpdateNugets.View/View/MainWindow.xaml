@@ -22,22 +22,6 @@
         </DataTemplate>
     </Controls:MetroWindow.IconTemplate>
 
-    <Controls:MetroWindow.LeftWindowCommands>
-        <Controls:WindowCommands Visibility="Collapsed">
-            <Button Content="New Project" 
-                    Command="{Binding NewProjectCommand}"/>
-            
-            <Button Content="Open Project"
-                    Command="{Binding OpenProjectCommand}"/>
-            
-            <Button Content="Finish Project"
-                    Command="{Binding FinishProjectCommand}"/>
-            
-            <Button Content="Project Settings"
-                    Command="{Binding SettingsCommand}"/>
-        </Controls:WindowCommands>
-    </Controls:MetroWindow.LeftWindowCommands>
-
     <Window.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -68,21 +52,6 @@
             </Grid.ColumnDefinitions>
 
             <DockPanel Grid.ColumnSpan="2">
-
-                <CheckBox Content="Include Prerelease"
-                      DockPanel.Dock="Right" 
-                      Margin="2"
-                      VerticalContentAlignment="Center"
-                      IsChecked="{Binding IncludePrerelease}"
-                          Visibility="Collapsed"/>
-
-                <CheckBox Content="Search Online"
-                      DockPanel.Dock="Right" 
-                      Margin="2"
-                      VerticalContentAlignment="Center"
-                      IsChecked="{Binding SearchOnline}"
-                          Visibility="Collapsed"/>
-
                 <TextBox Margin="2"
                      Controls:TextBoxHelper.ButtonCommand="{Binding SearchCommand, Mode=OneWay}"
                      Controls:TextBoxHelper.Watermark="Search NuGet..."
@@ -133,22 +102,5 @@
                 <StatusBarItem Content="{Binding StatusText}" />
             </StatusBar>
         </Grid>
-
-        <!--<Grid Visibility="{Binding IsWorkspaceSet, Converter={StaticResource BooleanToVisibilityConverter}}">
-            <DockPanel LastChildFill="False"
-                       VerticalAlignment="Center"
-                       HorizontalAlignment="Center"
-                       Visibility="{Binding IsWorkspaceSet, Converter={StaticResource InvertBooleanToVisibilityConverter}}">
-                <Button Content="Create a new Project" 
-                        Command="{Binding NewProjectCommand}"
-                        Margin="10"/>
-                <Button Content="Open a Project" 
-                        Command="{Binding OpenProjectCommand}"
-                        Margin="10"/>
-                <Button Content="Continue without Project" 
-                        Command="{Binding NewProjectCommand}"
-                        Margin="10"/>
-            </DockPanel>   
-        </Grid>-->
     </Grid>
 </Controls:MetroWindow>
