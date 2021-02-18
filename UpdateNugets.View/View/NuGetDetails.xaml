@@ -16,16 +16,23 @@
             </TextBlock>
         </GroupBox.Header>
         <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition />
+                <RowDefinition />
+            </Grid.RowDefinitions>
+            
             <Grid.ColumnDefinitions>
                 <ColumnDefinition />
                 <ColumnDefinition Width="1.5*"/>
             </Grid.ColumnDefinitions>
 
-            <Grid Margin="5" >
-                <local:NuGetInformationView DataContext="{Binding SelectedNuGetDetailsViewModel}" />
-            </Grid>
+            <local:NuGetVersionsView Margin="5"
+                                     />
+            
+            <local:NuGetDependeciesView Margin="5"
+                                        Grid.Row="1"/>
 
-            <Grid Margin="5"
+                <Grid Margin="5"
               Grid.Column="1">
                 <local:SelectedNuGetVersionFilesView DataContext="{Binding SelectedNuGetVersionFilesViewModel}"/>
             </Grid>
