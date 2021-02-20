@@ -21,7 +21,7 @@ namespace UpdateNugets.UI.Startup
 
             builder.RegisterType<ProjectFileHelper>().AsSelf();
 
-            builder.RegisterType<NuGetsListViewModel>().AsSelf();
+            builder.RegisterType<NavigationViewModel>().AsSelf();
             builder.RegisterType<SelectWorkspaceViewModel>().AsSelf();
 
             builder.RegisterType<MainWindow>().AsSelf();

@@ -1,0 +1,57 @@
+﻿<UserControl x:Class="UpdateNugets.UI.View.NavigationView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:UpdateNugets.UI.View"
+             xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+             xmlns:viewModel ="clr-namespace:UpdateNugets.UI.ViewModel"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800"
+             d:DataContext="{d:DesignInstance viewModel:NavigationViewModel}">
+
+    <DockPanel>
+        <DockPanel Grid.ColumnSpan="2"
+                   DockPanel.Dock="Top">
+            <TextBox Margin="2"
+                     Controls:TextBoxHelper.ButtonCommand="{Binding SearchCommand, Mode=OneWay}"
+                     Controls:TextBoxHelper.Watermark="Search NuGet..."
+                     Style="{DynamicResource MahApps.Styles.TextBox.Search}"
+                     Text="{Binding SearchBoxText, UpdateSourceTrigger=PropertyChanged}"/>
+        </DockPanel>
+
+        <GroupBox>
+            <GroupBox.Header>
+                <TextBlock Padding="5"
+                           Text="{Binding NumberOfNugetsInUsed, StringFormat=NuGets used (0)}"
+                           FontWeight="DemiBold"
+                           FontSize="15" />
+            </GroupBox.Header>
+
+            <ScrollViewer VerticalScrollBarVisibility="Auto"
+                          HorizontalScrollBarVisibility="Auto">
+
+                <ItemsControl ItemsSource="{Binding Path=VisibleNuGets}"
+                              Margin="2">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Button Command="{Binding OpenDetailViewCommand}">
+                                <Button.Content>
+                                    <TextBlock Text="{Binding Name}" Margin="3"/>
+                                </Button.Content>
+                                <Button.Style>
+                                    <Style TargetType="Button">
+                                        <Setter Property="Background" Value="Transparent" />
+                                        <Setter Property="BorderThickness" Value="0" />
+                                        <Setter Property="HorizontalContentAlignment" Value="Left" />
+                                    </Style>
+                                </Button.Style>
+                            </Button>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+
+            </ScrollViewer>
+        </GroupBox>
+    </DockPanel>
+</UserControl>

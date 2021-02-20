@@ -40,7 +40,7 @@ namespace UpdateNugets.UI.ViewModel
 
         public async Task LoadNuGetDetailsAsync()
         {
-            await NuGetVersionsViewModel.LoadVersionsAsync(_nuGet);
+            //await NuGetVersionsViewModel.LoadVersionsAsync(_nuGet);
         }
 
 

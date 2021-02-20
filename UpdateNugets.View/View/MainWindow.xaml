@@ -53,10 +53,10 @@
                 <ColumnDefinition Width="2.5*"/>
             </Grid.ColumnDefinitions>
 
-            <local:NuGetsListView x:Name="NuGetsListView"
+            <local:NavigationView x:Name="NuGetsListView"
                                       Grid.Row="0"
                                       Margin="5"
-                                      DataContext="{Binding NuGetsListViewModel}"/>
+                                      DataContext="{Binding NavigationViewModel}"/>
 
             <Controls:MetroTabControl Grid.Row="0"
                                       Grid.Column="1"

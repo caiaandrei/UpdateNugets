@@ -1,22 +1,22 @@
 ﻿using Prism.Commands;
 using Prism.Events;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows.Input;
-using UpdateNugets.Core;
 using UpdateNugets.UI.Events;
 
 namespace UpdateNugets.UI.ViewModel
 {
-    public class NuGetsListViewModel : ViewModelBase
+    public class NavigationViewModel : ViewModelBase
     {
         private NuGetDetailsViewModel _selectedNuGet;
-        private ObservableCollection<NuGetDetailsViewModel> _nuGets = new ObservableCollection<NuGetDetailsViewModel>();
+        private ObservableCollection<NavigationItemViewModel> _visibleNuGets = new ObservableCollection<NavigationItemViewModel>();
         private IEventAggregator _eventAggregator;
-        private ObservableCollection<NuGetDetailsViewModel> _allNuGetsDetail = new ObservableCollection<NuGetDetailsViewModel>();
+        private ObservableCollection<NavigationItemViewModel> _allNuGets = new ObservableCollection<NavigationItemViewModel>();
         private string _searchBoxText;
 
-        public NuGetsListViewModel(IEventAggregator eventAggregator)
+        public NavigationViewModel(IEventAggregator eventAggregator)
         {
             _eventAggregator = eventAggregator;
             SearchCommand = new DelegateCommand(ExecuteSearchCommand);
@@ -35,28 +35,19 @@ namespace UpdateNugets.UI.ViewModel
             }
         }
 
-        public ObservableCollection<NuGetDetailsViewModel> NuGetsDetail
+        public ObservableCollection<NavigationItemViewModel> VisibleNuGets
         {
-            get => _nuGets;
+            get => _visibleNuGets;
             set
             {
-                _nuGets = value;
+                _visibleNuGets = value;
 
-                //if (!_nuGets.Any())
-                //{
-                //    SelectedNuGet = null;
-                //}
-                //else
-                //{
-                //    SelectedNuGet = _nuGets[0];
-                //}
-
-                OnPropertyChanged(nameof(NuGetsDetail));
+                OnPropertyChanged(nameof(VisibleNuGets));
                 OnPropertyChanged(nameof(NumberOfNugetsInUsed));
             }
         }
 
-        public int NumberOfNugetsInUsed => NuGetsDetail.Count;
+        public int NumberOfNugetsInUsed => VisibleNuGets.Count;
 
         public NuGetDetailsViewModel SelectedNuGetDetails
         {
@@ -72,28 +63,27 @@ namespace UpdateNugets.UI.ViewModel
             }
         }
 
-        public void Load(ManageNugets manageNuGets)
+        public void Load(List<string> nugets)
         {
-            foreach (var item in manageNuGets.NuGets)
+            foreach (var item in nugets)
             {
-                _allNuGetsDetail.Add(new NuGetDetailsViewModel(item)
-                {
-                    NuGetVersionsViewModel = new NuGetVersionsViewModel(_eventAggregator)
-                });
+                _allNuGets.Add(new NavigationItemViewModel(item, _eventAggregator));
             }
-            NuGetsDetail = new ObservableCollection<NuGetDetailsViewModel>(_allNuGetsDetail);
+            VisibleNuGets = new ObservableCollection<NavigationItemViewModel>(_allNuGets);
         }
 
         private void ExecuteSearchCommand()
         {
             if (string.IsNullOrEmpty(SearchBoxText))
             {
-                NuGetsDetail = new ObservableCollection<NuGetDetailsViewModel>(_allNuGetsDetail);
+                VisibleNuGets = new ObservableCollection<NavigationItemViewModel>(_allNuGets);
             }
             else
             {
-                NuGetsDetail = new ObservableCollection<NuGetDetailsViewModel>(_allNuGetsDetail.Where(item => item.Name.Contains(SearchBoxText)));
+                VisibleNuGets = new ObservableCollection<NavigationItemViewModel>(_allNuGets.Where(item => item.Name.Contains(SearchBoxText, System.StringComparison.OrdinalIgnoreCase)));
             }
         }
+
+
     }
 }

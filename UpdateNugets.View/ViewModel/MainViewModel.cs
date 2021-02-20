@@ -1,5 +1,6 @@
 ﻿using Prism.Commands;
 using Prism.Events;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
@@ -16,29 +17,28 @@ namespace UpdateNugets.UI.ViewModel
         private readonly IEventAggregator _eventAggregator;
         private string _statusText;
         private bool _isStatusVisible;
-        private string _nuGetDetailsStatus = "Loading NuGet Details...";
-        private string _nuGetDependenciesStatus = "Loading Dependecies...";
+        private List<ProjectNuGet> _allNuGets;
+        private NuGetDetailsViewModel _selectedNuGetDetailsViewModel;
+        private ManageNugets _manageNuGets;
 
         public MainViewModel(IEventAggregator eventAggregator,
-                             NuGetsListViewModel nuGetsListViewModel,
+                             NavigationViewModel nuGetsListViewModel,
                              SelectWorkspaceViewModel selectWorkspaceViewModel)
         {
             _eventAggregator = eventAggregator;
 
-            NuGetsListViewModel = nuGetsListViewModel;
+            NavigationViewModel = nuGetsListViewModel;
             SelectWorkspaceViewModel = selectWorkspaceViewModel;
 
             SelectedNuGets = new ObservableCollection<NuGetDetailsViewModel>();
 
-            _eventAggregator.GetEvent<SelectedNuGetChangedEvent>().Subscribe(OnSelectedNuGetChangedEvent);
             _eventAggregator.GetEvent<SelectedVersionChanged>().Subscribe(OnSelectedVersionChangedEvent);
             _eventAggregator.GetEvent<NuGetUpdated>().Subscribe(OnSelectedVersionChangedEvent);
             _eventAggregator.GetEvent<WorkspacePathSelectedEvent>().Subscribe(OnWorkspacePathChangedEvent);
+            _eventAggregator.GetEvent<OpenDetailViewEvent>().Subscribe(OnOpenDetailViewEvent);
         }
 
         public ObservableCollection<NuGetDetailsViewModel> SelectedNuGets { get; }
-
-        private NuGetDetailsViewModel _selectedNuGetDetailsViewModel;
 
         public NuGetDetailsViewModel SelectedNuGetDetailsViewModel
         {
@@ -52,7 +52,7 @@ namespace UpdateNugets.UI.ViewModel
 
         public SelectedNuGetVersionFilesViewModel SelectedNuGetVersionFilesViewModel { get; }
 
-        public NuGetsListViewModel NuGetsListViewModel { get; }
+        public NavigationViewModel NavigationViewModel { get; }
 
         public SelectWorkspaceViewModel SelectWorkspaceViewModel { get; }
 
@@ -65,14 +65,18 @@ namespace UpdateNugets.UI.ViewModel
                 OnPropertyChanged(nameof(WorkspacePath));
                 OnPropertyChanged(nameof(IsWorkspaceSet));
                 ManageNuGets = new ManageNugets(_projectPath);
-                NuGetsListViewModel.Load(ManageNuGets);
             }
         }
 
         public ManageNugets ManageNuGets
         {
-            get;
-            set;
+            get => _manageNuGets;
+            set
+            {
+                _manageNuGets = value;
+                _allNuGets = _manageNuGets.NuGets.ToList();
+                NavigationViewModel.Load(_allNuGets.Select(item => item.Name).ToList());
+            }
         }
 
         public bool HasSelectedNuGet
@@ -109,30 +113,22 @@ namespace UpdateNugets.UI.ViewModel
 
         public bool IsWorkspaceSet { get; private set; }
 
-        private async void OnSelectedNuGetChangedEvent(NuGetDetailsViewModel nuGetDetailsViewModel)
+        private async void OnOpenDetailViewEvent(OpenDetailViewEventArgs arg)
         {
-            //SelectedNuGetDetailsViewModel.AreVersionsLoading = true;
-            //SelectedNuGetVersionFilesViewModel.AreVersionsLoading = true;
-            //StatusText = _nuGetDetailsStatus;
-            //await SelectedNuGetDetailsViewModel.LoadAsync(nuGet);
-            //SelectedNuGetDetailsViewModel.AreVersionsLoading = false;
-            //SelectedNuGetVersionFilesViewModel.AreVersionsLoading = false;
+            var nuGet = _allNuGets.First(item => item.Name == arg.Name);
 
-            //if (StatusText == _nuGetDetailsStatus)
-            //{
-            //    StatusText = string.Empty;
-            //}
-
-            //HasSelectedNuGet = true;
-
-            SelectedNuGetDetailsViewModel = nuGetDetailsViewModel;
-
-            var existingItem = SelectedNuGets.FirstOrDefault(item => item.Name == nuGetDetailsViewModel.Name);
+            var existingItem = SelectedNuGets.FirstOrDefault(item => item.Name == arg.Name);
 
             if (existingItem is null)
             {
-                SelectedNuGets.Add(nuGetDetailsViewModel);
-                await nuGetDetailsViewModel.LoadNuGetDetailsAsync();
+                var nugetDetails = new NuGetDetailsViewModel(nuGet);
+                SelectedNuGets.Add(nugetDetails);
+                SelectedNuGetDetailsViewModel = nugetDetails;
+                await SelectedNuGetDetailsViewModel.LoadNuGetDetailsAsync();
+            }
+            else
+            {
+                SelectedNuGetDetailsViewModel = existingItem;
             }
         }
 
