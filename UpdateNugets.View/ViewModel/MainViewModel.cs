@@ -1,11 +1,11 @@
 ﻿using Prism.Commands;
 using Prism.Events;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using UpdateNugets.Core;
 using UpdateNugets.UI.Events;
-using UpdateNugets.UI.Model;
 
 namespace UpdateNugets.UI.ViewModel
 {
@@ -14,7 +14,6 @@ namespace UpdateNugets.UI.ViewModel
         private string _projectPath;
         private bool _hasSelectedNuGet;
         private readonly IEventAggregator _eventAggregator;
-        private string _searchBoxText;
         private string _statusText;
         private bool _isStatusVisible;
         private string _nuGetDetailsStatus = "Loading NuGet Details...";
@@ -29,8 +28,6 @@ namespace UpdateNugets.UI.ViewModel
             NuGetsListViewModel = nuGetsListViewModel;
             SelectWorkspaceViewModel = selectWorkspaceViewModel;
 
-            SearchCommand = new DelegateCommand(async () => await ExecuteSearchAsyncCommand());
-
             SelectedNuGets = new ObservableCollection<NuGetDetailsViewModel>();
 
             _eventAggregator.GetEvent<SelectedNuGetChangedEvent>().Subscribe(OnSelectedNuGetChangedEvent);
@@ -41,26 +38,23 @@ namespace UpdateNugets.UI.ViewModel
 
         public ObservableCollection<NuGetDetailsViewModel> SelectedNuGets { get; }
 
-        public NuGetDetailsViewModel NuGetDetailsViewModel { get; }
+        private NuGetDetailsViewModel _selectedNuGetDetailsViewModel;
+
+        public NuGetDetailsViewModel SelectedNuGetDetailsViewModel
+        {
+            get { return _selectedNuGetDetailsViewModel; }
+            set
+            {
+                _selectedNuGetDetailsViewModel = value;
+                OnPropertyChanged(nameof(SelectedNuGetDetailsViewModel));
+            }
+        }
 
         public SelectedNuGetVersionFilesViewModel SelectedNuGetVersionFilesViewModel { get; }
 
         public NuGetsListViewModel NuGetsListViewModel { get; }
 
         public SelectWorkspaceViewModel SelectWorkspaceViewModel { get; }
-
-        public ICommand SearchCommand { get; }
-
-        public string SearchBoxText
-        {
-            get { return _searchBoxText; }
-            set
-            {
-                _searchBoxText = value;
-                SearchCommand?.Execute(this);
-                OnPropertyChanged(nameof(SearchBoxText));
-            }
-        }
 
         public string WorkspacePath
         {
@@ -130,8 +124,16 @@ namespace UpdateNugets.UI.ViewModel
             //}
 
             //HasSelectedNuGet = true;
-            SelectedNuGets.Add(nuGetDetailsViewModel);
-            await nuGetDetailsViewModel.LoadNuGetDetailsAsync();
+
+            SelectedNuGetDetailsViewModel = nuGetDetailsViewModel;
+
+            var existingItem = SelectedNuGets.FirstOrDefault(item => item.Name == nuGetDetailsViewModel.Name);
+
+            if (existingItem is null)
+            {
+                SelectedNuGets.Add(nuGetDetailsViewModel);
+                await nuGetDetailsViewModel.LoadNuGetDetailsAsync();
+            }
         }
 
         private async void OnSelectedVersionChangedEvent(Version selectedVersion)
@@ -147,12 +149,6 @@ namespace UpdateNugets.UI.ViewModel
             //await NuGetDetailsViewModel.LoadDependenciesAsync();
             //NuGetDetailsViewModel.AreDependenciesLoading = false;
             //StatusText = string.Empty;
-        }
-
-        private async Task ExecuteSearchAsyncCommand()
-        {
-            var allNuGets = await ManageNuGets.SearchAsync(SearchBoxText.Trim(), false, false);
-            //NuGetsListViewModel.NuGetsDetail = allNuGets;
         }
 
         private void OnWorkspacePathChangedEvent(string path)

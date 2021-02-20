@@ -44,7 +44,6 @@
 
         <Grid Visibility="{Binding IsWorkspaceSet, Converter={StaticResource BooleanToVisibilityConverter}}" >
             <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
                 <RowDefinition />
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
@@ -54,22 +53,15 @@
                 <ColumnDefinition Width="2.5*"/>
             </Grid.ColumnDefinitions>
 
-            <DockPanel Grid.ColumnSpan="2">
-                <TextBox Margin="2"
-                     Controls:TextBoxHelper.ButtonCommand="{Binding SearchCommand, Mode=OneWay}"
-                     Controls:TextBoxHelper.Watermark="Search NuGet..."
-                     Style="{DynamicResource MahApps.Styles.TextBox.Search}"
-                     Text="{Binding SearchBoxText, UpdateSourceTrigger=PropertyChanged}"/>
-            </DockPanel>
-
             <local:NuGetsListView x:Name="NuGetsListView"
-                                      Grid.Row="1"
+                                      Grid.Row="0"
                                       Margin="5"
                                       DataContext="{Binding NuGetsListViewModel}"/>
 
-            <Controls:MetroTabControl Grid.Row="1"
+            <Controls:MetroTabControl Grid.Row="0"
                                       Grid.Column="1"
                                       ItemsSource="{Binding SelectedNuGets}"
+                                      SelectedItem="{Binding SelectedNuGetDetailsViewModel}"
                                       Margin="0 10 0 10">
 
                 <Controls:MetroTabControl.ItemTemplate>
