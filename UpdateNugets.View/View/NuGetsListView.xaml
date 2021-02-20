@@ -16,8 +16,8 @@
                            FontSize="15" />
         </GroupBox.Header>
 
-        <ListBox ItemsSource="{Binding Path=NuGets}"
-                 SelectedItem="{Binding SelectedNuGet, Mode=TwoWay}"
+        <ListBox ItemsSource="{Binding Path=NuGetsDetail}"
+                 SelectedItem="{Binding SelectedNuGetDetails, Mode=TwoWay}"
                  Margin="2">
             <ListBox.CommandBindings>
                 <CommandBinding Command="ApplicationCommands.Copy"

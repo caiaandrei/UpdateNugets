@@ -3,7 +3,8 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:UpdateNugets.UI.View" xmlns:Controls="http://metro.mahapps.com/winfx/xaml/controls"
+             xmlns:local="clr-namespace:UpdateNugets.UI.View" 
+             xmlns:Controls="http://metro.mahapps.com/winfx/xaml/controls"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
 
@@ -16,38 +17,14 @@
         </ResourceDictionary>
     </UserControl.Resources>
 
-    <Grid >
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition />
-        </Grid.RowDefinitions>
+    <Grid>
 
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="3*" />
             <ColumnDefinition />
         </Grid.ColumnDefinitions>
 
-        <DockPanel Margin="5"
-                   LastChildFill="False"
-                   Grid.ColumnSpan="2"
-                   >
-
-            <TextBlock Text="Name"
-                        FontWeight="DemiBold"
-                        VerticalAlignment="Center"
-                        Margin="2"
-                        DockPanel.Dock="Top"/>
-
-            <TextBox Text="{Binding Name, Mode=OneWay}"
-                        IsReadOnly="True"
-                        BorderThickness="0"
-                        Margin="2"
-                        DockPanel.Dock="Top"
-                     />
-        </DockPanel>
-
-        <DockPanel Grid.Row="1"
-                   LastChildFill="False">
+        <DockPanel LastChildFill="False">
 
             <TextBlock Text="Versions"
                        FontWeight="DemiBold"
@@ -97,8 +74,8 @@
                 CommandParameter="{Binding}" />
 
         <Controls:ProgressRing Width="40"
-                                   Height="40"
-                                   IsActive="True"
-                                    />
+                               Height="40"
+                               IsActive="True"
+                               Visibility="{Binding AreVersionsLoading, Converter={StaticResource VisibleIfTrueConverter}}"/>
     </Grid>
 </UserControl>

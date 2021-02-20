@@ -79,7 +79,7 @@
                 </Controls:MetroTabControl.ItemTemplate>
                 <Controls:MetroTabControl.ContentTemplate>
                     <DataTemplate>
-                        <local:NuGetDetails />
+                        <local:NuGetDetails DataContext="{Binding}"/>
                     </DataTemplate>
                 </Controls:MetroTabControl.ContentTemplate>
             </Controls:MetroTabControl>

@@ -8,8 +8,8 @@ namespace UpdateNugets.UI.ViewModel
 {
     public class NuGetsListViewModel : ViewModelBase
     {
-        private ProjectNuGet _selectedNuGet;
-        private ObservableCollection<ProjectNuGet> _nuGets = new ObservableCollection<ProjectNuGet>();
+        private NuGetDetailsViewModel _selectedNuGet;
+        private ObservableCollection<NuGetDetailsViewModel> _nuGets = new ObservableCollection<NuGetDetailsViewModel>();
         private IEventAggregator _eventAggregator;
 
         public NuGetsListViewModel(IEventAggregator eventAggregator)
@@ -17,36 +17,36 @@ namespace UpdateNugets.UI.ViewModel
             _eventAggregator = eventAggregator;
         }
 
-        public ObservableCollection<ProjectNuGet> NuGets
+        public ObservableCollection<NuGetDetailsViewModel> NuGetsDetail
         {
             get => _nuGets;
             set
             {
                 _nuGets = value;
 
-                if (!_nuGets.Any())
-                {
-                    SelectedNuGet = null;
-                }
-                else
-                {
-                    SelectedNuGet = _nuGets[0];
-                }
+                //if (!_nuGets.Any())
+                //{
+                //    SelectedNuGet = null;
+                //}
+                //else
+                //{
+                //    SelectedNuGet = _nuGets[0];
+                //}
 
-                OnPropertyChanged(nameof(NuGets));
+                OnPropertyChanged(nameof(NuGetsDetail));
                 OnPropertyChanged(nameof(NumberOfNugetsInUsed));
             }
         }
 
-        public int NumberOfNugetsInUsed => NuGets.Count;
+        public int NumberOfNugetsInUsed => NuGetsDetail.Count;
 
-        public ProjectNuGet SelectedNuGet
+        public NuGetDetailsViewModel SelectedNuGetDetails
         {
             get { return _selectedNuGet; }
             set
             {
                 _selectedNuGet = value;
-                OnPropertyChanged(nameof(SelectedNuGet));
+                OnPropertyChanged(nameof(SelectedNuGetDetails));
                 if (_selectedNuGet != null)
                 {
                     _eventAggregator.GetEvent<SelectedNuGetChangedEvent>().Publish(_selectedNuGet);
@@ -56,7 +56,13 @@ namespace UpdateNugets.UI.ViewModel
 
         public void Load(ManageNugets manageNuGets)
         {
-            NuGets = manageNuGets.NuGets;
+            foreach (var item in manageNuGets.NuGets)
+            {
+                NuGetsDetail.Add(new NuGetDetailsViewModel(item)
+                {
+                    NuGetVersionsViewModel = new NuGetVersionsViewModel(_eventAggregator)
+                });
+            }
         }
     }
 }

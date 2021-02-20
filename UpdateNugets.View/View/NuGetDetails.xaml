@@ -16,23 +16,40 @@
             </TextBlock>
         </GroupBox.Header>
         <Grid>
-            <Grid.RowDefinitions>
-                <RowDefinition />
-                <RowDefinition />
-            </Grid.RowDefinitions>
-            
+
             <Grid.ColumnDefinitions>
                 <ColumnDefinition />
                 <ColumnDefinition Width="1.5*"/>
             </Grid.ColumnDefinitions>
 
-            <local:NuGetVersionsView Margin="5"
-                                     />
-            
-            <local:NuGetDependeciesView Margin="5"
-                                        Grid.Row="1"/>
+            <DockPanel LastChildFill="False">
 
-                <Grid Margin="5"
+                <DockPanel LastChildFill="False"
+                           DockPanel.Dock="Top" >
+
+                    <TextBlock Text="Name"
+                        FontWeight="DemiBold"
+                        VerticalAlignment="Center"
+                        Margin="2"
+                        DockPanel.Dock="Top"/>
+
+                    <TextBox Text="{Binding Name}"
+                        IsReadOnly="True"
+                        BorderThickness="0"
+                        Margin="2"
+                        DockPanel.Dock="Top"
+                     />
+                </DockPanel>
+
+                <local:NuGetVersionsView DockPanel.Dock="Top"
+                                     DataContext="{Binding NuGetVersionsViewModel, Mode=TwoWay}"
+                                     VerticalAlignment="Top"
+                                     />
+
+                <local:NuGetDependeciesView DockPanel.Dock="Top"/>
+
+            </DockPanel>
+            <Grid Margin="5"
               Grid.Column="1">
                 <local:SelectedNuGetVersionFilesView DataContext="{Binding SelectedNuGetVersionFilesViewModel}"/>
             </Grid>

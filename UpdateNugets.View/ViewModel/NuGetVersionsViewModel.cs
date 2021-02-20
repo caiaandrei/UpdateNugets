@@ -1,14 +1,18 @@
-﻿using NuGet.Packaging;
-using Prism.Commands;
+﻿using Prism.Commands;
 using Prism.Events;
+using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using UpdateNugets.Core;
 using UpdateNugets.UI.Events;
+using Version = UpdateNugets.Core.Version;
 
 namespace UpdateNugets.UI.ViewModel
 {
-    public class SelectedNuGetDetailsViewModel : ViewModelBase
+    public class NuGetVersionsViewModel : ViewModelBase
     {
         private ProjectNuGet _nuGet;
         private string _name;
@@ -16,13 +20,11 @@ namespace UpdateNugets.UI.ViewModel
         private Version _selectedVersion;
         private IEventAggregator _eventAggregator;
         private ObservableCollection<Version> _versions = new ObservableCollection<Version>();
-        private ObservableCollection<string> _dependencies = new ObservableCollection<string>();
         private bool _areVersionsVisible = true;
-        private bool _areDependeciesVisible;
-        private bool _areDependeciesLoading = true;
         private bool _isHigherVersionAvaiable;
         private bool _areMultipleVersions;
-        public SelectedNuGetDetailsViewModel(IEventAggregator eventAggregator)
+
+        public NuGetVersionsViewModel(IEventAggregator eventAggregator)
         {
             _eventAggregator = eventAggregator;
             UpdateNuGetCommand = new DelegateCommand(async () => await OnExecuteUpdateCommand(), OnCanExecuteUpdateCommand).ObservesProperty(() => SelectedVersion);
@@ -42,19 +44,6 @@ namespace UpdateNugets.UI.ViewModel
                 }
             }
         }
-
-        public ObservableCollection<string> Dependencies
-        {
-            get => _dependencies;
-            set
-            {
-                _dependencies = value;
-                OnPropertyChanged(nameof(Dependencies));
-                OnPropertyChanged(nameof(HasDependencies));
-            }
-        }
-
-        public bool HasDependencies => Dependencies.Count != 0;
 
         public Version SelectedVersion
         {
@@ -101,28 +90,6 @@ namespace UpdateNugets.UI.ViewModel
             }
         }
 
-        public bool AreDependenciesLoading
-        {
-            get { return _areDependeciesLoading; }
-            set
-            {
-                _areDependeciesLoading = value;
-                AreDependenciesVisible = !_areDependeciesLoading;
-                OnPropertyChanged(nameof(AreDependenciesLoading));
-            }
-        }
-
-
-        public bool AreDependenciesVisible
-        {
-            get { return _areDependeciesVisible; }
-            set
-            {
-                _areDependeciesVisible = value;
-                OnPropertyChanged(nameof(AreDependenciesVisible));
-            }
-        }
-
         public bool IsHigherVersionAvaiable
         {
             get { return _isHigherVersionAvaiable; }
@@ -144,20 +111,14 @@ namespace UpdateNugets.UI.ViewModel
             }
         }
 
-
-        public async Task LoadAsync(ProjectNuGet nuGet)
+        public async Task LoadVersionsAsync(ProjectNuGet nuGet)
         {
+            AreVersionsLoading = true;
             _nuGet = nuGet;
-            Name = nuGet.Name;
             var versions = await nuGet.SearchNuGetVersions();
             Versions = new ObservableCollection<Version>(versions);
             SelectedVersion = nuGet.CurrentVersion;
-        }
-
-        public async Task LoadDependenciesAsync()
-        {
-            var dependencies = await _nuGet.GetDependecies();
-            Dependencies = new ObservableCollection<string>(dependencies);
+            AreVersionsLoading = false;
         }
 
         private bool OnCanExecuteUpdateCommand()
@@ -172,9 +133,6 @@ namespace UpdateNugets.UI.ViewModel
             Versions = new ObservableCollection<Version>(_nuGet.Versions);
             UpdateNuGetCommand.RaiseCanExecuteChanged();
             _eventAggregator.GetEvent<NuGetUpdated>().Publish(SelectedVersion);
-
-            var dependencies = await _nuGet.GetDependecies();
-            Dependencies = new ObservableCollection<string>(dependencies);
         }
     }
 }
