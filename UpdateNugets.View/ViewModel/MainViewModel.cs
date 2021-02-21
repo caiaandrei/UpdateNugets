@@ -1,12 +1,10 @@
-﻿using Prism.Commands;
-using Prism.Events;
+﻿using Prism.Events;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Threading.Tasks;
-using System.Windows.Input;
 using UpdateNugets.Core;
 using UpdateNugets.UI.Events;
+using UpdateNugets.UI.Model;
 
 namespace UpdateNugets.UI.ViewModel
 {
@@ -17,7 +15,7 @@ namespace UpdateNugets.UI.ViewModel
         private readonly IEventAggregator _eventAggregator;
         private string _statusText;
         private bool _isStatusVisible;
-        private List<ProjectNuGet> _allNuGets;
+        private List<NugetModel> _allNuGets;
         private NuGetDetailsViewModel _selectedNuGetDetailsViewModel;
         private ManageNugets _manageNuGets;
 
@@ -32,8 +30,6 @@ namespace UpdateNugets.UI.ViewModel
 
             SelectedNuGets = new ObservableCollection<NuGetDetailsViewModel>();
 
-            _eventAggregator.GetEvent<SelectedVersionChanged>().Subscribe(OnSelectedVersionChangedEvent);
-            _eventAggregator.GetEvent<NuGetUpdated>().Subscribe(OnSelectedVersionChangedEvent);
             _eventAggregator.GetEvent<WorkspacePathSelectedEvent>().Subscribe(OnWorkspacePathChangedEvent);
             _eventAggregator.GetEvent<OpenDetailViewEvent>().Subscribe(OnOpenDetailViewEvent);
         }
@@ -74,7 +70,7 @@ namespace UpdateNugets.UI.ViewModel
             set
             {
                 _manageNuGets = value;
-                _allNuGets = _manageNuGets.NuGets.ToList();
+                _allNuGets = _manageNuGets.NuGets.Select(item => new NugetModel(item)).ToList();
                 NavigationViewModel.Load(_allNuGets.Select(item => item.Name).ToList());
             }
         }
@@ -121,7 +117,7 @@ namespace UpdateNugets.UI.ViewModel
 
             if (existingItem is null)
             {
-                var nugetDetails = new NuGetDetailsViewModel(nuGet);
+                var nugetDetails = new NuGetDetailsViewModel(nuGet, _eventAggregator);
                 SelectedNuGets.Add(nugetDetails);
                 SelectedNuGetDetailsViewModel = nugetDetails;
                 await SelectedNuGetDetailsViewModel.LoadNuGetDetailsAsync();
@@ -130,21 +126,6 @@ namespace UpdateNugets.UI.ViewModel
             {
                 SelectedNuGetDetailsViewModel = existingItem;
             }
-        }
-
-        private async void OnSelectedVersionChangedEvent(Version selectedVersion)
-        {
-            //if (selectedVersion is null)
-            //{
-            //    return;
-            //}
-
-            //SelectedNuGetVersionFilesViewModel.Load(selectedVersion);
-            //NuGetDetailsViewModel.AreDependenciesLoading = true;
-            //StatusText = _nuGetDependenciesStatus;
-            //await NuGetDetailsViewModel.LoadDependenciesAsync();
-            //NuGetDetailsViewModel.AreDependenciesLoading = false;
-            //StatusText = string.Empty;
         }
 
         private void OnWorkspacePathChangedEvent(string path)

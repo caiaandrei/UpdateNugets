@@ -1,36 +1,31 @@
 ﻿using Prism.Commands;
 using Prism.Events;
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using UpdateNugets.Core;
-using UpdateNugets.UI.Events;
-using Version = UpdateNugets.Core.Version;
+using UpdateNugets.UI.Model;
 
 namespace UpdateNugets.UI.ViewModel
 {
     public class NuGetVersionsViewModel : ViewModelBase
     {
-        private ProjectNuGet _nuGet;
-        private string _name;
+        private NugetModel _nugetModel;
         private bool _areVersionsLoading;
-        private Version _selectedVersion;
+        private VersionModel _selectedVersion;
         private IEventAggregator _eventAggregator;
-        private ObservableCollection<Version> _versions = new ObservableCollection<Version>();
+        private ObservableCollection<VersionModel> _versions = new ObservableCollection<VersionModel>();
         private bool _areVersionsVisible = true;
         private bool _isHigherVersionAvaiable;
         private bool _areMultipleVersions;
 
-        public NuGetVersionsViewModel(IEventAggregator eventAggregator)
+        public NuGetVersionsViewModel(NugetModel nugetModel, IEventAggregator eventAggregator)
         {
+            _nugetModel = nugetModel;
             _eventAggregator = eventAggregator;
-            UpdateNuGetCommand = new DelegateCommand(async () => await OnExecuteUpdateCommand(), OnCanExecuteUpdateCommand).ObservesProperty(() => SelectedVersion);
+            UpdateNuGetCommand = new DelegateCommand(async () => await OnExecuteUpdateCommand());
         }
 
-        public ObservableCollection<Version> Versions
+        public ObservableCollection<VersionModel> Versions
         {
             get { return _versions; }
             set
@@ -39,35 +34,24 @@ namespace UpdateNugets.UI.ViewModel
                 OnPropertyChanged(nameof(Versions));
                 if (Versions.Count > 1)
                 {
-                    IsHigherVersionAvaiable = _nuGet.IsHigherVersionAvailable();
-                    AreMultipleVersions = _nuGet.AreMultipleVersionUsed;
+                    IsHigherVersionAvaiable = _nugetModel.IsHigherVersionAvailable;
+                    AreMultipleVersions = _nugetModel.AreMultipleVersionUsed;
                 }
             }
         }
 
-        public Version SelectedVersion
+        public VersionModel SelectedVersion
         {
             get { return _selectedVersion; }
             set
             {
                 _selectedVersion = value;
-                _nuGet.CurrentSelectedVersion = _selectedVersion;
                 OnPropertyChanged(nameof(SelectedVersion));
-                _eventAggregator.GetEvent<SelectedVersionChanged>().Publish(SelectedVersion);
+                _nugetModel.CurrentSelectedVersion = _selectedVersion;
             }
         }
 
         public DelegateCommand UpdateNuGetCommand { get; }
-
-        public string Name
-        {
-            get { return _name; }
-            set
-            {
-                _name = value;
-                OnPropertyChanged(nameof(Name));
-            }
-        }
 
         public bool AreVersionsLoading
         {
@@ -111,28 +95,21 @@ namespace UpdateNugets.UI.ViewModel
             }
         }
 
-        public async Task LoadVersionsAsync(ProjectNuGet nuGet)
+        public async Task LoadVersionsAsync()
         {
             AreVersionsLoading = true;
-            _nuGet = nuGet;
-            var versions = await nuGet.SearchNuGetVersions();
-            Versions = new ObservableCollection<Version>(versions);
-            SelectedVersion = nuGet.CurrentVersion;
+            AreVersionsVisible = false;
+            await _nugetModel.LoadNuGetVersions();
+            Versions = new ObservableCollection<VersionModel>(_nugetModel.Versions);
+            SelectedVersion = Versions.First(item => item.IsUsed);
             AreVersionsLoading = false;
-        }
-
-        private bool OnCanExecuteUpdateCommand()
-        {
-            return _nuGet != null && _nuGet.CurrentVersion != _nuGet.CurrentSelectedVersion;
+            AreVersionsVisible = true;
         }
 
         private async Task OnExecuteUpdateCommand()
         {
-            _nuGet.UpdateNuGets();
-
-            Versions = new ObservableCollection<Version>(_nuGet.Versions);
-            UpdateNuGetCommand.RaiseCanExecuteChanged();
-            _eventAggregator.GetEvent<NuGetUpdated>().Publish(SelectedVersion);
+            _nugetModel.UpdateNuGets();
+            await LoadVersionsAsync();
         }
     }
 }

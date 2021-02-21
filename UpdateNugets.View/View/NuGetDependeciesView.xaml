@@ -19,7 +19,8 @@
     <Grid>
         <Controls:ProgressRing Width="40"
                                 Height="40"
-                                IsActive="True"
+                                IsActive="False"
+                               Visibility="Collapsed"
                                 />
         <ListBox ItemsSource="{Binding Dependencies}"
                                  Margin="2" 

@@ -1,20 +1,24 @@
-﻿using System;
+﻿using Prism.Events;
 using System.Threading.Tasks;
 using UpdateNugets.Core;
+using UpdateNugets.UI.Model;
 
 namespace UpdateNugets.UI.ViewModel
 {
     public class NuGetDetailsViewModel : ViewModelBase
     {
-        public NuGetDetailsViewModel(Core.ProjectNuGet nuGet)
-        {
-            //NuGetVersionsViewModel = nuGetVersionsViewModel;
-            Name = nuGet.Name;
-            _nuGet = nuGet;
-        }
-
+        private NugetModel _nugetModel;
+        private readonly IEventAggregator _eventAggregator;
         private string _name;
+
         private NuGetVersionsViewModel _nuGetVersionsViewModel;
+
+        public NuGetDetailsViewModel(NugetModel nugetModel, IEventAggregator eventAggregator)
+        {
+            Name = nugetModel.Name;
+            _nugetModel = nugetModel;
+            _eventAggregator = eventAggregator;
+        }
 
         public string Name
         {
@@ -26,9 +30,7 @@ namespace UpdateNugets.UI.ViewModel
             }
         }
 
-        private ProjectNuGet _nuGet;
-
-        public NuGetVersionsViewModel NuGetVersionsViewModel 
+        public NuGetVersionsViewModel NuGetVersionsViewModel
         {
             get => _nuGetVersionsViewModel;
             set
@@ -40,10 +42,8 @@ namespace UpdateNugets.UI.ViewModel
 
         public async Task LoadNuGetDetailsAsync()
         {
-            //await NuGetVersionsViewModel.LoadVersionsAsync(_nuGet);
+            NuGetVersionsViewModel = new NuGetVersionsViewModel(_nugetModel, _eventAggregator);
+            await NuGetVersionsViewModel.LoadVersionsAsync();
         }
-
-
-        //public NuGetVersionsViewModel NuGetVersionsViewModel { get; }
     }
 }
