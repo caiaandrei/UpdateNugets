@@ -18,12 +18,13 @@
     
     <Grid>
         <Controls:ProgressRing Width="40"
-                                Height="40"
-                                IsActive="False"
-                               Visibility="Collapsed"
+                               Height="40"
+                               IsActive="{Binding AreDependenciesLoading}"
+                               Visibility="{Binding AreDependenciesLoading, Converter={StaticResource VisibleIfTrueConverter}}"
                                 />
         <ListBox ItemsSource="{Binding Dependencies}"
-                                 Margin="2" 
+                 Margin="2"
+                 Visibility="{Binding AreDependenciesVisible, Converter={StaticResource VisibleIfTrueConverter}}"
                                  >
             <ListBox.CommandBindings>
                 <CommandBinding Command="ApplicationCommands.Copy"

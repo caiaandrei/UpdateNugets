@@ -12,6 +12,7 @@ namespace UpdateNugets.UI.ViewModel
         private string _name;
 
         private NuGetVersionsViewModel _nuGetVersionsViewModel;
+        private NuGetDependenciesViewModel _nuGetDependenciesViewModel;
 
         public NuGetDetailsViewModel(NugetModel nugetModel, IEventAggregator eventAggregator)
         {
@@ -40,9 +41,20 @@ namespace UpdateNugets.UI.ViewModel
             }
         }
 
+        public NuGetDependenciesViewModel NuGetDependenciesViewModel
+        {
+            get => _nuGetDependenciesViewModel;
+            set
+            {
+                _nuGetDependenciesViewModel = value;
+                OnPropertyChanged(nameof(NuGetDependenciesViewModel));
+            }
+        }
+
         public async Task LoadNuGetDetailsAsync()
         {
             NuGetVersionsViewModel = new NuGetVersionsViewModel(_nugetModel, _eventAggregator);
+            NuGetDependenciesViewModel = new NuGetDependenciesViewModel(_nugetModel, _eventAggregator);
             await NuGetVersionsViewModel.LoadVersionsAsync();
         }
     }

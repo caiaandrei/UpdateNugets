@@ -3,6 +3,7 @@ using Prism.Events;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
+using UpdateNugets.UI.Events;
 using UpdateNugets.UI.Model;
 
 namespace UpdateNugets.UI.ViewModel
@@ -48,6 +49,7 @@ namespace UpdateNugets.UI.ViewModel
                 _selectedVersion = value;
                 OnPropertyChanged(nameof(SelectedVersion));
                 _nugetModel.CurrentSelectedVersion = _selectedVersion;
+                _eventAggregator.GetEvent<SelectedVersionChanged>().Publish(_nugetModel);
             }
         }
 

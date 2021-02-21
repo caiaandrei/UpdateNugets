@@ -9,6 +9,9 @@ namespace UpdateNugets.UI.Model
     public class NugetModel : ViewModelBase
     {
         private ProjectNuGet _projectNuGet;
+        private List<VersionModel> _versions;
+        private List<string> _dependencies;
+        private VersionModel _currentSelectedVersion;
 
         public NugetModel(ProjectNuGet projectNuGet)
         {
@@ -17,8 +20,6 @@ namespace UpdateNugets.UI.Model
         }
 
         public string Name { get; set; }
-
-        private List<VersionModel> _versions;
 
         public List<VersionModel> Versions
         {
@@ -30,11 +31,29 @@ namespace UpdateNugets.UI.Model
             }
         }
 
+        public List<string> Dependencies
+        {
+            get { return _dependencies; }
+            set
+            {
+                _dependencies = value;
+                OnPropertyChanged(nameof(Dependencies));
+            }
+        }
+
         public bool IsHigherVersionAvailable { get; set; }
 
         public bool AreMultipleVersionUsed { get; set; }
 
-        public VersionModel CurrentSelectedVersion { get; set; }
+        public VersionModel CurrentSelectedVersion 
+        {
+            get => _currentSelectedVersion;
+            set
+            {
+                _currentSelectedVersion = value;
+                _projectNuGet.CurrentSelectedVersion = _projectNuGet.Versions.First(item => item.NuGetVersion == _currentSelectedVersion.CurrentVersion);
+            }
+        }
 
         public async Task LoadNuGetVersions()
         {
@@ -56,9 +75,14 @@ namespace UpdateNugets.UI.Model
             IsHigherVersionAvailable = _projectNuGet.IsHigherVersionAvailable();
         }
 
+        public async Task LoadNuGetDependencies()
+        {
+            var dependencies = await _projectNuGet.GetDependecies();
+            Dependencies = new List<string>(dependencies);
+        }
+
         public void UpdateNuGets()
         {
-            _projectNuGet.CurrentSelectedVersion = _projectNuGet.Versions.First(item => item.NuGetVersion == CurrentSelectedVersion.CurrentVersion);
             _projectNuGet.UpdateNuGets();
         }
     }

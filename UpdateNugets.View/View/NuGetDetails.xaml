@@ -42,11 +42,12 @@
                 </DockPanel>
 
                 <local:NuGetVersionsView DockPanel.Dock="Top"
-                                     DataContext="{Binding NuGetVersionsViewModel, Mode=TwoWay}"
+                                     DataContext="{Binding NuGetVersionsViewModel}"
                                      VerticalAlignment="Top"
                                      />
 
-                <local:NuGetDependeciesView DockPanel.Dock="Top"/>
+                <local:NuGetDependeciesView DockPanel.Dock="Top"
+                                            DataContext="{Binding NuGetDependenciesViewModel}"/>
 
             </DockPanel>
             <Grid Margin="5"
