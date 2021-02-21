@@ -8,6 +8,7 @@ namespace UpdateNugets.UI.ViewModel
 {
     public class NuGetDependenciesViewModel : ViewModelBase
     {
+        private const string _statusMessage = "Dependencies loading...";
         private IEventAggregator _eventAggregator;
         private NugetModel _nugetModel;
         private ObservableCollection<string> _dependencies;
@@ -55,7 +56,19 @@ namespace UpdateNugets.UI.ViewModel
 
         public async Task LoadDependenciesAsync()
         {
+            _eventAggregator.GetEvent<PublishMessageEvent>().Publish(new PublishMessageEventArg
+            {
+                Message = _statusMessage,
+                IsVisible = true
+            });
+
             await _nugetModel.LoadNuGetDependencies();
+
+            _eventAggregator.GetEvent<PublishMessageEvent>().Publish(new PublishMessageEventArg
+            {
+                Message = _statusMessage,
+                IsVisible = false
+            });
         }
 
         private async void OnSelectedVersionChanged(NugetModel nugetModel)

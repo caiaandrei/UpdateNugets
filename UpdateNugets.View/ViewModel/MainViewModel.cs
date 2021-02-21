@@ -18,6 +18,7 @@ namespace UpdateNugets.UI.ViewModel
         private List<NugetModel> _allNuGets;
         private NuGetDetailsViewModel _selectedNuGetDetailsViewModel;
         private ManageNugets _manageNuGets;
+        private List<PublishMessageEventArg> _allStatusMessages;
 
         public MainViewModel(IEventAggregator eventAggregator,
                              NavigationViewModel nuGetsListViewModel,
@@ -32,6 +33,9 @@ namespace UpdateNugets.UI.ViewModel
 
             _eventAggregator.GetEvent<WorkspacePathSelectedEvent>().Subscribe(OnWorkspacePathChangedEvent);
             _eventAggregator.GetEvent<OpenDetailViewEvent>().Subscribe(OnOpenDetailViewEvent);
+            _eventAggregator.GetEvent<PublishMessageEvent>().Subscribe(OnPublishMessageEvent);
+
+            _allStatusMessages = new List<PublishMessageEventArg>();
         }
 
         public ObservableCollection<NuGetDetailsViewModel> SelectedNuGets { get; }
@@ -130,6 +134,31 @@ namespace UpdateNugets.UI.ViewModel
         {
             IsWorkspaceSet = true;
             WorkspacePath = path;
+        }
+
+        private void OnPublishMessageEvent(PublishMessageEventArg arg)
+        {
+            if (arg.IsVisible)
+            {
+                _allStatusMessages.Add(arg);
+                StatusText = arg.Message;
+            }
+            else
+            {
+                var existingMessage = _allStatusMessages.First(item => item.Message == arg.Message);
+
+                if (existingMessage is null)
+                {
+                    //log this
+                }
+
+                _allStatusMessages.Remove(existingMessage);
+            }
+
+            if (_allStatusMessages.Count == 0)
+            {
+                StatusText = string.Empty;
+            }
         }
     }
 }

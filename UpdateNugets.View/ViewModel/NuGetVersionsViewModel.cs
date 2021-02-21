@@ -10,6 +10,7 @@ namespace UpdateNugets.UI.ViewModel
 {
     public class NuGetVersionsViewModel : ViewModelBase
     {
+        private const string _statusMessage = "Versions loading...";
         private NugetModel _nugetModel;
         private bool _areVersionsLoading;
         private VersionModel _selectedVersion;
@@ -99,6 +100,12 @@ namespace UpdateNugets.UI.ViewModel
 
         public async Task LoadVersionsAsync()
         {
+            _eventAggregator.GetEvent<PublishMessageEvent>().Publish(new PublishMessageEventArg
+            {
+                Message = _statusMessage,
+                IsVisible = true
+            });
+
             AreVersionsLoading = true;
             AreVersionsVisible = false;
             await _nugetModel.LoadNuGetVersions();
@@ -106,6 +113,12 @@ namespace UpdateNugets.UI.ViewModel
             SelectedVersion = Versions.First(item => item.IsUsed);
             AreVersionsLoading = false;
             AreVersionsVisible = true;
+
+            _eventAggregator.GetEvent<PublishMessageEvent>().Publish(new PublishMessageEventArg
+            {
+                Message = _statusMessage,
+                IsVisible = false
+            });
         }
 
         private async Task OnExecuteUpdateCommand()
