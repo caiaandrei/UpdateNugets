@@ -46,8 +46,6 @@ namespace UpdateNugets.UI.ViewModel
             }
         }
 
-        public SelectedNuGetVersionFilesViewModel SelectedNuGetVersionFilesViewModel { get; }
-
         public NavigationViewModel NavigationViewModel { get; }
 
         public SelectWorkspaceViewModel SelectWorkspaceViewModel { get; }

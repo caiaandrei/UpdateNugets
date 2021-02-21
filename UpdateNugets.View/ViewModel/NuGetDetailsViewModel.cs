@@ -1,6 +1,5 @@
 ﻿using Prism.Events;
 using System.Threading.Tasks;
-using UpdateNugets.Core;
 using UpdateNugets.UI.Model;
 
 namespace UpdateNugets.UI.ViewModel
@@ -13,6 +12,7 @@ namespace UpdateNugets.UI.ViewModel
 
         private NuGetVersionsViewModel _nuGetVersionsViewModel;
         private NuGetDependenciesViewModel _nuGetDependenciesViewModel;
+        private NuGetVersionFilesViewModel _selectedNuGetVersionFilesViewModel;
 
         public NuGetDetailsViewModel(NugetModel nugetModel, IEventAggregator eventAggregator)
         {
@@ -41,6 +41,16 @@ namespace UpdateNugets.UI.ViewModel
             }
         }
 
+        public NuGetVersionFilesViewModel NuGetVersionFilesViewModel
+        {
+            get => _selectedNuGetVersionFilesViewModel;
+            set
+            {
+                _selectedNuGetVersionFilesViewModel = value;
+                OnPropertyChanged(nameof(NuGetVersionFilesViewModel));
+            }
+        }
+
         public NuGetDependenciesViewModel NuGetDependenciesViewModel
         {
             get => _nuGetDependenciesViewModel;
@@ -55,6 +65,7 @@ namespace UpdateNugets.UI.ViewModel
         {
             NuGetVersionsViewModel = new NuGetVersionsViewModel(_nugetModel, _eventAggregator);
             NuGetDependenciesViewModel = new NuGetDependenciesViewModel(_nugetModel, _eventAggregator);
+            NuGetVersionFilesViewModel = new NuGetVersionFilesViewModel(_nugetModel, _eventAggregator);
             await NuGetVersionsViewModel.LoadVersionsAsync();
         }
     }

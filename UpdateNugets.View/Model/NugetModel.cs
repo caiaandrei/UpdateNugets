@@ -65,7 +65,8 @@ namespace UpdateNugets.UI.Model
                 versionModels.Add(new VersionModel
                 {
                     CurrentVersion = item.NuGetVersion,
-                    IsUsed = item.IsTheCurrentVersion
+                    IsUsed = item.IsTheCurrentVersion,
+                    Files = item.Files.ToList()
                 });
             }
 

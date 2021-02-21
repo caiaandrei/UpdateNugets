@@ -50,9 +50,8 @@
                                             DataContext="{Binding NuGetDependenciesViewModel}"/>
 
             </DockPanel>
-            <Grid Margin="5"
-              Grid.Column="1">
-                <local:SelectedNuGetVersionFilesView DataContext="{Binding SelectedNuGetVersionFilesViewModel}"/>
+            <Grid Grid.Column="1">
+                <local:NuGetVersionFilesView DataContext="{Binding NuGetVersionFilesViewModel}"/>
             </Grid>
         </Grid>
     </GroupBox>
