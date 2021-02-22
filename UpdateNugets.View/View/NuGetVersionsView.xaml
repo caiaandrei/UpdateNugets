@@ -1,0 +1,91 @@
+﻿<UserControl x:Class="UpdateNugets.UI.View.NuGetVersionsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:UpdateNugets.UI.View" 
+             xmlns:Controls="http://metro.mahapps.com/winfx/xaml/controls"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/Resources/UpdateNugetsIcons.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+            <BooleanToVisibilityConverter x:Key="VisibleIfTrueConverter" />
+        </ResourceDictionary>
+    </UserControl.Resources>
+
+    <Grid>
+        <Grid Visibility="{Binding AreVersionsVisible, Converter={StaticResource VisibleIfTrueConverter}}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition />
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+
+            <DockPanel LastChildFill="False">
+
+                <TextBlock Text="Versions"
+                       FontWeight="DemiBold"
+                       VerticalAlignment="Center"
+                       Margin="2"
+                       DockPanel.Dock="Top"/>
+
+                <ComboBox ItemsSource="{Binding Versions}"
+                      SelectedItem="{Binding SelectedVersion}"
+                      DockPanel.Dock="Left"
+                      Margin="2"
+                      VerticalAlignment="Center" >
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate>
+                            <DockPanel>
+                                <Image Source="{StaticResource IsUsedIcon}"
+                                       Width="12"
+                                       Height="12"
+                                       Margin="3"
+                                       Visibility="{Binding IsUsed, Converter={StaticResource VisibleIfTrueConverter}}"
+                                       VerticalAlignment="Center"
+                                       DockPanel.Dock="Right"
+                                       HorizontalAlignment="Right"/>
+                                <TextBlock Text="{Binding CurrentVersion}"
+                                           VerticalAlignment="Center"
+                                           HorizontalAlignment="Left"
+                                           Margin="0 0 5 0"/>
+                            </DockPanel>
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                </ComboBox>
+
+                <Image Source="{StaticResource ArrowUpIcon}" 
+                   Width="16"
+                   Height="16"
+                   Margin="3"
+                   DockPanel.Dock="Left"
+                   VerticalAlignment="Center"
+                   Visibility="{Binding IsHigherVersionAvaiable, Converter={StaticResource VisibleIfTrueConverter}}" />
+
+                <Image Source="{StaticResource WarningIcon}"  
+                   ToolTip="Different Versions in different files"
+                   DockPanel.Dock="Left"
+                   Width="16"
+                   Height="16"
+                   Margin="3"
+                   Visibility="{Binding AreMultipleVersions, Converter={StaticResource VisibleIfTrueConverter}}"
+                   VerticalAlignment="Center"/>
+
+                <Button Content="Update NuGet"
+                        Margin="3"
+                        DockPanel.Dock="Right"
+                        Command="{Binding UpdateNuGetCommand}"
+                        CommandParameter="{Binding}"
+                        VerticalAlignment="Top"/>
+            </DockPanel>
+        </Grid>
+
+        <Controls:ProgressRing Width="40"
+                               Height="40"
+                               IsActive="True"
+                               Visibility="{Binding AreVersionsLoading, Converter={StaticResource VisibleIfTrueConverter}}"/>
+    </Grid>
+</UserControl>

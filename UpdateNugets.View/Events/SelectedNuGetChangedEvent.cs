@@ -1,9 +1,9 @@
 ﻿using Prism.Events;
-using UpdateNugets.Core;
+using UpdateNugets.UI.ViewModel;
 
 namespace UpdateNugets.UI.Events
 {
-    public class SelectedNuGetChangedEvent : PubSubEvent<ProjectNuGet>
+    public class SelectedNuGetChangedEvent : PubSubEvent<NuGetDetailsViewModel>
     {
     }
 }

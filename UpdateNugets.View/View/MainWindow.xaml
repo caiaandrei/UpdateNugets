@@ -22,22 +22,6 @@
         </DataTemplate>
     </Controls:MetroWindow.IconTemplate>
 
-    <Controls:MetroWindow.LeftWindowCommands>
-        <Controls:WindowCommands Visibility="Collapsed">
-            <Button Content="New Project" 
-                    Command="{Binding NewProjectCommand}"/>
-            
-            <Button Content="Open Project"
-                    Command="{Binding OpenProjectCommand}"/>
-            
-            <Button Content="Finish Project"
-                    Command="{Binding FinishProjectCommand}"/>
-            
-            <Button Content="Project Settings"
-                    Command="{Binding SettingsCommand}"/>
-        </Controls:WindowCommands>
-    </Controls:MetroWindow.LeftWindowCommands>
-
     <Window.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -46,6 +30,10 @@
              
             <helpers:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
             <helpers:InvertBooleanToVisibilityConverter x:Key="InvertBooleanToVisibilityConverter" />
+            <Style TargetType="Controls:MetroTabItem">
+                <Setter Property="CloseButtonEnabled" Value="True" />
+                <Setter Property="CloseButtonMargin" Value=" 0 10 0 0" />
+            </Style>
         </ResourceDictionary>
     </Window.Resources>
 
@@ -56,60 +44,37 @@
 
         <Grid Visibility="{Binding IsWorkspaceSet, Converter={StaticResource BooleanToVisibilityConverter}}" >
             <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
                 <RowDefinition />
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
 
             <Grid.ColumnDefinitions>
                 <ColumnDefinition />
-                <ColumnDefinition />
-                <ColumnDefinition Width="2*"/>
+                <ColumnDefinition Width="2.5*"/>
             </Grid.ColumnDefinitions>
 
-            <DockPanel Grid.ColumnSpan="2">
+            <local:NavigationView x:Name="NuGetsListView"
+                                      Grid.Row="0"
+                                      Margin="5"
+                                      DataContext="{Binding NavigationViewModel}"/>
 
-                <CheckBox Content="Include Prerelease"
-                      DockPanel.Dock="Right" 
-                      Margin="2"
-                      VerticalContentAlignment="Center"
-                      IsChecked="{Binding IncludePrerelease}"
-                          Visibility="Collapsed"/>
+            <Controls:MetroTabControl Grid.Row="0"
+                                      Grid.Column="1"
+                                      ItemsSource="{Binding SelectedNuGets}"
+                                      SelectedItem="{Binding SelectedNuGetDetailsViewModel}"
+                                      Margin="0 10 0 10">
 
-                <CheckBox Content="Search Online"
-                      DockPanel.Dock="Right" 
-                      Margin="2"
-                      VerticalContentAlignment="Center"
-                      IsChecked="{Binding SearchOnline}"
-                          Visibility="Collapsed"/>
-
-                <TextBox Margin="2"
-                     Controls:TextBoxHelper.ButtonCommand="{Binding SearchCommand, Mode=OneWay}"
-                     Controls:TextBoxHelper.Watermark="Search NuGet..."
-                     Style="{DynamicResource MahApps.Styles.TextBox.Search}"
-                     Text="{Binding SearchBoxText, UpdateSourceTrigger=PropertyChanged}"/>
-            </DockPanel>
-
-            <Grid Grid.Row="1"                
-              Margin="5">
-                <local:NuGetsListView x:Name="NuGetsListView"
-                                  DataContext="{Binding NuGetsListViewModel}"/>
-            </Grid>
-
-            <Grid Grid.Column="2"
-                  Grid.Row="1"
-                  Margin="5"
-                  Visibility="{Binding HasSelectedNuGet, Converter={StaticResource BooleanToVisibilityConverter}}"
-                  >
-                <local:SelectedNuGetVersionFilesView DataContext="{Binding SelectedNuGetVersionFilesViewModel}"/>
-            </Grid>
-
-            <Grid Grid.Column="1"
-                  Grid.Row="1"
-                  Margin="5"
-                  Visibility="{Binding HasSelectedNuGet, Converter={StaticResource BooleanToVisibilityConverter}}">
-                <local:SelectedNuGetDetailsView DataContext="{Binding SelectedNuGetDetailsViewModel}" />
-            </Grid>
+                <Controls:MetroTabControl.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding Name}" FontSize="20" Margin="5"/>
+                    </DataTemplate>
+                </Controls:MetroTabControl.ItemTemplate>
+                <Controls:MetroTabControl.ContentTemplate>
+                    <DataTemplate>
+                        <local:NuGetDetails DataContext="{Binding}"/>
+                    </DataTemplate>
+                </Controls:MetroTabControl.ContentTemplate>
+            </Controls:MetroTabControl>
 
             <StatusBar Grid.Row="2"
                    Grid.ColumnSpan="3">
@@ -133,22 +98,5 @@
                 <StatusBarItem Content="{Binding StatusText}" />
             </StatusBar>
         </Grid>
-
-        <!--<Grid Visibility="{Binding IsWorkspaceSet, Converter={StaticResource BooleanToVisibilityConverter}}">
-            <DockPanel LastChildFill="False"
-                       VerticalAlignment="Center"
-                       HorizontalAlignment="Center"
-                       Visibility="{Binding IsWorkspaceSet, Converter={StaticResource InvertBooleanToVisibilityConverter}}">
-                <Button Content="Create a new Project" 
-                        Command="{Binding NewProjectCommand}"
-                        Margin="10"/>
-                <Button Content="Open a Project" 
-                        Command="{Binding OpenProjectCommand}"
-                        Margin="10"/>
-                <Button Content="Continue without Project" 
-                        Command="{Binding NewProjectCommand}"
-                        Margin="10"/>
-            </DockPanel>   
-        </Grid>-->
     </Grid>
 </Controls:MetroWindow>
