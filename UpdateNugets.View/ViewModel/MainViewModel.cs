@@ -10,7 +10,7 @@ namespace UpdateNugets.UI.ViewModel
 {
     public class MainViewModel : ViewModelBase
     {
-        private string _projectPath;
+        private string _workspacePath;
         private bool _hasSelectedNuGet;
         private readonly IEventAggregator _eventAggregator;
         private string _statusText;
@@ -31,7 +31,7 @@ namespace UpdateNugets.UI.ViewModel
 
             SelectedNuGets = new ObservableCollection<NuGetDetailsViewModel>();
 
-            _eventAggregator.GetEvent<WorkspacePathSelectedEvent>().Subscribe(OnWorkspacePathChangedEvent);
+            _eventAggregator.GetEvent<WorkspaceSelectedEvent>().Subscribe(OnWorkspaceChangedEvent);
             _eventAggregator.GetEvent<OpenDetailViewEvent>().Subscribe(OnOpenDetailViewEvent);
             _eventAggregator.GetEvent<PublishMessageEvent>().Subscribe(OnPublishMessageEvent);
 
@@ -56,13 +56,12 @@ namespace UpdateNugets.UI.ViewModel
 
         public string WorkspacePath
         {
-            get { return _projectPath; }
+            get { return _workspacePath; }
             set
             {
-                _projectPath = value;
+                _workspacePath = value;
                 OnPropertyChanged(nameof(WorkspacePath));
                 OnPropertyChanged(nameof(IsWorkspaceSet));
-                ManageNuGets = new WorkspaceNuGetsManager(_projectPath, "https://pkgs.dev.azure.com/sdl/_packaging/SDLNuget/nuget/v3/index.json");
             }
         }
 
@@ -130,10 +129,11 @@ namespace UpdateNugets.UI.ViewModel
             }
         }
 
-        private void OnWorkspacePathChangedEvent(string path)
+        private void OnWorkspaceChangedEvent(WorkspaceSelectedEventArg arg)
         {
             IsWorkspaceSet = true;
-            WorkspacePath = path;
+            WorkspacePath = arg.WorkspacePath;
+            ManageNuGets = new WorkspaceNuGetsManager(WorkspacePath, arg.PackagesSource);
         }
 
         private void OnPublishMessageEvent(PublishMessageEventArg arg)

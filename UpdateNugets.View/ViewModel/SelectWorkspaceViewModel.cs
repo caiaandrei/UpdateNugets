@@ -23,6 +23,8 @@ namespace UpdateNugets.UI.ViewModel
             _okCommand = new DelegateCommand(OnExecuteOKCommand, OnCanExecuteOKCommand);
 
             WorkspacePath = string.Empty;
+
+            PackagesSource = "https://api.nuget.org/v3/index.json";
         }
 
         [CustomValidation(typeof(SelectWorkspaceViewModel), nameof(ValidateWorkspace))]
@@ -37,6 +39,19 @@ namespace UpdateNugets.UI.ViewModel
                 _okCommand.RaiseCanExecuteChanged();
             }
         }
+
+        private string _packagesSource;
+
+        public string PackagesSource
+        {
+            get { return _packagesSource; }
+            set
+            {
+                _packagesSource = value;
+                OnPropertyChanged(nameof(PackagesSource));
+            }
+        }
+
 
         public ICommand BrowseWorkspacePathCommand { get; }
 
@@ -59,7 +74,11 @@ namespace UpdateNugets.UI.ViewModel
 
         private void OnExecuteOKCommand()
         {
-            _eventAggregator.GetEvent<WorkspacePathSelectedEvent>().Publish(WorkspacePath);
+            _eventAggregator.GetEvent<WorkspaceSelectedEvent>().Publish(new WorkspaceSelectedEventArg
+            {
+                WorkspacePath = WorkspacePath,
+                PackagesSource = PackagesSource
+            });
         }
 
         private ValidationResult ValidateWorkspacePath(string path)

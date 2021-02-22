@@ -25,10 +25,6 @@
     <Grid>
         <DockPanel VerticalAlignment="Center"
                        HorizontalAlignment="Center">
-            <TextBlock Text="Select the workspace path" 
-                           FontWeight="DemiBold"
-                           DockPanel.Dock="Top"
-                           Margin="5"/>
 
             <Button Content="Ok"
                     DockPanel.Dock="Bottom"
@@ -38,27 +34,50 @@
                     Command="{Binding OkCommand}"
                     />
 
-            <DockPanel>
+            <DockPanel LastChildFill="False">
+                
+                <DockPanel DockPanel.Dock="Top">
 
-                <Button Content="Browse..." 
+                    <Button Content="Browse..." 
                         DockPanel.Dock="Right"
-                        VerticalAlignment="Center"
+                        VerticalAlignment="Bottom"
                         HorizontalAlignment="Center"
                         Margin="5"
                         Command="{Binding BrowseWorkspacePathCommand}"
                         CommandParameter="{Binding}"/>
 
-                <TextBox MinWidth="400"
-                         Margin="5"
-                         VerticalContentAlignment="Center"
-                         Validation.ErrorTemplate="{StaticResource ValidationTemplate}"
-                         Text="{Binding WorkspacePath, 
-                                        UpdateSourceTrigger=PropertyChanged,
-                                        ValidatesOnDataErrors=True,
-                                        NotifyOnValidationError=True}"
-                         />
+                    <DockPanel DockPanel.Dock="Top">
+
+                        <TextBlock Text="NuGets Source"
+                                   DockPanel.Dock="Top"
+                                   FontWeight="SemiBold"
+                                   Margin="5 20 5 0"/>
+
+                        <TextBox Text="{Binding PackagesSource}" 
+                                 DockPanel.Dock="Top"
+                                 Margin="5"/>
+
+                        <TextBlock Text="Select the workspace path" 
+                                   FontWeight="DemiBold"
+                                   DockPanel.Dock="Top"
+                                   Margin="5 20 5 0" />
+
+                        <TextBox MinWidth="400"
+                                 Margin="5"
+                                 VerticalContentAlignment="Center"
+                                 Validation.ErrorTemplate="{StaticResource ValidationTemplate}"
+                                 DockPanel.Dock="Top"
+                                 Text="{Binding WorkspacePath, 
+                                 UpdateSourceTrigger=PropertyChanged,
+                                 ValidatesOnDataErrors=True,
+                                 NotifyOnValidationError=True}" />
+
+                    </DockPanel>
 
 
+                </DockPanel>
+
+                
             </DockPanel>
         </DockPanel>
     </Grid>

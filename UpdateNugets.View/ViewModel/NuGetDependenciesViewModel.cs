@@ -1,4 +1,5 @@
 ﻿using Prism.Events;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using UpdateNugets.UI.Events;
@@ -62,7 +63,14 @@ namespace UpdateNugets.UI.ViewModel
                 IsVisible = true
             });
 
-            await _nugetModel.LoadNuGetDependencies();
+            try
+            {
+                await _nugetModel.LoadNuGetDependencies();
+            }
+            catch
+            {
+                //TODO
+            }
 
             _eventAggregator.GetEvent<PublishMessageEvent>().Publish(new PublishMessageEventArg
             {
@@ -79,8 +87,11 @@ namespace UpdateNugets.UI.ViewModel
             }
 
             AreDependenciesLoading = true;
+
             await LoadDependenciesAsync();
-            Dependencies = new ObservableCollection<string>(_nugetModel.Dependencies);
+
+            Dependencies = new ObservableCollection<string>(_nugetModel.Dependencies ?? new List<string>());
+
             AreDependenciesLoading = false;
         }
     }
