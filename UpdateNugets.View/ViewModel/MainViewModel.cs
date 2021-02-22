@@ -17,7 +17,7 @@ namespace UpdateNugets.UI.ViewModel
         private bool _isStatusVisible;
         private List<NugetModel> _allNuGets;
         private NuGetDetailsViewModel _selectedNuGetDetailsViewModel;
-        private ManageNugets _manageNuGets;
+        private WorkspaceNuGetsManager _manageNuGets;
         private List<PublishMessageEventArg> _allStatusMessages;
 
         public MainViewModel(IEventAggregator eventAggregator,
@@ -62,11 +62,11 @@ namespace UpdateNugets.UI.ViewModel
                 _projectPath = value;
                 OnPropertyChanged(nameof(WorkspacePath));
                 OnPropertyChanged(nameof(IsWorkspaceSet));
-                ManageNuGets = new ManageNugets(_projectPath);
+                ManageNuGets = new WorkspaceNuGetsManager(_projectPath, "https://pkgs.dev.azure.com/sdl/_packaging/SDLNuget/nuget/v3/index.json");
             }
         }
 
-        public ManageNugets ManageNuGets
+        public WorkspaceNuGetsManager ManageNuGets
         {
             get => _manageNuGets;
             set
