@@ -2,9 +2,9 @@
 
 namespace UpdateNugets.UI.View
 {
-    public partial class NewProjectView : UserControl
+    public partial class SelectWorkspaceView : UserControl
     {
-        public NewProjectView()
+        public SelectWorkspaceView()
         {
             InitializeComponent();
         }

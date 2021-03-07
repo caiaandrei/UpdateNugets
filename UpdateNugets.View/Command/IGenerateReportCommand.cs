@@ -2,7 +2,7 @@
 
 namespace UpdateNugets.UI.Command
 {
-    public interface ICreateProjectCommand : ICommand
+    public interface IGenerateReportCommand : ICommand
     {
     }
 }

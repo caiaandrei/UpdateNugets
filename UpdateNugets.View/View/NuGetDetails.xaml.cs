@@ -2,9 +2,9 @@
 
 namespace UpdateNugets.UI.View
 {
-    public partial class OpenProjectView : UserControl
+    public partial class NuGetDetails : UserControl
     {
-        public OpenProjectView()
+        public NuGetDetails()
         {
             InitializeComponent();
         }

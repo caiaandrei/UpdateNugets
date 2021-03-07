@@ -4,9 +4,9 @@ using System.Windows.Input;
 
 namespace UpdateNugets.UI.View
 {
-    public partial class NuGetsListView : UserControl
+    public partial class NuGetVersionFilesView : UserControl
     {
-        public NuGetsListView()
+        public NuGetVersionFilesView()
         {
             InitializeComponent();
         }

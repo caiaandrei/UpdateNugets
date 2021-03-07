@@ -16,11 +16,11 @@ using System.Windows.Shapes;
 namespace UpdateNugets.UI.View
 {
     /// <summary>
-    /// Interaction logic for ProjectSettingsView.xaml
+    /// Interaction logic for NuGetVersionsView.xaml
     /// </summary>
-    public partial class ProjectSettingsView : UserControl
+    public partial class NuGetVersionsView : UserControl
     {
-        public ProjectSettingsView()
+        public NuGetVersionsView()
         {
             InitializeComponent();
         }

@@ -1,138 +1,86 @@
-﻿using Prism.Commands;
-using Prism.Events;
+﻿using Prism.Events;
 using System.Collections.Generic;
-using System.Threading.Tasks;
+using System.Collections.ObjectModel;
+using System.Linq;
 using System.Windows.Input;
 using UpdateNugets.Core;
+using UpdateNugets.UI.Command;
 using UpdateNugets.UI.Events;
+using UpdateNugets.UI.Model;
 
 namespace UpdateNugets.UI.ViewModel
 {
     public class MainViewModel : ViewModelBase
     {
-        private string _projectPath;
+        private string _workspacePath;
         private bool _hasSelectedNuGet;
         private readonly IEventAggregator _eventAggregator;
-        private bool _searchOnline;
-        private bool _includePrerelease;
-        private string _searchBoxText;
         private string _statusText;
         private bool _isStatusVisible;
-        private string _nuGetDetailsStatus = "Loading NuGet Details...";
-        private string _nuGetDependenciesStatus = "Loading Dependecies...";
-        private bool _isNewProjectFlyoutOpen;
-        private bool _isOpenProjectFlyoutOpen;
-        private bool _isSettingsFlyoutOpen;
-        private bool _isFinishProjectFlyoutOpen;
+        private List<NugetModel> _allNuGets;
+        private NuGetDetailsViewModel _selectedNuGetDetailsViewModel;
+        private WorkspaceNuGetsManager _manageNuGets;
+        private List<PublishMessageEventArg> _allStatusMessages;
 
         public MainViewModel(IEventAggregator eventAggregator,
-                             NuGetsListViewModel nuGetsListViewModel,
-                             SelectedNuGetDetailsViewModel selectedNuGetDetailsViewModel,
-                             SelectedNuGetVersionFilesViewModel selectedNuGetVersionFilesViewModel,
-                             NewProjectViewModel newProjectViewModel,
-                             OpenProjectViewModel openProjectViewModel,
-                             FinishProjectViewModel finishProjectViewModel,
-                             ProjectSettingsViewModel projectSettingsViewModel)
+                             NavigationViewModel nuGetsListViewModel,
+                             SelectWorkspaceViewModel selectWorkspaceViewModel,
+                             IGenerateReportCommand generateReportCommand)
         {
             _eventAggregator = eventAggregator;
 
-            NuGetsListViewModel = nuGetsListViewModel;
-            SelectedNuGetDetailsViewModel = selectedNuGetDetailsViewModel;
-            SelectedNuGetVersionFilesViewModel = selectedNuGetVersionFilesViewModel;
-            NewProjectViewModel = newProjectViewModel;
-            OpenProjectViewModel = openProjectViewModel;
-            FinishProjectViewModel = finishProjectViewModel;
-            ProjectSettingsViewModel = projectSettingsViewModel;
+            NavigationViewModel = nuGetsListViewModel;
+            SelectWorkspaceViewModel = selectWorkspaceViewModel;
 
-            SearchCommand = new DelegateCommand(async () => await ExecuteSearchAsyncCommand());
+            GenerateReportCommand = generateReportCommand;
 
-            NewProjectCommand = new DelegateCommand(() => ExecuteNewProjectCommand());
-            OpenProjectCommand = new DelegateCommand(() => ExecuteOpenProjectCommand());
-            SettingsCommand = new DelegateCommand(() => ExecuteSettingsCommand());
-            FinishProjectCommand = new DelegateCommand(() => ExecuteFinishProjectCommand());
+            SelectedNuGets = new ObservableCollection<NuGetDetailsViewModel>();
 
-            _eventAggregator.GetEvent<SelectedNuGetChangedEvent>().Subscribe(OnSelectedNuGetChangedEvent);
-            _eventAggregator.GetEvent<SelectedVersionChanged>().Subscribe(OnSelectedVersionChangedEvent);
-            _eventAggregator.GetEvent<NuGetUpdated>().Subscribe(OnSelectedVersionChangedEvent);
+            _eventAggregator.GetEvent<WorkspaceSelectedEvent>().Subscribe(OnWorkspaceChangedEvent);
+            _eventAggregator.GetEvent<OpenDetailViewEvent>().Subscribe(OnOpenDetailViewEvent);
+            _eventAggregator.GetEvent<PublishMessageEvent>().Subscribe(OnPublishMessageEvent);
 
-            NewProjectViewModel.ProjectCreated += ExecuteProjectCreated;
+            _allStatusMessages = new List<PublishMessageEventArg>();
         }
 
-        public SelectedNuGetDetailsViewModel SelectedNuGetDetailsViewModel { get; }
+        public IGenerateReportCommand GenerateReportCommand { get; }
 
-        public SelectedNuGetVersionFilesViewModel SelectedNuGetVersionFilesViewModel { get; }
+        public ObservableCollection<NuGetDetailsViewModel> SelectedNuGets { get; }
 
-        public NuGetsListViewModel NuGetsListViewModel { get; }
-
-        public NewProjectViewModel NewProjectViewModel { get; }
-
-        public OpenProjectViewModel OpenProjectViewModel { get; }
-
-        public FinishProjectViewModel FinishProjectViewModel { get; }
-
-        public ProjectSettingsViewModel ProjectSettingsViewModel { get; }
-
-        public ICommand RefreshProjectCommand { get; }
-
-        public ICommand NewProjectCommand { get; }
-
-        public ICommand OpenProjectCommand { get; }
-
-        public ICommand FinishProjectCommand { get; }
-
-        public ICommand SettingsCommand { get; }
-
-        public ICommand SearchCommand { get; }
-
-        public bool IsNewProjectFlyoutOpen
+        public NuGetDetailsViewModel SelectedNuGetDetailsViewModel
         {
-            get { return _isNewProjectFlyoutOpen; }
+            get { return _selectedNuGetDetailsViewModel; }
             set
             {
-                _isNewProjectFlyoutOpen = value;
-                OnPropertyChanged(nameof(IsNewProjectFlyoutOpen));
+                _selectedNuGetDetailsViewModel = value;
+                OnPropertyChanged(nameof(SelectedNuGetDetailsViewModel));
             }
         }
 
-        public bool IsOpenProjectFlyoutOpen
-        {
-            get { return _isOpenProjectFlyoutOpen; }
-            set
-            {
-                _isOpenProjectFlyoutOpen = value;
-                OnPropertyChanged(nameof(IsOpenProjectFlyoutOpen));
-            }
-        }
+        public NavigationViewModel NavigationViewModel { get; }
 
-
-        public string SearchBoxText
-        {
-            get { return _searchBoxText; }
-            set
-            {
-                _searchBoxText = value;
-                SearchCommand?.Execute(this);
-                OnPropertyChanged(nameof(SearchBoxText));
-            }
-        }
+        public SelectWorkspaceViewModel SelectWorkspaceViewModel { get; }
 
         public string WorkspacePath
         {
-            get { return _projectPath; }
+            get { return _workspacePath; }
             set
             {
-                _projectPath = value;
+                _workspacePath = value;
                 OnPropertyChanged(nameof(WorkspacePath));
                 OnPropertyChanged(nameof(IsWorkspaceSet));
-                ManageNuGets = new ManageNugets(_projectPath);
-                NuGetsListViewModel.Load(ManageNuGets);
             }
         }
 
-        public ManageNugets ManageNuGets
+        public WorkspaceNuGetsManager ManageNuGets
         {
-            get;
-            set;
+            get => _manageNuGets;
+            set
+            {
+                _manageNuGets = value;
+                _allNuGets = _manageNuGets.NuGets.Select(item => new NugetModel(item)).ToList();
+                NavigationViewModel.Load(_allNuGets.Select(item => item.Name).ToList());
+            }
         }
 
         public bool HasSelectedNuGet
@@ -142,26 +90,6 @@ namespace UpdateNugets.UI.ViewModel
             {
                 _hasSelectedNuGet = value;
                 OnPropertyChanged(nameof(HasSelectedNuGet));
-            }
-        }
-
-        public bool SearchOnline
-        {
-            get { return _searchOnline; }
-            set
-            {
-                _searchOnline = value;
-                OnPropertyChanged(nameof(SearchOnline));
-            }
-        }
-
-        public bool IncludePrerelease
-        {
-            get { return _includePrerelease; }
-            set
-            {
-                _includePrerelease = value;
-                OnPropertyChanged(nameof(IncludePrerelease));
             }
         }
 
@@ -187,113 +115,57 @@ namespace UpdateNugets.UI.ViewModel
             }
         }
 
-        public bool IsSettingsFlyoutOpen
+        public bool IsWorkspaceSet { get; private set; }
+
+        private async void OnOpenDetailViewEvent(OpenDetailViewEventArgs arg)
         {
-            get => _isSettingsFlyoutOpen;
-            set
+            var nuGet = _allNuGets.First(item => item.Name == arg.Name);
+
+            var existingItem = SelectedNuGets.FirstOrDefault(item => item.Name == arg.Name);
+
+            if (existingItem is null)
             {
-                _isSettingsFlyoutOpen = value;
-                OnPropertyChanged(nameof(IsSettingsFlyoutOpen));
+                var nugetDetails = new NuGetDetailsViewModel(nuGet, _eventAggregator);
+                SelectedNuGets.Add(nugetDetails);
+                SelectedNuGetDetailsViewModel = nugetDetails;
+                await SelectedNuGetDetailsViewModel.LoadNuGetDetailsAsync();
+            }
+            else
+            {
+                SelectedNuGetDetailsViewModel = existingItem;
             }
         }
 
-        public bool IsFinishProjectFlyoutOpen
+        private void OnWorkspaceChangedEvent(WorkspaceSelectedEventArg arg)
         {
-            get => _isFinishProjectFlyoutOpen;
-            set
-            {
-                _isFinishProjectFlyoutOpen = value;
-                OnPropertyChanged(nameof(IsFinishProjectFlyoutOpen));
-            }
+            IsWorkspaceSet = true;
+            WorkspacePath = arg.WorkspacePath;
+            ManageNuGets = new WorkspaceNuGetsManager(WorkspacePath, arg.PackagesSource);
         }
 
-        public bool IsWorkspaceSet => !string.IsNullOrEmpty(WorkspacePath);
-
-        private async void OnSelectedNuGetChangedEvent(ProjectNuGet nuGet)
+        private void OnPublishMessageEvent(PublishMessageEventArg arg)
         {
-            SelectedNuGetDetailsViewModel.AreVersionsLoading = true;
-            SelectedNuGetVersionFilesViewModel.AreVersionsLoading = true;
-            StatusText = _nuGetDetailsStatus;
-            await SelectedNuGetDetailsViewModel.LoadAsync(nuGet);
-            SelectedNuGetDetailsViewModel.AreVersionsLoading = false;
-            SelectedNuGetVersionFilesViewModel.AreVersionsLoading = false;
+            if (arg.IsVisible)
+            {
+                _allStatusMessages.Add(arg);
+                StatusText = arg.Message;
+            }
+            else
+            {
+                var existingMessage = _allStatusMessages.First(item => item.Message == arg.Message);
 
-            if (StatusText == _nuGetDetailsStatus)
+                if (existingMessage is null)
+                {
+                    //log this
+                }
+
+                _allStatusMessages.Remove(existingMessage);
+            }
+
+            if (_allStatusMessages.Count == 0)
             {
                 StatusText = string.Empty;
             }
-
-            HasSelectedNuGet = true;
-        }
-
-        private async void OnSelectedVersionChangedEvent(Version selectedVersion)
-        {
-            if (selectedVersion is null)
-            {
-                return;
-            }
-
-            SelectedNuGetVersionFilesViewModel.Load(selectedVersion);
-            SelectedNuGetDetailsViewModel.AreDependenciesLoading = true;
-            StatusText = _nuGetDependenciesStatus;
-            await SelectedNuGetDetailsViewModel.LoadDependenciesAsync();
-            SelectedNuGetDetailsViewModel.AreDependenciesLoading = false;
-            StatusText = string.Empty;
-        }
-
-        private async Task ExecuteSearchAsyncCommand()
-        {
-            var allNuGets = await ManageNuGets.SearchAsync(SearchBoxText.Trim(), false, false);
-            NuGetsListViewModel.NuGets = allNuGets;
-        }
-
-        private void ExecuteOpenProjectCommand()
-        {
-            IsOpenProjectFlyoutOpen = true;
-        }
-
-        private void ExecuteNewProjectCommand()
-        {
-            IsNewProjectFlyoutOpen = true;
-        }
-
-        private void ExecuteSettingsCommand()
-        {
-            IsSettingsFlyoutOpen = true;
-        }
-
-        private void ExecuteFinishProjectCommand()
-        {
-            IsFinishProjectFlyoutOpen = true;
-        }
-
-        private void ExecuteProjectCreated(object sender, System.EventArgs e)
-        {
-            WorkspacePath = NewProjectViewModel.WorkspacePath;
-            IsNewProjectFlyoutOpen = false;
-            AddNuGetsInProjectFile();
-        }
-
-        private void AddNuGetsInProjectFile()
-        {
-            var packages = new Dictionary<string, IList<string>>();
-
-            foreach (var item in NuGetsListViewModel.NuGets)
-            {
-                foreach (var version in item.Versions)
-                {
-                    if (!packages.ContainsKey(item.Name))
-                    {
-                        packages.Add(item.Name, new List<string> { version.NuGetVersion });
-                    }
-                    else
-                    {
-                        packages[item.Name].Add(version.NuGetVersion);
-                    }
-                }
-            }
-
-            NewProjectViewModel.ProjectFileHelper.AddPackagesInProjectFile(NewProjectViewModel.ProjectName, NewProjectViewModel.ProjectFolderPath, packages);
         }
     }
 }

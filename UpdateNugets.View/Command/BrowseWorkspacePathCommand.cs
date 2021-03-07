@@ -20,7 +20,7 @@ namespace UpdateNugets.UI.Command
 
         public void Execute(object parameter)
         {
-            var viewModel = parameter as NewProjectViewModel;
+            var viewModel = parameter as SelectWorkspaceViewModel;
 
             viewModel.WorkspacePath = _browsePathHelper.GetFolderPath();
         }

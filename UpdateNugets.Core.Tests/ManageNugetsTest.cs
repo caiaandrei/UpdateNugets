@@ -18,7 +18,7 @@ namespace UpdateNugets.Core.Tests
             CreateFile1();
 
             //Act
-            var manageNugets = new ManageNugets(".");
+            var manageNugets = new WorkspaceNuGetsManager(".", "");
 
             //Assert
             var nuget = manageNugets.NuGets.FirstOrDefault(item => item.Name.Equals("Castle.Core"));
@@ -34,7 +34,7 @@ namespace UpdateNugets.Core.Tests
             CreateFile2();
 
             //Act
-            var manageNugets = new ManageNugets(".");
+            var manageNugets = new WorkspaceNuGetsManager(".", "");
 
             //Assert
             var nuget = manageNugets.NuGets.FirstOrDefault(item => item.Name.Equals("Moq"));
@@ -53,7 +53,7 @@ namespace UpdateNugets.Core.Tests
             CreateFile3();
 
             //Act
-            var manageNugets = new ManageNugets(".");
+            var manageNugets = new WorkspaceNuGetsManager(".", "");
 
             //Assert
             var nuget = manageNugets.NuGets.FirstOrDefault(item => item.Name.Equals("Moq"));

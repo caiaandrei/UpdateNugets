@@ -13,18 +13,18 @@ namespace UpdateNugets.Core
 {
     public class InterogateNuGetFeed
     {
-        private string source = "https://pkgs.dev.azure.com/sdl/_packaging/SDLNuget/nuget/v3/index.json";
+        private string _source;
 
-        public InterogateNuGetFeed()
+        public InterogateNuGetFeed(string packagesSource)
         {
-
+            _source = packagesSource;
         }
 
         public async Task<IList<IPackageSearchMetadata>> SearchAsync(string text, int take, bool includePrerelease = false)
         {
             var cancellationToken = new CancellationToken();
 
-            var packageSource = new PackageSource(source);
+            var packageSource = new PackageSource(_source);
             var sourceRepository = new SourceRepository(packageSource, Repository.Provider.GetCoreV3());
 
             var rawPackageSearchResouce = await sourceRepository.GetResourceAsync<PackageSearchResource>(cancellationToken);
@@ -41,7 +41,7 @@ namespace UpdateNugets.Core
             CancellationToken cancellationToken = CancellationToken.None;
 
             var cache = new SourceCacheContext();
-            var packageSource = new PackageSource(source);
+            var packageSource = new PackageSource(_source);
             var sourceRepository = new SourceRepository(packageSource, Repository.Provider.GetCoreV3());
             var resource = await sourceRepository.GetResourceAsync<FindPackageByIdResource>();
 
