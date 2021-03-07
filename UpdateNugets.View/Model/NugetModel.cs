@@ -50,6 +50,11 @@ namespace UpdateNugets.UI.Model
             get => _currentSelectedVersion;
             set
             {
+                if (value is null)
+                {
+                    return;
+                }
+
                 _currentSelectedVersion = value;
                 _projectNuGet.CurrentSelectedVersion = _projectNuGet.Versions.First(item => item.NuGetVersion == _currentSelectedVersion.CurrentVersion);
             }
