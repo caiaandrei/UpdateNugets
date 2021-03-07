@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Windows.Input;
 using UpdateNugets.Core;
+using UpdateNugets.UI.Command;
 using UpdateNugets.UI.Events;
 using UpdateNugets.UI.Model;
 
@@ -22,12 +24,15 @@ namespace UpdateNugets.UI.ViewModel
 
         public MainViewModel(IEventAggregator eventAggregator,
                              NavigationViewModel nuGetsListViewModel,
-                             SelectWorkspaceViewModel selectWorkspaceViewModel)
+                             SelectWorkspaceViewModel selectWorkspaceViewModel,
+                             IGenerateReportCommand generateReportCommand)
         {
             _eventAggregator = eventAggregator;
 
             NavigationViewModel = nuGetsListViewModel;
             SelectWorkspaceViewModel = selectWorkspaceViewModel;
+
+            GenerateReportCommand = generateReportCommand;
 
             SelectedNuGets = new ObservableCollection<NuGetDetailsViewModel>();
 
@@ -37,6 +42,8 @@ namespace UpdateNugets.UI.ViewModel
 
             _allStatusMessages = new List<PublishMessageEventArg>();
         }
+
+        public IGenerateReportCommand GenerateReportCommand { get; }
 
         public ObservableCollection<NuGetDetailsViewModel> SelectedNuGets { get; }
 

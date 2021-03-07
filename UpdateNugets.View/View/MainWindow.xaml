@@ -32,10 +32,18 @@
             <helpers:InvertBooleanToVisibilityConverter x:Key="InvertBooleanToVisibilityConverter" />
             <Style TargetType="Controls:MetroTabItem">
                 <Setter Property="CloseButtonEnabled" Value="True" />
-                <Setter Property="CloseButtonMargin" Value=" 0 10 0 0" />
+                <Setter Property="CloseButtonMargin" Value=" 0 2 0 0" />
             </Style>
         </ResourceDictionary>
     </Window.Resources>
+
+    <Controls:MetroWindow.RightWindowCommands>
+        <Controls:WindowCommands Visibility="{Binding IsWorkspaceSet, Converter={StaticResource BooleanToVisibilityConverter}}">
+            <Button Content="Generate Report" 
+                    Command="{Binding GenerateReportCommand}"
+                    CommandParameter="{Binding}"/>
+        </Controls:WindowCommands>
+    </Controls:MetroWindow.RightWindowCommands>
 
     <Grid>
         <Grid Visibility="{Binding IsWorkspaceSet, Converter={StaticResource InvertBooleanToVisibilityConverter}}">
@@ -66,7 +74,7 @@
 
                 <Controls:MetroTabControl.ItemTemplate>
                     <DataTemplate>
-                        <TextBlock Text="{Binding Name}" FontSize="20" Margin="5"/>
+                        <TextBlock Text="{Binding Name}" FontSize="20" Margin="2"/>
                     </DataTemplate>
                 </Controls:MetroTabControl.ItemTemplate>
                 <Controls:MetroTabControl.ContentTemplate>

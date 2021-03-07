@@ -19,7 +19,7 @@ namespace UpdateNugets.UI.Startup
             builder.RegisterType<BrowsePathHelper>().AsSelf();
             builder.RegisterType<BrowseWorkspacePathCommand>().As<IBrowseWorkspacePathCommand>();
 
-            builder.RegisterType<ProjectFileHelper>().AsSelf();
+            builder.RegisterType<GenerateReportCommand>().As<IGenerateReportCommand>();
 
             builder.RegisterType<NavigationViewModel>().AsSelf();
             builder.RegisterType<SelectWorkspaceViewModel>().AsSelf();

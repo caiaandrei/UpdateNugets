@@ -4,12 +4,11 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Windows.Input;
 using UpdateNugets.UI.ViewModel;
 
 namespace UpdateNugets.UI.Command
 {
-    public class GenerateRaportCommand : ICommand
+    public class GenerateReportCommand : IGenerateReportCommand
     {
         public event EventHandler CanExecuteChanged;
 
@@ -32,7 +31,7 @@ namespace UpdateNugets.UI.Command
                 filePath = dialog.FileName;
                 GenerateReport(filePath, namesAndInitialVersions, namesAndCurrentVersions);
             }
-            catch (System.Exception)
+            catch (Exception ex)
             {
                 return;
             }
@@ -40,6 +39,8 @@ namespace UpdateNugets.UI.Command
 
         private void GenerateReport(string filePath, IList<string> nameAndInitialVersions, List<string> nameAndCurrentVersions)
         {
+            ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+
             using (var excel = new ExcelPackage())
             {
                 excel.Workbook.Worksheets.Add("My sheet");
