@@ -9,11 +9,11 @@
   <Identity
     Name="0fc18df8-2fa3-4a59-bd70-2c5df19a9bbe"
     Publisher="CN=Caia Andrei"
-    Version="1.0.1.0" />
+    Version="1.0.2.0" />
 
   <Properties>
     <DisplayName>UpdateNuGets.Package</DisplayName>
-    <PublisherDisplayName>acaia</PublisherDisplayName>
+    <PublisherDisplayName>Caia Andrei</PublisherDisplayName>
     <Logo>Images\NuGet icon.png</Logo>
   </Properties>
 
