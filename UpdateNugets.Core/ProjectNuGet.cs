@@ -88,6 +88,11 @@ namespace UpdateNugets.Core
 
         public void UpdateNuGets()
         {
+            if (CurrentVersion.NuGetVersion == CurrentSelectedVersion.NuGetVersion)
+            {
+                return;
+            }
+
             foreach (var file in CurrentVersion.Files)
             {
                 var project = new Csproj(file);

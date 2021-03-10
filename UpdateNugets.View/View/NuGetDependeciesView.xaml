@@ -15,39 +15,48 @@
             <BooleanToVisibilityConverter x:Key="VisibleIfTrueConverter" />
         </ResourceDictionary>
     </UserControl.Resources>
-    
-    <Grid>
-        <Controls:ProgressRing Width="40"
+
+    <GroupBox HorizontalAlignment="Stretch"
+              BorderThickness="0">
+        <GroupBox.Header>
+            <TextBlock Padding="5"
+                   Text="Dependencies"
+                   FontWeight="DemiBold">
+            </TextBlock>
+        </GroupBox.Header>
+        <Grid>
+            <Controls:ProgressRing Width="40"
                                Height="40"
                                IsActive="{Binding AreDependenciesLoading}"
                                Visibility="{Binding AreDependenciesLoading, Converter={StaticResource VisibleIfTrueConverter}}"
                                 />
-        <ListBox ItemsSource="{Binding Dependencies}"
+            <ListBox ItemsSource="{Binding Dependencies}"
                  Margin="2"
                  Visibility="{Binding AreDependenciesVisible, Converter={StaticResource VisibleIfTrueConverter}}"
                                  >
-            <ListBox.CommandBindings>
-                <CommandBinding Command="ApplicationCommands.Copy"
+                <ListBox.CommandBindings>
+                    <CommandBinding Command="ApplicationCommands.Copy"
                                 CanExecute="CtrlCCopyCmdCanExecute" 
                                 Executed="CtrlCCopyCmdExecuted"/>
-            </ListBox.CommandBindings>
-            <ListBox.ItemTemplate>
-                <DataTemplate>
-                    <TextBlock Text="{Binding}">
-                        <TextBlock.ContextMenu>
-                            <ContextMenu>
-                                <MenuItem Command="Copy">
-                                    <MenuItem.CommandBindings>
-                                        <CommandBinding Command="ApplicationCommands.Copy" 
+                </ListBox.CommandBindings>
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding}">
+                            <TextBlock.ContextMenu>
+                                <ContextMenu>
+                                    <MenuItem Command="Copy">
+                                        <MenuItem.CommandBindings>
+                                            <CommandBinding Command="ApplicationCommands.Copy" 
                                                         CanExecute="RightClickCopyCmdCanExecute"
                                                         Executed="RightClickCopyCmdExecuted" />
-                                    </MenuItem.CommandBindings>
-                                </MenuItem>
-                            </ContextMenu>
-                        </TextBlock.ContextMenu>
-                    </TextBlock>
-                </DataTemplate>
-            </ListBox.ItemTemplate>
-        </ListBox>
-    </Grid>
+                                        </MenuItem.CommandBindings>
+                                    </MenuItem>
+                                </ContextMenu>
+                            </TextBlock.ContextMenu>
+                        </TextBlock>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+        </Grid>
+    </GroupBox>
 </UserControl>
