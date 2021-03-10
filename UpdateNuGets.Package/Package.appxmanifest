@@ -9,7 +9,7 @@
   <Identity
     Name="0fc18df8-2fa3-4a59-bd70-2c5df19a9bbe"
     Publisher="CN=Caia Andrei"
-    Version="1.0.2.0" />
+    Version="1.0.4.0" />
 
   <Properties>
     <DisplayName>UpdateNuGets.Package</DisplayName>
@@ -36,7 +36,7 @@
         BackgroundColor="transparent"
         Square150x150Logo="Images\Square150x150Logo.png"
         Square44x44Logo="Images\Square44x44Logo.png">
-        <uap:DefaultTile Wide310x150Logo="Images\Wide310x150Logo.png"  ShortName="Update NuGets">
+        <uap:DefaultTile Wide310x150Logo="Images\Wide310x150Logo.png"  ShortName="Update NuGets" Square71x71Logo="Images\SmallTile.png" Square310x310Logo="Images\LargeTile.png">
         </uap:DefaultTile >
         <uap:SplashScreen Image="Images\SplashScreen.png" />
       </uap:VisualElements>
