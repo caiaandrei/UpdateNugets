@@ -13,6 +13,7 @@
     <PackageReference Include="EPPlus" Version="5.5.5" />
     <PackageReference Include="ExcelLibrary" Version="1.2011.7.31" />
     <PackageReference Include="MahApps.Metro" Version="2.4.3" />
+    <PackageReference Include="NLog" Version="4.7.8" />
     <PackageReference Include="Ookii.Dialogs.Wpf" Version="3.1.0" />
     <PackageReference Include="Prism.Core" Version="8.0.0.1909" />
     <PackageReference Include="WindowsAPICodePack-Shell" Version="1.1.1" />
@@ -20,6 +21,12 @@
 
   <ItemGroup>
     <ProjectReference Include="..\UpdateNugets.Core\UpdateNugets.Core.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="NLog.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>

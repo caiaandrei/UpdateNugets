@@ -1,4 +1,5 @@
 ﻿using Autofac;
+using NLog;
 using NuGet.Common;
 using NuGet.Configuration;
 using NuGet.Credentials;
@@ -17,6 +18,7 @@ namespace UpdateNugets.UI
 {
     public partial class App : Application
     {
+        private static Logger _logger;
         private MainWindow _mainWindow;
 
         public void ApplicationStart(object sender, StartupEventArgs args)
@@ -27,6 +29,8 @@ namespace UpdateNugets.UI
                                                       nonInteractive: false,
                                                       handlesDefaultCredentials: false));
 
+            LogManager.LoadConfiguration("NLog.config");
+            _logger = LogManager.GetCurrentClassLogger();
             var bootstrapper = new Bootstrapper();
             var container = bootstrapper.Bootstrap();
             
@@ -47,7 +51,7 @@ namespace UpdateNugets.UI
             string errorMessage = CreateErrorMessage(e.Exception);
 
             MessageBox.Show(_mainWindow, errorMessage, "Error");
-
+            _logger.Error(e.Exception, "Something bad happened");
             e.Handled = true;
         }
 
