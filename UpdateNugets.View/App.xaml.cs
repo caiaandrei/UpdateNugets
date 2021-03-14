@@ -27,7 +27,7 @@ namespace UpdateNugets.UI
                 new Lazy<ICredentialService>(() => new CredentialService(
                                                       new AsyncLazy<IEnumerable<ICredentialProvider>>(() => GetProviders()),
                                                       nonInteractive: false,
-                                                      handlesDefaultCredentials: false));
+                                                      handlesDefaultCredentials: true));
 
             LogManager.LoadConfiguration("NLog.config");
             _logger = LogManager.GetCurrentClassLogger();

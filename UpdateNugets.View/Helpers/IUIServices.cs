@@ -4,6 +4,6 @@ namespace UpdateNugets.UI.Helpers
 {
     public interface IUIServices
     {
-        bool OpenCredentialsDialog(string v, out NetworkCredential credential);
+        bool OpenCredentialsDialog(string target, out NetworkCredential credential);
     }
 }
