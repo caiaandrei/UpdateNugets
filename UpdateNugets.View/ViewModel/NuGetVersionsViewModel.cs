@@ -1,5 +1,6 @@
 ﻿using Prism.Commands;
 using Prism.Events;
+using System;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
@@ -108,7 +109,15 @@ namespace UpdateNugets.UI.ViewModel
 
             AreVersionsLoading = true;
             AreVersionsVisible = false;
-            await _nugetModel.LoadNuGetVersions();
+            try
+            {
+                await _nugetModel.LoadNuGetVersions();
+            }
+            catch (Exception ex)
+            {
+                //log this
+            }
+
             Versions = new ObservableCollection<VersionModel>(_nugetModel.Versions);
             SelectedVersion = Versions.First(item => item.IsUsed);
             AreVersionsLoading = false;

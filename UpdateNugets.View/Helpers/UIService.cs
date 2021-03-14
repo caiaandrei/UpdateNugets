@@ -15,7 +15,7 @@ namespace UpdateNugets.UI.Helpers
                 Content = "Enter Personal Access Tokens in the username field.",
                 Target = target,
                 ShowSaveCheckBox = true, // Allow user to save the credentials to operating system's credential manager
-                ShowUIForSavedCredentials = false // Do not show dialog when credentials can be grabbed from OS credential manager
+                ShowUIForSavedCredentials = true, // Do not show dialog when credentials can be grabbed from OS credential manager
             };
 
             try
