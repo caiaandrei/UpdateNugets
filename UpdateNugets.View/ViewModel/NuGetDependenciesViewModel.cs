@@ -63,14 +63,7 @@ namespace UpdateNugets.UI.ViewModel
                 IsVisible = true
             });
 
-            try
-            {
-                await _nugetModel.LoadNuGetDependencies();
-            }
-            catch
-            {
-                //TODO
-            }
+            await _nugetModel.LoadNuGetDependencies();
 
             _eventAggregator.GetEvent<PublishMessageEvent>().Publish(new PublishMessageEventArg
             {
