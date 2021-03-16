@@ -109,14 +109,8 @@ namespace UpdateNugets.UI.ViewModel
 
             AreVersionsLoading = true;
             AreVersionsVisible = false;
-            try
-            {
-                await _nugetModel.LoadNuGetVersions();
-            }
-            catch (Exception ex)
-            {
-                //log this
-            }
+
+            await _nugetModel.LoadNuGetVersions();
 
             Versions = new ObservableCollection<VersionModel>(_nugetModel.Versions);
             SelectedVersion = Versions.First(item => item.IsUsed);
