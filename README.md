@@ -13,5 +13,5 @@ Update NuGets is a Windows app that simplifies the process of updating different
 
 ## Get started
 
-- [Download installer](https://caiaandrei.github.io/UpdateNugets-Installer/)
-- [Quick start](https://github.com/caiaandrei/UpdateNugets/wiki/Quick-start)
+- [Download (Windows version >= 10.0.17134.0)](https://caiaandrei.github.io/UpdateNugets-Installer/)
+- [Download (Windows version < 10.0.17134.0)](https://github.com/caiaandrei/UpdateNugets/releases/tag/1.0.8.0)
